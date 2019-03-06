@@ -132,9 +132,9 @@ export function compareDecks(deck1, deck2) {
   while (i < cards1.length && j < cards2.length) {
     if (cards1[i][0] === cards2[j][0]) {
       if (cards1[i][1]<cards2[j][1]) {
-        result2.push([cards2[i][0], cards2[j][1] - cards1[i][1]])
+        result2.push([cards2[j][0], cards2[j][1] - cards1[i][1]])
       } else if (cards2[j][1]<cards1[i][1]) {
-        result1.push([cards2[i][0], cards1[i][1] - cards2[j][1]])
+        result1.push([cards2[j][0], cards1[i][1] - cards2[j][1]])
       }
       i++;
       j++;

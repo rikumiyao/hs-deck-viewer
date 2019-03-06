@@ -64,7 +64,6 @@ class BattlefyDecks extends Component {
   }
 
   processDecks(codes) {
-    console.log(codes);
     codes = codes.map(code => {
       const s = code.substring(code.search('AAE'));
       const endOfCode = s.search(/[^a-zA-Z0-9+/=]/)
@@ -72,7 +71,6 @@ class BattlefyDecks extends Component {
     });
     const result = validateDecks(codes);
     if (!result[0]) {
-      console.log(result[1]);
       this.setState({
         isValid: false
       });
