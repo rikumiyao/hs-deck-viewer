@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "dateformat": "^3.0.3",
+    "deckstrings": "^2.1.0",
     "file-loader": "^3.0.1",
     "fs": "0.0.1-security",
     "query-string": "^6.3.0",
