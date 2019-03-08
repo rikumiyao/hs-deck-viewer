@@ -8,7 +8,7 @@ class Header extends Component {
     const component = pageURI.split('/')[1];
     return (
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand>YAYtears</Navbar.Brand>
+        <Navbar.Brand href="/">YAYtears</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">

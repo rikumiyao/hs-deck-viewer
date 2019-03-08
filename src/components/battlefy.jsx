@@ -70,6 +70,7 @@ class Battlefy extends Component {
     if (this.state.isLoaded && !this.state.error) {
       component = (
         <div className='container'>
+          <h2>Browse Hearthstone Master's Cup Tournaments</h2>
           <table className="table">
             <thead>
               <tr>

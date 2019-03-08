@@ -19,9 +19,7 @@ class DeckOptions extends Component {
 
   render() {
     return (
-      <div className="dropdown m-3">
-        <input type="checkbox" onChange={this.handleCheck} defaultChecked={this.state.diffChecked}/> See Diff
-      </div>
+      <button type="button" className="btn btn-primary" onClick={this.handleCheck}>{this.state.diffChecked ? "Hide Differences" : "Show Differences"}</button>
     );
   }
 }

@@ -111,8 +111,8 @@ class BattlefyDecks extends Component {
         });
       }
       return (
-        <div>
-          <Link to={`/battlefy/${this.props.location.pathname.split('/')[2]}`}>Back</Link>
+        <div className='m-3'>
+          <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.location.pathname.split('/')[2]}`}>&lt; Back</Link>
           <h1>{this.state.player}'s Decks</h1>
           {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
           <div className='container'>

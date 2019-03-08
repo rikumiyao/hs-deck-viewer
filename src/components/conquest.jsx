@@ -3,7 +3,10 @@ import DeckPanel from './deckpanel';
 class Conquest extends Component {
   render() {
     return (
-      <DeckPanel mode='conquest' numDecks={4}/>
+      <div className="m-3">
+        <h2>Preview Hearthstone Conquest Lineups</h2>
+        <DeckPanel mode='conquest' numDecks={4}/>
+      </div>
     );
   }
 }

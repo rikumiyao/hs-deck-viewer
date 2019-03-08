@@ -11,7 +11,7 @@ class Main extends Component {
     return (
       <main>
         <Switch>
-          <Route exact path='/' component={Specialist}/>
+          <Route exact path='/' component={Conquest}/>
           <Route path='/specialist' component={Specialist}/>
           <Route path='/conquest' component={Conquest}/>
           <Route path='/battlefy/([0-9a-f]+)/([0-9a-f]+)' component={BattlefyDecks}/>
