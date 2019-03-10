@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import HttpsRedirect from 'react-https-redirect';
 
 import { BrowserRouter } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render((
-	<BrowserRouter><App/></BrowserRouter>
+	<HttpsRedirect><BrowserRouter><App/></BrowserRouter></HttpsRedirect>
 ), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

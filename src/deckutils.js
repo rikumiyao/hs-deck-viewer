@@ -20,18 +20,20 @@ for (var x=0;x<data.length;x++) {
 }
 
 function isValidDeckstring(deckstring) {
-  try {
-    return decode(deckstring);
+  for (var i=0;i<2;i++) {
+    try {
+      return decode(deckstring);
+    }
+    catch (err) {
+    }
+    deckstring = deckstring + '=';
   }
-  catch (err) {
-    return false;
-  }
+  return false
 }
 
 export function findDeckCode(text, hasNewLine) {
   if (hasNewLine) {
     const regex = /^AAE[a-zA-Z0-9/+=]+/m;
-    console.log(text.match(regex)[0]);
     return text.match(regex)[0];
   } else {
     const regex = /AAE[a-zA-Z0-9/+=]+/;

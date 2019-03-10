@@ -129,6 +129,7 @@ class BattlefyEvent extends Component {
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <div className='container mt-3'>
+          <Link className="btn btn-primary" role="button" to={`/battlefy`}>&lt; Back</Link>
           <h2>{this.state.name}</h2>
           <input type="text" className="form-control m-1" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
           <table className="table">
