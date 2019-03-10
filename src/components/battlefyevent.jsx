@@ -6,6 +6,8 @@ class BattlefyEvent extends Component {
   constructor() {
     super();
     this.processBracket = this.processBracket.bind(this);
+    this.processSwiss = this.processSwiss.bind(this);
+    this.processTop8 = this.processTop8.bind(this);
   }
 
   state = {
@@ -24,14 +26,57 @@ class BattlefyEvent extends Component {
       ['top', 'bottom'].forEach(pos=> {
         const team = row[pos];
         if (team['team']) {
-          players[team['team']['name']] = row['_id']
+          players[team['team']['name']] = {matchId : row['_id']}
         }
       })
     });
     this.setState({
-      players: players,
-      isLoaded: true
+      players: players
     })
+  }
+
+  processSwiss(stageId) {
+    const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
+    return fetch(metaDataUrl)
+      .then(res => res.json())
+      .then(res => res["bracket"]["currentRoundNumber"]+1 || res["currentRound"])
+      .then(roundNum => {
+        const standingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/rounds/${roundNum}/standings`;
+        return fetch(standingsUrl)
+          .then(res => res.json())
+          .then(res => {
+            res.forEach( (row, idx) => {
+              const name = row["team"]["name"];
+              const wins = row["wins"];
+              const losses = row["losses"];
+              const players = this.state.players;
+              players[name]["wins"] = wins;
+              players[name]["losses"] = losses;
+              players[name]["position"] = idx;
+              this.setState({players: players});
+            });
+          });
+      });
+  }
+
+  processTop8(top8Id) {
+    if (!top8Id) {
+      return;
+    }
+    const standingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${top8Id}/standings`
+    return fetch(standingsUrl)
+      .then(res => res.json())
+      .then(res => {
+        if (res) {
+          const players = this.state.players;
+          res.forEach(row => {
+            const name = row['team']['name'];
+            const place = row['place'];
+            players[name]['place'] = place;
+          });
+          this.setState({players:players});
+        }
+      });
   }
 
   componentDidMount() {
@@ -45,6 +90,7 @@ class BattlefyEvent extends Component {
         (result) => {
           this.setState({name: result['name']})
           const stageId = result['stageIDs'][0];
+          const top8Id = result['stageIDs'][1];
           if (stageId) {
             this.setState({bracketStarted:true});
           } else {
@@ -54,17 +100,13 @@ class BattlefyEvent extends Component {
             });
             return;
           }
-          const fetchBracketUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`
+          const fetchBracketUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
           fetch(fetchBracketUrl)
             .then(res => res.json())
-            .then(this.processBracket,
-              (error) => {
-                this.setState({
-                  isLoaded: true,
-                  error
-                });
-              }
-            );
+            .then(this.processBracket)
+            .then(()=>this.processSwiss(stageId))
+            .then(()=>this.processTop8(top8Id))
+            .then(()=>this.setState({isLoaded: true}));
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -83,19 +125,38 @@ class BattlefyEvent extends Component {
   }
 
   render() {
+
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
-        <div className='m-3'>
+        <div className='container mt-3'>
           <h2>{this.state.name}</h2>
-          <input type="text" className="form-control" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
-          <ul className='list-group'>
-            {Object.keys(this.state.players).filter(name=>name.toLowerCase().startsWith(this.state.input.toLowerCase()))
-              .sort().map(name =>
-              <li className='list-group-item' key={name}>
-                <Link to={`/battlefy/${this.state.id}/${this.state.players[name]}?player=${encodeURIComponent(name)}`}>{name}</Link>
-              </li>
-            )}
-          </ul>
+          <input type="text" className="form-control m-1" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Swiss Score</th>
+                <th scope="col">Top 8 Finish</th>
+              </tr>
+             </thead>
+            <tbody>
+              {
+                Object.entries(this.state.players).filter(entry=>entry[0].toLowerCase().startsWith(this.state.input.toLowerCase()))
+                .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map(entry => {
+                  const name = entry[0];
+                  const value = entry[1];
+                  return (
+                    <tr key={name}>
+                      <td>{value['position']+1}</td>
+                      <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
+                      <td>{value['wins']+"-"+value['losses']}</td>
+                      <td>{value['place']}</td>
+                    </tr>);
+                }
+              )}
+            </tbody>
+          </table>
         </div>
       );
     } else if (!this.state.error && this.state.isLoaded && !this.state.bracketStarted) {

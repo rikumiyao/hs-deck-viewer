@@ -19,7 +19,7 @@ class DeckForm extends Component {
 
   render() {
     return (
-      <div className='m-3'>
+      <div>
         {
           [...Array(this.props.numDecks).keys()].map((unused, i) => {
             return (

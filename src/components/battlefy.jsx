@@ -69,7 +69,7 @@ class Battlefy extends Component {
     const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     if (this.state.isLoaded && !this.state.error) {
       component = (
-        <div className='container'>
+        <div className='container  mt-2'>
           <h2>Browse Hearthstone Master's Cup Tournaments</h2>
           <table className="table">
             <thead>

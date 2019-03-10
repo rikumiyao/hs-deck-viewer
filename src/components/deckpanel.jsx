@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { validateDecks, compareDecks } from '../deckutils.js';
+import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
 import Deck from './deck';
 import DeckForm from './deckform';
 import DeckOptions from './deckoptions';
@@ -23,6 +23,7 @@ class DeckPanel extends Component {
   }
 
   handleSubmit(codes) {
+    codes = codes.map(code => findDeckCode(code, false));
     const result = validateDecks(codes, this.props.mode);
     if (!result[0]) {
       this.setState({

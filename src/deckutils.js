@@ -28,6 +28,17 @@ function isValidDeckstring(deckstring) {
   }
 }
 
+export function findDeckCode(text, hasNewLine) {
+  if (hasNewLine) {
+    const regex = /^AAE[a-zA-Z0-9/+=]+/m;
+    console.log(text.match(regex)[0]);
+    return text.match(regex)[0];
+  } else {
+    const regex = /AAE[a-zA-Z0-9/+=]+/;
+    return text.match(regex)[0];
+  }
+}
+
 export function validateDecks(deckstrings, mode) {
   const valid = deckstrings.map(isValidDeckstring);
   if (!valid.every(i=>i)) {
@@ -42,13 +53,13 @@ export function validateDecks(deckstrings, mode) {
     return [false, cardsValid];
   }
   if (mode==='specialist') {
-    if (!decks.every(deck=>decks[0].heroClass===deck.heroClass)) {
+    if (!decks.every(deck=>decks[0].class===deck.class)) {
       const result = Array(deckstrings.length).fill('');
       result[0] = 'Specialist Decks must all be of same class';
       return [false, result];
     }
   } else if (mode==='conquest') {
-    if (!decks.every((deck1,index1)=>decks.every((deck2, index2) => index2>index1 && deck1.heroClass!==deck2.heroClass))) {
+    if (!decks.every((deck1,index1)=>decks.every((deck2, index2) => index2<=index1 || deck1.class!==deck2.class))) {
       const result = Array(deckstrings.length).fill('');
       result[0] = 'Conquest Decks must all have different classes';
       return [false, result];
