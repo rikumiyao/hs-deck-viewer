@@ -15,14 +15,16 @@ class DeckDiff extends Component {
 	};
 
   renderDeck() {
-    const decktype = this.props.index===2 ? "Secondary" : "Tertiary"
+    const deck = this.props.deck;
     return (
       <div>
         <CopyToClipboard className='m-2' text={encodeDeck(this.props.deck)}
           onCopy={() => this.setState({copied: true})}>
           <button>Copy Deck Code</button>
         </CopyToClipboard>
-        <h1>{decktype} Deck</h1>
+        <span>
+          { deck.class ? <img src={this.getClassImg(deck.class, this.props.index)} alt={deck.class}></img> : null }
+        </span>
         <h2 style={{color:'red'}}>Removed Cards</h2>
         <ul style={this.styles}>
           {
@@ -46,6 +48,14 @@ class DeckDiff extends Component {
       </div>                                                                                                      
     );
   }
+
+  getClassImg(deckClass, index) {
+    if (index===0)
+      return require('../resources/classes/'+deckClass+'.jpg');
+    else
+      return require('../resources/classes/'+deckClass+'_'+index+'.jpg');
+  }
+
   render() {
     return this.renderDeck();
   }

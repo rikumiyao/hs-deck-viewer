@@ -16,7 +16,7 @@ class BattlefyDecks extends Component {
     isValid : false,
     isLoaded : false,
     error : null,
-    isDiff : false
+    isDiff : true
   }
 
   constructor() {

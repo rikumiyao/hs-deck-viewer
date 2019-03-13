@@ -19,7 +19,7 @@ class DeckPanel extends Component {
     decks : [],
     validDeck : [],
     isValid : false,
-    isDiff: false
+    isDiff: true
   }
 
   handleSubmit(codes) {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class DeckOptions extends Component {
 
   state = {
-    diffChecked : false
+    diffChecked : true
   }
 
   constructor() {
