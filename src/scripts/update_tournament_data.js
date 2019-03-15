@@ -2,7 +2,7 @@ const https = require('https');
 const fs = require('fs');
 const { encode, decode, FormatType } = require('deckstrings');
 
-const data = fs.readFileSync('../resources/cards.collectible.json');
+const data = fs.readFileSync('src/resources/cards.collectible.json');
 const jsonData = JSON.parse(data);
 const cardsDict = {}
 
@@ -78,11 +78,11 @@ function processBracket(data, tournamentId) {
   function recurse(i) {
     if (i >= data.length) {
       const json = JSON.stringify(playerClasses);
-      const dir = '../resources/tournamentData'; 
+      const dir = 'src/resources/tournamentData'; 
       if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
       }
-      fs.writeFile(`../resources/tournamentData/${tournamentId}.json`, json, 'utf8', err => {
+      fs.writeFile(`src/resources/tournamentData/${tournamentId}.json`, json, 'utf8', err => {
         if (err) {
           console.log('error in writing file '+`../resources/tournamentData/${tournamentId}.json`);
         }
