@@ -125,7 +125,10 @@ class BattlefyEvent extends Component {
   }
 
   render() {
-
+    let data;
+    if (this.state.id) {
+      data = require(`../resources/tournamentData/${this.state.id}.json`);
+    }
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <div className='container mt-3'>
@@ -137,6 +140,7 @@ class BattlefyEvent extends Component {
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
+                <th scope="col">Class</th>
                 <th scope="col">Swiss Score</th>
                 <th scope="col">Top 8 Finish</th>
               </tr>
@@ -151,6 +155,7 @@ class BattlefyEvent extends Component {
                     <tr key={name}>
                       <td>{value['position']+1}</td>
                       <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
+                      <td>{data[name][0].toUpperCase()+data[name].substring(1).toLowerCase()}</td>
                       <td>{value['wins']+"-"+value['losses']}</td>
                       <td>{value['place']}</td>
                     </tr>);

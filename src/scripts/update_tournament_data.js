@@ -51,10 +51,14 @@ function httpGet(url, options, callback) {
   });
 }
 
-function updateTournaments() {
+function updateTournaments(sync) {
   const date = new Date();
-  const startDate = new Date(date);
-  startDate.setDate(date.getDate()-1);
+  let startDate = new Date(date);
+  if (sync==='sync') {
+    startDate = new Date('3/5/2019');
+  } else {
+    startDate.setDate(date.getDate()-1);
+  }
   const fetchTourneysURL = `https://majestic.battlefy.com/hearthstone-masters/tournaments?start=${startDate.toJSON()}&end=${date.toJSON()}`;
   httpGet(fetchTourneysURL, {}, processTournaments);
 }
@@ -116,4 +120,5 @@ function processBracket(data, tournamentId) {
   recurse(0);
 }
 
-updateTournaments();
+const sync = process.argv[2]
+updateTournaments(sync);
