@@ -33,10 +33,10 @@ function isValidDeckstring(deckstring) {
 
 export function findDeckCode(text, hasNewLine) {
   if (hasNewLine) {
-    const regex = /^AAE[a-zA-Z0-9/+=]+/m;
+    const regex = /^AAE([A-Za-z0-9+=/](?: ?))+/m;
     return text.match(regex)[0];
   } else {
-    const regex = /AAE[a-zA-Z0-9/+=]+/;
+    const regex = /AAE([A-Za-z0-9+=/](?: ?))+/;
     return text.match(regex)[0];
   }
 }
