@@ -125,12 +125,6 @@ class BattlefyEvent extends Component {
   }
 
   render() {
-    let data;
-    try {
-      data = require(`../resources/tournamentData/${this.state.id}.json`);
-    } catch (e) {
-
-    }
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <div className='container mt-3'>
