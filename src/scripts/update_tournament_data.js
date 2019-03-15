@@ -1,7 +1,9 @@
 const https = require('https');
 const fs = require('fs');
+const mongodb = require('mongodb')
 const { encode, decode, FormatType } = require('deckstrings');
 
+const uri = process.env.MONGODB_URI;
 const data = fs.readFileSync('src/resources/cards.collectible.json');
 const jsonData = JSON.parse(data);
 const cardsDict = {}
@@ -71,26 +73,32 @@ function processTournaments(data) {
       const stageId = result['stageIDs'][0];
       if (stageId) {
         const fetchBracketUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
-        httpGet(fetchBracketUrl, {}, data => {processBracket(data, id)});
+        httpGet(fetchBracketUrl, {}, data => {processBracket(id, data)});
       }
     });
   });
 }
 
-function processBracket(data, tournamentId) {
+function writeClasses(tournamentId, data) {
+  mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client) => {
+    if (err) throw err;
+
+    const db = client.db();
+    const heroClasses = db.collection('classes');
+    heroClasses.updateOne({_id: tournamentId},{$set: {classes: data}}, {upsert:true}, (err, res) => {
+      if (err) throw err;
+      client.close();
+    });
+  });
+}
+
+
+function processBracket(tournamentId, data) {
   const playerClasses = {};
   function recurse(i) {
     if (i >= data.length) {
+      writeClasses(tournamentId, playerClasses);
       const json = JSON.stringify(playerClasses);
-      const dir = 'src/resources/tournamentData'; 
-      if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-      }
-      fs.writeFile(`src/resources/tournamentData/${tournamentId}.json`, json, 'utf8', err => {
-        if (err) {
-          console.log('error in writing file '+`../resources/tournamentData/${tournamentId}.json`);
-        }
-      });
       return;
     }
     const id = data[i]['_id']
