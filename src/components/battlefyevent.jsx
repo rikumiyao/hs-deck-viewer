@@ -6,6 +6,7 @@ class BattlefyEvent extends Component {
   constructor() {
     super();
     this.processBracket = this.processBracket.bind(this);
+    this.processClasses = this.processClasses.bind(this);
     this.processSwiss = this.processSwiss.bind(this);
     this.processTop8 = this.processTop8.bind(this);
   }
@@ -13,6 +14,7 @@ class BattlefyEvent extends Component {
   state = {
     name: '',
     players: {},
+    playerClasses: {},
     isLoaded : false,
     error : null,
     input: '',
@@ -56,6 +58,20 @@ class BattlefyEvent extends Component {
               this.setState({players: players});
             });
           });
+      });
+  }
+
+  processClasses(id) {
+    const url = `https://yaytears-backend.herokuapp.com/classes?id=${id}`;
+    return fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        const playerClasses = res[0];
+        if (playerClasses) {
+          this.setState({
+            playerClasses: playerClasses
+          });
+        }
       });
   }
 
@@ -106,6 +122,7 @@ class BattlefyEvent extends Component {
             .then(this.processBracket)
             .then(()=>this.processSwiss(stageId))
             .then(()=>this.processTop8(top8Id))
+            .then(()=>this.processClasses(id))
             .then(()=>this.setState({isLoaded: true}));
         },
         // Note: it's important to handle errors here
@@ -147,11 +164,12 @@ class BattlefyEvent extends Component {
                 .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map(entry => {
                   const name = entry[0];
                   const value = entry[1];
+                  const heroClass = this.state.playerClasses[name]
                   return (
                     <tr key={name}>
                       <td>{value['position']+1}</td>
                       <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
-                      <td>{data ? data[name][0].toUpperCase()+data[name].substring(1).toLowerCase() : ""}</td>
+                      <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
                       <td>{value['wins']+"-"+value['losses']}</td>
                       <td>{value['place']}</td>
                     </tr>);
