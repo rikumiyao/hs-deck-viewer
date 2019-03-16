@@ -121,9 +121,9 @@ class BattlefyEvent extends Component {
             .then(res => res.json())
             .then(this.processBracket)
             .then(()=>this.processSwiss(stageId))
+            .then(()=>this.setState({isLoaded: true}))
             .then(()=>this.processTop8(top8Id))
-            .then(()=>this.processClasses(id))
-            .then(()=>this.setState({isLoaded: true}));
+            .then(()=>this.processClasses(id));
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -161,17 +161,17 @@ class BattlefyEvent extends Component {
             <tbody>
               {
                 Object.entries(this.state.players).filter(entry=>entry[0].toLowerCase().startsWith(this.state.input.toLowerCase()))
-                .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map(entry => {
+                .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map((entry,i) => {
                   const name = entry[0];
                   const value = entry[1];
                   const heroClass = this.state.playerClasses[name]
                   return (
                     <tr key={name}>
-                      <td>{value['position']+1}</td>
+                      <td>{i+1}</td>
                       <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
                       <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
-                      <td>{value['wins']+"-"+value['losses']}</td>
-                      <td>{value['place']}</td>
+                      <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td>
+                      <td>{value['place'] ? value['place'] : ''}</td>
                     </tr>);
                 }
               )}
