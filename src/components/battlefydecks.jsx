@@ -39,6 +39,9 @@ class BattlefyDecks extends Component {
       .then(
         (result) => {
           ['top', 'bottom'].forEach(i=> {
+            if (!result[0][i]['team']) {
+              return;
+            }
             const playerName = result[0][i]['team']['name'];
             if (!player || player===playerName) {
               const decks = result[0][i]['team']['players'][0]['gameAttributes']['deckStrings'];
