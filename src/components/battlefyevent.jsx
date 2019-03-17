@@ -1,5 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { Tabs, Tab } from 'react-bootstrap';
+
+import BattlefyStats from './battlefystats';
 
 class BattlefyEvent extends Component {
 
@@ -141,42 +144,57 @@ class BattlefyEvent extends Component {
     this.setState({input: event.target.value});
   }
 
+  renderTable() {
+    return (
+      <Fragment>
+        <input type="text" className="form-control m-1" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Class</th>
+              <th scope="col">Swiss Score</th>
+              <th scope="col">Top 8 Finish</th>
+            </tr>
+           </thead>
+          <tbody>
+            {
+              Object.entries(this.state.players).filter(entry=>entry[0].toLowerCase().startsWith(this.state.input.toLowerCase()))
+              .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map((entry,i) => {
+                const name = entry[0];
+                const value = entry[1];
+                const heroClass = this.state.playerClasses[name]
+                return (
+                  <tr key={name}>
+                    <td>{i+1}</td>
+                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
+                    <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
+                    <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td>
+                    <td>{value['place'] ? value['place'] : ''}</td>
+                  </tr>);
+              }
+            )}
+          </tbody>
+        </table>
+      </Fragment>
+    );
+  }
+
   render() {
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <div className='container mt-3'>
           <Link className="btn btn-primary" role="button" to={`/battlefy`}>&lt; Back</Link>
           <h2>{this.state.name}</h2>
-          <input type="text" className="form-control m-1" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Class</th>
-                <th scope="col">Swiss Score</th>
-                <th scope="col">Top 8 Finish</th>
-              </tr>
-             </thead>
-            <tbody>
-              {
-                Object.entries(this.state.players).filter(entry=>entry[0].toLowerCase().startsWith(this.state.input.toLowerCase()))
-                .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map((entry,i) => {
-                  const name = entry[0];
-                  const value = entry[1];
-                  const heroClass = this.state.playerClasses[name]
-                  return (
-                    <tr key={name}>
-                      <td>{i+1}</td>
-                      <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
-                      <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
-                      <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td>
-                      <td>{value['place'] ? value['place'] : ''}</td>
-                    </tr>);
-                }
-              )}
-            </tbody>
-          </table>
+          <Tabs defaultActiveKey="decks">
+            <Tab eventKey="decks" title="Decks">
+              {this.renderTable()}
+            </Tab>
+            <Tab eventKey="stats" title="Stats">
+              <BattlefyStats classes={this.state.playerClasses} players={this.state.players}/>
+            </Tab>
+          </Tabs>
         </div>
       );
     } else if (!this.state.error && this.state.isLoaded && !this.state.bracketStarted) {
