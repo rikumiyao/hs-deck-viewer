@@ -69,10 +69,37 @@ class BattlefyStats extends Component {
       }]
     }
 
+    const classesTop8 = Object.entries(players).reduce((acc, entry) => {
+      const name = entry[0];
+      const value = entry[1];
+      if (value['place']) {
+        const className = classes[name];
+        if (acc[className]) {
+          acc[className]++;
+        } else {
+          acc[className] = 1;
+        }
+      }
+      return acc;
+    }, {});
+
+    const optionsTop8 = {
+      title: {
+        text: "Class Distribution (Top 8)"
+      },
+      data: [{
+        type: "bar",
+        dataPoints: classNames.filter(name => classesTop8[name.toLowerCase()]).map(name => { 
+          return {label: name, y: classesTop8[name.toLowerCase()], color: classColors[name.toLowerCase()]}
+        })
+      }]
+    }
+
     return (
       <div>
         <CanvasJSChart options = {optionsTotal}/>
         <CanvasJSChart options = {optionsTopSwiss}/>
+        <CanvasJSChart options = {optionsTop8}/>
       </div>
     );
   }
