@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import { Tabs, Tab } from 'react-bootstrap';
+import BattlefyAggregateStats from './battlefyaggregatestats'
+
 const dateFormat = require('dateformat');
 
 class Battlefy extends Component {
@@ -64,48 +67,61 @@ class Battlefy extends Component {
     this.fetchTourney(date);
   }
 
+  renderTable() {
+    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th colSpan="3" >
+              <button className="btn" id="left" onClick={()=>this.handleDate("left")}><i className="icon-chevron-left"></i></button>
+              {"Week of "+month[this.state.startDate.getMonth()]+" "+this.state.startDate.getDate()}
+              <button className="btn" id="right" onClick={()=>this.handleDate("right")}><i className="icon-chevron-right"></i></button>
+              </th>
+          </tr>
+          <tr>
+            <th scope='col'>Name</th>
+            <th scope='col'>Start Time</th>
+            <th scope='col'>Region</th>
+            <th scope='col'>Deck Links</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.tournaments.map(data=> {
+            const date = new Date(Date.parse(data['startTime']));
+            return (
+              <tr id={data['_id']}>
+                <th scope='row'>
+                  <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['_id']}/info`}>
+                    {data['name']}
+                  </a>
+                </th>
+                <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
+                <td>{data['region']}</td>
+                <td>
+                  <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
+                </td>
+              </tr>
+            )})}
+        </tbody>
+      </table>
+    );
+  }
+
   render() {
     let component;
-    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     if (this.state.isLoaded && !this.state.error) {
       component = (
         <div className='container  mt-2'>
           <h2>Browse Hearthstone Master's Cup Tournaments</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th colSpan="3" >
-                  <button className="btn" id="left" onClick={()=>this.handleDate("left")}><i className="icon-chevron-left"></i></button>
-                  {"Week of "+month[this.state.startDate.getMonth()]+" "+this.state.startDate.getDate()}
-                  <button className="btn" id="right" onClick={()=>this.handleDate("right")}><i className="icon-chevron-right"></i></button>
-                  </th>
-              </tr>
-              <tr>
-                <th scope='col'>Name</th>
-                <th scope='col'>Start Time</th>
-                <th scope='col'>Region</th>
-                <th scope='col'>Deck Links</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.tournaments.map(data=> {
-                const date = new Date(Date.parse(data['startTime']));
-                return (
-                  <tr id={data['_id']}>
-                    <th scope='row'>
-                      <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['_id']}/info`}>
-                        {data['name']}
-                      </a>
-                    </th>
-                    <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
-                    <td>{data['region']}</td>
-                    <td>
-                      <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
-                    </td>
-                  </tr>
-                )})}
-            </tbody>
-          </table>
+          <Tabs defaultActiveKey="events">
+            <Tab eventKey="events" title="Tournaments">
+              {this.renderTable()}
+            </Tab>
+            <Tab eventKey="stats" title="Stats">
+              <BattlefyAggregateStats/>
+            </Tab>
+          </Tabs>
         </div>
       );
     } else if (this.state.error) {
