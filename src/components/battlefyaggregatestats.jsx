@@ -27,7 +27,6 @@ class BattlefyAggregateStats extends Component {
   }
 
   componentDidMount() {
-    const date = new Date();
     const url1 = 'https://api.yaytears.com/stats';
     const url2 = 'https://api.yaytears.com/topSwissStats';
     const url3 = 'https://api.yaytears.com/top8Stats';
@@ -59,22 +58,24 @@ class BattlefyAggregateStats extends Component {
   }
 
   render() {
-    const classNames = ['Warrior', 'Warlock', 'Shaman', 'Rogue', 'Priest', 'Paladin', 'Mage', 'Hunter', 'Druid'];
     const total = this.state.classes.reduce((a,b)=>a+b['total'],0);
     const optionsTotal = {
       title: {
         text: "Class Distribution (Total)"
       },
-      data: [{        
+      data: [{
         type: "bar",
         dataPoints: this.state.classes.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
             y: entry['total'],
+            indexLabel: entry['total']+'('+Math.round(entry['total']/total*100)+'%)',
             color: classColors[entry['_id']]
           }})
       }]
     }
+
+    const totalTopSwiss = this.state.topSwissClasses.reduce((a,b)=>a+b['total'],0);
 
     const optionsTopSwiss = {
       title: {
@@ -86,10 +87,13 @@ class BattlefyAggregateStats extends Component {
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
             y: entry['total'],
+            indexLabel: entry['total']+'('+Math.round(entry['total']/totalTopSwiss*100)+'%)',
             color: classColors[entry['_id']]
           }})
       }]
     }
+
+    const totalTop8 = this.state.top8Classes.reduce((a,b)=>a+b['total'],0);
 
     const optionsTop8 = {
       title: {
@@ -101,6 +105,7 @@ class BattlefyAggregateStats extends Component {
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
             y: entry['total'],
+            indexLabel: entry['total']+'('+Math.round(entry['total']/totalTop8*100)+'%)',
             color: classColors[entry['_id']]
           }})
       }]

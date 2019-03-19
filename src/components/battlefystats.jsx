@@ -32,6 +32,7 @@ class BattlefyStats extends Component {
       }
       return acc;
     },{});
+    const total = Object.values(classesTotal).reduce((a,b)=>a+b, 0);
     const classesTopSwiss = Object.entries(players).reduce((acc, entry) => {
       const name = entry[0];
       const value = entry[1];
@@ -53,10 +54,18 @@ class BattlefyStats extends Component {
       colorSet: 'classes',
       data: [{        
         type: "bar",
-        dataPoints: classNames.map(name => { return {label: name, y: classesTotal[name.toLowerCase()] ? classesTotal[name.toLowerCase()] : 0}})
+        dataPoints: classNames.map(name => {
+          const value = classesTotal[name.toLowerCase()] ? classesTotal[name.toLowerCase()] : 0;
+          return {
+            label: name, 
+            y: value,
+            indexLabel: value+'('+Math.round(value/total*100)+'%)'
+          }
+        })
       }]
     }
 
+    const totalTopSwiss = Object.values(classesTopSwiss).reduce((a,b)=>a+b, 0);
     const optionsTopSwiss = {
       title: {
         text: "Class Distribution (At least 6 wins Swiss)"
@@ -64,7 +73,13 @@ class BattlefyStats extends Component {
       data: [{
         type: "bar",
         dataPoints: classNames.filter(name => classesTopSwiss[name.toLowerCase()]).map(name => { 
-          return {label: name, y: classesTopSwiss[name.toLowerCase()], color: classColors[name.toLowerCase()]}
+          const value = classesTopSwiss[name.toLowerCase()];
+          return {
+            label: name,
+            y: classesTopSwiss[name.toLowerCase()], 
+            color: classColors[name.toLowerCase()],
+            indexLabel: value+'('+Math.round(value/totalTopSwiss*100)+'%)'
+          }
         })
       }]
     }
@@ -83,6 +98,7 @@ class BattlefyStats extends Component {
       return acc;
     }, {});
 
+    const totalTop8 = Object.values(classesTop8).reduce((a,b)=>a+b, 0);
     const optionsTop8 = {
       title: {
         text: "Class Distribution (Top 8)"
@@ -90,7 +106,13 @@ class BattlefyStats extends Component {
       data: [{
         type: "bar",
         dataPoints: classNames.filter(name => classesTop8[name.toLowerCase()]).map(name => { 
-          return {label: name, y: classesTop8[name.toLowerCase()], color: classColors[name.toLowerCase()]}
+          const value = classesTop8[name.toLowerCase()];
+          return {
+            label: name, 
+            y: classesTop8[name.toLowerCase()], 
+            color: classColors[name.toLowerCase()],
+            indexLabel: value+'('+Math.round(value/totalTop8*100)+'%)'
+          }
         })
       }]
     }
