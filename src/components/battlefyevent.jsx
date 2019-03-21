@@ -211,7 +211,7 @@ class BattlefyEvent extends Component {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
     else {
-      return <DocumentTitle title='Loading Players...'></DocumentTitle>;
+      return <DocumentTitle title='Loading Tournament...'></DocumentTitle>;
     }
   }
 }
