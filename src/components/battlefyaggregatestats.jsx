@@ -63,13 +63,18 @@ class BattlefyAggregateStats extends Component {
       title: {
         text: "Class Distribution (Total)"
       },
+      toolTip:{
+        contentFormatter: e=> {
+          return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y} %`
+        }
+      },
       data: [{
         type: "bar",
         dataPoints: this.state.classes.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
-            y: entry['total'],
-            indexLabel: entry['total']+'('+Math.round(entry['total']/total*100)+'%)',
+            y: Math.round(entry['total']/total*100),
+            indexLabel: `${Math.round(entry['total']/total*100)}%`,
             color: classColors[entry['_id']]
           }})
       }]
@@ -81,13 +86,18 @@ class BattlefyAggregateStats extends Component {
       title: {
         text: "Class Distribution (At least 6 wins Swiss)"
       },
+      toolTip:{
+        contentFormatter: e=> {
+          return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y} %`
+        }
+      },
       data: [{        
         type: "bar",
         dataPoints: this.state.topSwissClasses.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
-            y: entry['total'],
-            indexLabel: entry['total']+'('+Math.round(entry['total']/totalTopSwiss*100)+'%)',
+            y: Math.round(entry['total']/totalTopSwiss*100),
+            indexLabel: `${Math.round(entry['total']/totalTopSwiss*100)}%`,
             color: classColors[entry['_id']]
           }})
       }]
@@ -99,13 +109,19 @@ class BattlefyAggregateStats extends Component {
       title: {
         text: "Class Distribution (Top 8)"
       },
+      toolTip:{
+        contentFormatter: e=> {
+          console.log(e);
+          return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y} %`
+        }
+      },
       data: [{        
         type: "bar",
         dataPoints: this.state.top8Classes.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
-            y: entry['total'],
-            indexLabel: entry['total']+'('+Math.round(entry['total']/totalTop8*100)+'%)',
+            y: Math.round(entry['total']/totalTop8*100),
+            indexLabel: `${Math.round(entry['total']/totalTop8*100)}%`,
             color: classColors[entry['_id']]
           }})
       }]

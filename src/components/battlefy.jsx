@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
+import DocumentTitle from 'react-document-title'
+
 import BattlefyAggregateStats from './battlefyaggregatestats'
 
 const dateFormat = require('dateformat');
@@ -99,7 +101,7 @@ class Battlefy extends Component {
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
                 <td>
-                  <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
+                  <Link to={`/battlefy/${data['_id']}`} target='_blank' rel='noopener noreferrer'>Decks</Link>
                 </td>
               </tr>
             )})}
@@ -127,7 +129,11 @@ class Battlefy extends Component {
     } else if (this.state.error) {
       component = <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
-  	return <div>{component}</div>;
+  	return (
+      <DocumentTitle title='Browse Battlefy Tournaments'>
+        <div>{component}</div>
+      </DocumentTitle>
+    );
   }
 }
 

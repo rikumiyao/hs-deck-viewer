@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
+import DocumentTitle from 'react-document-title'
 
 import BattlefyStats from './battlefystats';
 
@@ -65,7 +66,7 @@ class BattlefyEvent extends Component {
   }
 
   processClasses(id) {
-    const url = `https://yaytears-backend.herokuapp.com/classes?id=${id}`;
+    const url = `https://api.yaytears.com/classes?id=${id}`;
     return fetch(url)
       .then(res => res.json())
       .then(res => {
@@ -168,7 +169,7 @@ class BattlefyEvent extends Component {
                 return (
                   <tr key={name}>
                     <td>{i+1}</td>
-                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
+                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`} target='_blank' rel='noopener noreferrer'>{name}</Link></td>
                     <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
                     <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td>
                     <td>{value['place'] ? value['place'] : ''}</td>
@@ -184,26 +185,34 @@ class BattlefyEvent extends Component {
   render() {
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
-        <div className='container mt-3'>
-          <Link className="btn btn-primary" role="button" to={`/battlefy`}>&lt; Back</Link>
-          <h2>{this.state.name}</h2>
-          <Tabs defaultActiveKey="decks">
-            <Tab eventKey="decks" title="Decks">
-              {this.renderTable()}
-            </Tab>
-            <Tab eventKey="stats" title="Stats">
-              <BattlefyStats classes={this.state.playerClasses} players={this.state.players}/>
-            </Tab>
-          </Tabs>
-        </div>
+        <DocumentTitle title={this.state.name}>
+          <div className='container mt-3'>
+            <Link className="btn btn-primary" role="button" to={`/battlefy`}>&lt; Back</Link>
+            <h2>{this.state.name}</h2>
+            <Tabs defaultActiveKey="decks">
+              <Tab eventKey="decks" title="Decks">
+                {this.renderTable()}
+              </Tab>
+              <Tab eventKey="stats" title="Stats">
+                <BattlefyStats classes={this.state.playerClasses} players={this.state.players}/>
+              </Tab>
+            </Tabs>
+          </div>
+        </DocumentTitle>
       );
     } else if (!this.state.error && this.state.isLoaded && !this.state.bracketStarted) {
-      return <h2 style={{'color':'red'}}>The bracket has not yet started</h2>;
+      return (
+        <DocumentTitle title={this.state.name}>
+          <h2 style={{'color':'red'}}>The bracket has not yet started</h2>
+        </DocumentTitle>
+      );
     }
     else if (this.state.error) {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
-    return null;
+    else {
+      return <DocumentTitle title='Loading Players...'></DocumentTitle>;
+    }
   }
 }
 

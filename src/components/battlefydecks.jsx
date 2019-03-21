@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
+import DocumentTitle from 'react-document-title'
 
+import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
 import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
 import Deck from './deck';
@@ -110,22 +111,24 @@ class BattlefyDecks extends Component {
         });
       }
       return (
-        <div className='container mt-2'>
-          <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.location.pathname.split('/')[2]}`}>&lt; Back</Link>
-          <h1>{this.state.player}'s Decks</h1>
-          {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
-          <div className='row'>
-            {decks}
+        <DocumentTitle title={this.state.player}>
+          <div className='container mt-2'>
+            <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.location.pathname.split('/')[2]}`}>&lt; Back</Link>
+            <h1>{this.state.player}'s Decks</h1>
+            {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
+            <div className='row'>
+              {decks}
+            </div>
           </div>
-        </div>
+        </DocumentTitle>
       );
     } else if (!this.state.error && this.state.isLoaded && !this.state.isValid) {
-      return <h2 style={{'color':'red'}}>Unknown error in validating decks</h2>;
+      return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Unknown error in validating decks</h2></DocumentTitle>;
     }
     else if (this.state.error) {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
-    return null;
+    return <DocumentTitle title='Loading Decks...'></DocumentTitle>;
   }
 }
 
