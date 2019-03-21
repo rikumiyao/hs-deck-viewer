@@ -94,14 +94,14 @@ class Battlefy extends Component {
             return (
               <tr id={data['_id']}>
                 <th scope='row'>
-                  <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['_id']}/info`}>
+                  <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['_id']}/info`}  target='_blank' rel='noopener noreferrer'>
                     {data['name']}
                   </a>
                 </th>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
                 <td>
-                  <Link to={`/battlefy/${data['_id']}`} target='_blank' rel='noopener noreferrer'>Decks</Link>
+                  <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
                 </td>
               </tr>
             )})}
