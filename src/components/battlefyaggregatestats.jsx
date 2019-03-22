@@ -73,8 +73,8 @@ class BattlefyAggregateStats extends Component {
         dataPoints: this.state.classes.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
-            y: Math.round(entry['total']/total*100),
-            indexLabel: `${Math.round(entry['total']/total*100)}%`,
+            y: entry['total']/total*100,
+            indexLabel: `${(entry['total']/total*100).toFixed(1)}%`,
             color: classColors[entry['_id']]
           }})
       }]
@@ -96,8 +96,8 @@ class BattlefyAggregateStats extends Component {
         dataPoints: this.state.topSwissClasses.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
-            y: Math.round(entry['total']/totalTopSwiss*100),
-            indexLabel: `${Math.round(entry['total']/totalTopSwiss*100)}%`,
+            y: entry['total']/totalTopSwiss*100,
+            indexLabel: `${(entry['total']/totalTopSwiss*100).toFixed(1)}%`,
             color: classColors[entry['_id']]
           }})
       }]
@@ -120,8 +120,8 @@ class BattlefyAggregateStats extends Component {
         dataPoints: this.state.top8Classes.map(entry => { 
           return {
             label: entry['_id'][0].toUpperCase()+entry['_id'].substring(1).toLowerCase(), 
-            y: Math.round(entry['total']/totalTop8*100),
-            indexLabel: `${Math.round(entry['total']/totalTop8*100)}%`,
+            y: entry['total']/totalTop8*100,
+            indexLabel: `${(entry['total']/totalTop8*100).toFixed(1)}%`,
             color: classColors[entry['_id']]
           }})
       }]
