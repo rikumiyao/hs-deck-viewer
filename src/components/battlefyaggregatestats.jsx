@@ -59,14 +59,15 @@ class BattlefyAggregateStats extends Component {
 
   render() {
     const total = this.state.classes.reduce((a,b)=>a+b['total'],0);
+    const contentFormatter = e=> {
+      return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y.toFixed(1)} %`
+    };
     const optionsTotal = {
       title: {
         text: "Class Distribution (Total)"
       },
       toolTip:{
-        contentFormatter: e=> {
-          return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y} %`
-        }
+        contentFormatter: contentFormatter
       },
       data: [{
         type: "bar",
@@ -87,9 +88,7 @@ class BattlefyAggregateStats extends Component {
         text: "Class Distribution (At least 6 wins Swiss)"
       },
       toolTip:{
-        contentFormatter: e=> {
-          return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y} %`
-        }
+        contentFormatter: contentFormatter
       },
       data: [{        
         type: "bar",
@@ -110,10 +109,7 @@ class BattlefyAggregateStats extends Component {
         text: "Class Distribution (Top 8)"
       },
       toolTip:{
-        contentFormatter: e=> {
-          console.log(e);
-          return `<font color=${e.entries[0].dataPoint.color}>${e.entries[0].dataPoint.label}:</font> ${e.entries[0].dataPoint.y} %`
-        }
+        contentFormatter: contentFormatter
       },
       data: [{        
         type: "bar",
