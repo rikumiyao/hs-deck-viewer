@@ -18,7 +18,8 @@ class Battlefy extends Component {
     startDate : new Date(),
     tournaments : {},
     isLoaded : false,
-    error : null
+    error : null,
+    winners : {}
   }
 
   handleDate(direction, event) {
@@ -42,7 +43,6 @@ class Battlefy extends Component {
       .then(
         (result) => {
           this.setState({
-            isLoaded: true,
             tournaments: result
           });
         },
@@ -56,6 +56,21 @@ class Battlefy extends Component {
           });
         }
       )
+      .then(()=> {
+        const fetchWinnerURL = `https://api.yaytears.com/winners`;
+        return fetch(fetchWinnerURL);
+      })
+      .then(res => res.json())
+      .then((result) => {
+        const winnerDict = {};
+        result.forEach(entry => {
+          winnerDict[entry['_id']] = entry['name'];
+        })
+        this.setState({
+          winners: winnerDict,
+          isLoaded: true
+        })
+      })
   }
 
   componentDidMount() {
@@ -85,6 +100,7 @@ class Battlefy extends Component {
             <th scope='col'>Name</th>
             <th scope='col'>Start Time</th>
             <th scope='col'>Region</th>
+            <th scope='col'>Winner</th>
             <th scope='col'>Deck Links</th>
           </tr>
         </thead>
@@ -100,6 +116,7 @@ class Battlefy extends Component {
                 </th>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
+                <td>{this.state.winners[data['_id']]}</td>
                 <td>
                   <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
                 </td>
