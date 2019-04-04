@@ -169,7 +169,7 @@ class BattlefyEvent extends Component {
                 return (
                   <tr key={name}>
                     <td>{i+1}</td>
-                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`} target='_blank' rel='noopener noreferrer'>{name}</Link></td>
+                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
                     <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
                     <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td>
                     <td>{value['place'] ? value['place'] : ''}</td>

@@ -41,7 +41,7 @@ export function findDeckCode(text, hasNewLine) {
   }
 }
 
-export function validateDecks(deckstrings, mode) {
+export function validateDecks(deckstrings, mode, validateDeck=false) {
   const valid = deckstrings.map(isValidDeckstring);
   if (!valid.every(i=>i)) {
     return [false, valid.map(i=>i? '' : 'Invalid code')];
@@ -50,9 +50,11 @@ export function validateDecks(deckstrings, mode) {
   if (!decks.every(i=>i)) {
     return [false, decks.map(i=>i? '' : 'Invalid code')];
   }
-  const cardsValid = decks.map(validateCards);
-  if (cardsValid.some(i=>i)) {
-    return [false, cardsValid];
+  if (validateDeck) {
+    const cardsValid = decks.map(validateCards);
+    if (cardsValid.some(i=>i)) {
+      return [false, cardsValid];
+    }
   }
   if (mode==='specialist') {
     if (!decks.every(deck=>decks[0].class===deck.class)) {
