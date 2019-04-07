@@ -23,13 +23,37 @@ class BattlefyAggregateStats extends Component {
   state = {
     classes : [],
     topSwissClasses: [],
-    top8Classes : []
+    top8Classes : [],
+    patch : 'Intermission_1'
+  }
+
+
+  constructor() {
+    super();
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    if (this.state.patch!==event.target.value) {
+      this.setState({patch: event.target.value});
+      this.fetchData(event.target.value);
+    }
   }
 
   componentDidMount() {
-    const url1 = 'https://api.yaytears.com/stats';
-    const url2 = 'https://api.yaytears.com/topSwissStats';
-    const url3 = 'https://api.yaytears.com/top8Stats';
+    this.fetchData(this.state.patch);
+  }
+
+  fetchData(patch) {
+    let params = '';
+    if (patch==='Intermission_1') {
+      params = '?start=132';
+    } else if (patch==='Rastakhan') {
+      params = '?start=1&end=131';
+    }
+    const url1 = 'https://api.yaytears.com/stats'+params;
+    const url2 = 'https://api.yaytears.com/topSwissStats'+params;
+    const url3 = 'https://api.yaytears.com/top8Stats'+params;
     return fetch(url1)
       .then(res => res.json())
       .then(res => {
@@ -125,6 +149,10 @@ class BattlefyAggregateStats extends Component {
 
     return (
       <div>
+        <select className="custom-select" value={this.state.patch} onChange={this.handleChange}>
+          <option value='Intermission_1'>Vargoth Meta Pre-rotation</option>
+          <option value='Rastakhan'>Rastakhan</option>
+        </select>
         <CanvasJSChart options = {optionsTotal}/>
         <CanvasJSChart options = {optionsTopSwiss}/>
         <CanvasJSChart options = {optionsTop8}/>
