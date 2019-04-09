@@ -24,7 +24,7 @@ class DeckPanel extends Component {
 
   handleSubmit(codes) {
     codes = codes.map(code => findDeckCode(code, false));
-    const result = validateDecks(codes, this.props.mode);
+    const result = validateDecks(codes, this.props.mode, true);
     if (!result[0]) {
       this.setState({
         validDeck:result[1],

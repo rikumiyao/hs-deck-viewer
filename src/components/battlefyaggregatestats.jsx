@@ -46,8 +46,11 @@ class BattlefyAggregateStats extends Component {
 
   fetchData(patch) {
     let params = '';
+    if (patch==='Shadows') {
+      params = '?start=151';
+    }
     if (patch==='Intermission_1') {
-      params = '?start=132';
+      params = '?start=132&end=150';
     } else if (patch==='Rastakhan') {
       params = '?start=1&end=131';
     }
@@ -150,8 +153,9 @@ class BattlefyAggregateStats extends Component {
     return (
       <div>
         <select className="custom-select" value={this.state.patch} onChange={this.handleChange}>
-          <option value='Intermission_1'>Vargoth Meta Pre-rotation</option>
-          <option value='Rastakhan'>Rastakhan</option>
+          <option value='Shadows'>Rise of Shadows (151-)</option>
+          <option value='Intermission_1'>Vargoth Meta Pre-rotation (132-150)</option>
+          <option value='Rastakhan'>Rastakhan (1-131)</option>
         </select>
         <CanvasJSChart options = {optionsTotal}/>
         <CanvasJSChart options = {optionsTopSwiss}/>

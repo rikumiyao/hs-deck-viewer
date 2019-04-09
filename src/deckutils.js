@@ -84,7 +84,7 @@ function validateCards(deck) {
       return 'Invalid card count: ' + card['name'];
     }
     cardCount += count;
-    if (card['set'] && !['CORE','EXPERT1','UNGORO','ICECROWN','LOOTAPALOOZA','GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN'].includes(card['set'])) {
+    if (card['set'] && !['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN'].includes(card['set'])) {
       return 'Invalid card: ' + card['name'];
     }
     if (card.id==='BOT_914') { //Whizbang
