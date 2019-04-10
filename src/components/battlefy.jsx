@@ -36,7 +36,6 @@ class Battlefy extends Component {
 
   fetchTourney(startDate) {
     const endDate = new Date(startDate);
-    console.log(startDate);
     endDate.setDate(startDate.getDate()+7);
     const fetchTourneyURL = `https://majestic.battlefy.com/hearthstone-masters/tournaments?start=${startDate.toJSON()}&end=${endDate.toJSON()}`
 
