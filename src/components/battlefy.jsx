@@ -23,18 +23,20 @@ class Battlefy extends Component {
   }
 
   handleDate(direction, event) {
-    const offset = direction==='left' ? -7 : 7
+    const offset = direction==='left' ? -7 : 7;
     const startDate = new Date(this.state.startDate);
     startDate.setDate(this.state.startDate.getDate()+offset);
     this.setState({
       startDate: startDate
-    })
+    });
+    this.props.history.replace('/battlefy/week/'+JSON.parse(JSON.stringify(startDate)));
     this.fetchTourney(startDate);
     return;
   }
 
   fetchTourney(startDate) {
     const endDate = new Date(startDate);
+    console.log(startDate);
     endDate.setDate(startDate.getDate()+7);
     const fetchTourneyURL = `https://majestic.battlefy.com/hearthstone-masters/tournaments?start=${startDate.toJSON()}&end=${endDate.toJSON()}`
 
@@ -74,14 +76,25 @@ class Battlefy extends Component {
   }
 
   componentDidMount() {
-    const date = new Date();
-    date.setHours(8-date.getTimezoneOffset()/60)
-    date.setDate(date.getDate()-((date.getDay()+5)%7))
-    date.setMinutes(0);
-    this.setState({
-      'startDate': date,
-    });
-    this.fetchTourney(date);
+    const pathname = this.props.location.pathname;
+    const arr = pathname.split('/');
+    if (arr[2]==='week' && arr.length >= 4 && !isNaN(new Date(arr[3]))) {
+      const date = new Date(arr[3]);
+      this.setState({
+        'startDate': date,
+      });
+      this.fetchTourney(date);
+    }
+    else {
+      const date = new Date();
+      date.setHours(8-date.getTimezoneOffset()/60)
+      date.setDate(date.getDate()-((date.getDay()+5)%7))
+      date.setMinutes(0);
+      this.setState({
+        'startDate': date,
+      });
+      this.fetchTourney(date);
+    }
   }
 
   renderTable() {

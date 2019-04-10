@@ -187,7 +187,7 @@ class BattlefyEvent extends Component {
       return (
         <DocumentTitle title={this.state.name}>
           <div className='container mt-3'>
-            <Link className="btn btn-primary" role="button" to={`/battlefy`}>&lt; Back</Link>
+            <button className="btn btn-primary" onClick={this.props.history.goBack}>&lt; Back</button>
             <h2>{this.state.name}</h2>
             <Tabs defaultActiveKey="decks">
               <Tab eventKey="decks" title="Decks">
@@ -203,7 +203,10 @@ class BattlefyEvent extends Component {
     } else if (!this.state.error && this.state.isLoaded && !this.state.bracketStarted) {
       return (
         <DocumentTitle title={this.state.name}>
-          <h2 style={{'color':'red'}}>The bracket has not yet started</h2>
+          <div className='container mt-3'>
+            <button className="btn btn-primary" onClick={this.props.history.goBack}>&lt; Back</button>
+            <h2 style={{'color':'red'}}>The bracket has not yet started</h2>
+          </div>
         </DocumentTitle>
       );
     }

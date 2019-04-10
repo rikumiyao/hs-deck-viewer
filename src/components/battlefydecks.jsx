@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
 import DocumentTitle from 'react-document-title'
 
 import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
@@ -113,7 +112,7 @@ class BattlefyDecks extends Component {
       return (
         <DocumentTitle title={this.state.player}>
           <div className='container mt-2'>
-            <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.location.pathname.split('/')[2]}`}>&lt; Back</Link>
+            <button className="btn btn-primary" onClick={this.props.history.goBack}>&lt; Back</button>
             <h1>{this.state.player}'s Decks</h1>
             {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
             <div className='row'>
