@@ -194,7 +194,7 @@ class BattlefyEvent extends Component {
   }
 
   render() {
-    const defaultActiveKey = this.props.location.pathname.split('/')[3]==='stats'?'stats' : 'decks';
+    const defaultActiveKey = this.props.location.pathname.split('/')[3]==='stats' ? 'stats' : 'decks';
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <DocumentTitle title={this.state.name}>

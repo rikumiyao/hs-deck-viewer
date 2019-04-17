@@ -23,9 +23,10 @@ class Deck extends Component {
     return (
       <div>
         <CopyToClipboard className='m-2' text={encodeDeck(deck)}
-          onCopy={() => this.setState({copied: true})}>
+          onCopy={() => {console.log('test'); this.setState({copied: true})}}>
           <button>Copy Deck Code</button>
         </CopyToClipboard>
+        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
  
         <span>
           { deck.class ? <img src={this.getClassImg(deck.class, this.props.index)} alt={deck.class}></img> : null }
@@ -39,7 +40,6 @@ class Deck extends Component {
             ) 
           }
         </ul>
-        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
       </div>
     );
   }

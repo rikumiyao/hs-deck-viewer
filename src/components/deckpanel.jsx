@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { withRouter } from "react-router";
 
-import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
+import { validateDecks, compareDecks, findDeckCode, cardDiff, condenseDeckstring, parseDecks } from '../deckutils.js';
 import Deck from './deck';
 import DeckForm from './deckform';
 import DeckOptions from './deckoptions';
@@ -19,7 +21,25 @@ class DeckPanel extends Component {
     decks : [],
     validDeck : [],
     isValid : false,
-    isDiff: true
+    isDiff: true,
+    isValidSpecialist: false,
+    copied: false
+  }
+
+  componentDidMount() {
+    const pathname = this.props.location.pathname;
+    const arr = pathname.split('/');
+    if (this.props.mode==='specialist' && arr[2]) {
+      const codes = decodeURIComponent(arr[2]).split('.');
+      const decks = parseDecks(codes);
+      if (decks.length === 3) {
+        this.setState({
+          decks: decks,
+          isValid: true,
+          isValidSpecialist: true
+        })
+      }
+    }
   }
 
   handleSubmit(codes) {
@@ -31,16 +51,50 @@ class DeckPanel extends Component {
         isValid: false
       });
     } else {
+      const decks = result[1];
+      const validDeck = Array(this.state.numDecks).fill('');
+      let validSpecialist = true;
+      if (this.props.mode==='specialist') {
+        const diffs1 = cardDiff(decks[0],decks[1]);
+        const diffs2 = cardDiff(decks[0], decks[2]);
+        if (diffs1 > 5) {
+          validDeck[1] = `Invalid number of swaps: ${diffs1}`;
+          validSpecialist = false;
+        }
+        if (diffs2 > 5) {
+          validDeck[2] = `Invalid number of swaps: ${diffs2}`;
+          validSpecialist = false;
+        }
+      }
       this.setState({
-        validDeck: Array(this.state.numDecks).fill(''),
-        decks: result[1],
-        isValid: true
+        validDeck: validDeck,
+        decks: decks,
+        isValid: true,
+        isValidSpecialist: validSpecialist
       });
     }
   }
 
   handleToggleDiff(isDiff) {
     this.setState({isDiff: isDiff});
+  }
+
+  decksToURL(decks) {
+    return `https://www.yaytears.com/specialist/${encodeURIComponent(condenseDeckstring(decks))}`;
+  }
+
+  renderSpecialistURL() {
+    const url = this.decksToURL(this.state.decks);
+    return (
+      <div>
+        <CopyToClipboard className='m-2' text={url}
+          onCopy={() => this.setState({copied: true})}>
+          <button>Copy</button>
+        </CopyToClipboard>
+        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
+        <input type="text" className="form-control m-2" id={'listexport'} value={this.decksToURL(this.state.decks)} readOnly />
+      </div>
+    );
   }
 
   render() {
@@ -83,6 +137,7 @@ class DeckPanel extends Component {
       <div>
         <DeckForm mode={this.props.mode} onSubmit={this.handleSubmit} numDecks={this.props.numDecks} validDeck={this.state.validDeck}></DeckForm>
         {this.props.mode==='specialist' && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
+        {this.props.mode==='specialist' && this.state.isValidSpecialist ? this.renderSpecialistURL() : ''}
         <div className='container'>
           <div className='row'>
             {decks}
@@ -93,4 +148,4 @@ class DeckPanel extends Component {
   }
 }
 
-export default DeckPanel;
+export default withRouter(DeckPanel);

@@ -136,6 +136,36 @@ export function encodeDeck(deck) {
   });
 }
 
+//Returns the 'hamming distance' between 2 decks
+export function cardDiff(deck1, deck2) {
+  const cards1 = deck1.cards;
+  const cards2 = deck2.cards;
+  let count = 0;
+  let i = 0;
+  let j = 0;
+  while (i < cards1.length && j < cards2.length) {
+    if (cards1[i][0] === cards2[j][0]) {
+      if (cards1[i][1]>cards2[j][1]) {
+        count += Math.abs(cards1[i][1]-cards2[j][1]);
+      }
+      i++;
+      j++;
+    } else {
+      if (compare(cards1[i], cards2[j]) < 0) {
+        count += cards1[i][1];
+        i++;
+      } else {
+        j++;
+      }
+    }
+  }
+  while (i < cards1.length) {
+    count+=cards1[i][1];
+    i++;
+  }
+  return count;
+}
+
 // Outputs a diff of 2 decks. Must be sorted. Generates list of cards removed from the first deck and list of cards added to the second deck
 export function compareDecks(deck1, deck2) {
   const cards1 = deck1.cards;
@@ -172,4 +202,88 @@ export function compareDecks(deck1, deck2) {
     j++;
   }
   return [result1, result2];
+}
+
+export function condenseDeckstring(decks) {
+  const hero = decks[0].class;
+  const deck1 = encodeDeck(decks[0]);
+  const diffs1 = compareDecks(decks[0],decks[1]);
+  const diffs2 = compareDecks(decks[0],decks[2]);
+  const cards1 = diffs1[0].map(card => [card[0]['dbfId'], card[1]]);
+  const cards2 = diffs1[1].map(card => [card[0]['dbfId'], card[1]]);
+  const cards3 = diffs2[0].map(card => [card[0]['dbfId'], card[1]]);
+  const cards4 = diffs2[1].map(card => [card[0]['dbfId'], card[1]]);
+  const encodePart = cards => encode({
+    'cards': cards,
+    'heroes': [heroDict[hero]],
+    'format': 2
+  }).substring(6)
+  const codes = [deck1, encodePart(cards1),encodePart(cards2),encodePart(cards3),encodePart(cards4)].join('.');
+  return codes;
+}
+
+// Note: only works for Specialist
+export function parseDecks(deckcodes) {
+  if (deckcodes.length !== 5) {
+    return [];
+  }
+  const deck1 = isValidDeckstring(deckcodes[0]);
+  console.log(deck1);
+  const diffs1 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[1]);
+  const diffs2 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[2]);
+  const diffs3 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[3]);
+  const diffs4 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[4]);
+  if (!diffs1 || !diffs2 || !diffs3 || !diffs4) {
+    return [];
+  }
+  const deck2 = combine(deck1, diffs1, diffs2);
+  const deck3 = combine(deck1, diffs3, diffs4);
+  const decks = [deck1, deck2, deck3].map(convertDeck);
+  if (!decks.every(i=>i)) {
+    return [];
+  }
+  const cardsValid = decks.map(validateCards);
+  if (cardsValid.some(i=>i)) {
+    return [];
+  }
+  if (!decks.every(deck=>decks[0].class===deck.class)) {
+    return [];
+  }
+  if (cardDiff(decks[0], decks[1]) > 5 || cardDiff(decks[0], decks[2]) > 5) {
+    return [];
+  }
+  return decks;
+}
+
+function combine(base, removed, added) {
+  const cards = [...base.cards];
+  //console.log(cards);
+  //console.log(removed);
+  removed.cards.forEach((cardArr) => {
+    const id = cardArr[0];
+    const count = cardArr[1];
+    const idx = cards.findIndex(v=>v[0]===id);
+    if (idx !== -1) { // This should be true in normal circumstances
+      if (cards[idx][1]-count===0) {
+        cards.splice(idx, 1);
+      } else {
+        cards[idx] = [id, cards[idx][1]-count];
+      }
+    }
+  });
+  added.cards.forEach((cardArr) => {
+    const id = cardArr[0];
+    const count = cardArr[1];
+    const idx = cards.findIndex(v=>v[0]===id);
+    if (idx !== -1) {
+      cards[idx] = [id, cards[idx][1]+count];
+    } else {
+      cards.push([id, count]);
+    }
+  });
+  return ({
+    'cards': cards,
+    'heroes': base.heroes,
+    'format': base.format
+  });
 }

@@ -22,6 +22,7 @@ class DeckDiff extends Component {
           onCopy={() => this.setState({copied: true})}>
           <button>Copy Deck Code</button>
         </CopyToClipboard>
+        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
         <span>
           { deck.class ? <img src={this.getClassImg(deck.class, this.props.index)} alt={deck.class}></img> : null }
         </span>
