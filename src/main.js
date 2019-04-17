@@ -15,6 +15,7 @@ class Main extends Component {
           <Route path='/specialist' component={Specialist}/>
           <Route path='/conquest' component={Conquest}/>
           <Route path='/battlefy/([0-9a-f]+)/([0-9a-f]+)' component={BattlefyDecks}/>
+          <Route path='/battlefy/week/' component={Battlefy}/>
           <Route path='/battlefy/([0-9a-f]+)' component={BattlefyEvent}/>
           <Route path='/battlefy' component={Battlefy}/>
         </Switch>

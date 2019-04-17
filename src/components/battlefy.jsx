@@ -12,6 +12,7 @@ class Battlefy extends Component {
   constructor() {
     super();
     this.handleDate = this.handleDate.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   state = {
@@ -29,9 +30,19 @@ class Battlefy extends Component {
     this.setState({
       startDate: startDate
     });
-    this.props.history.replace('/battlefy/week/'+JSON.parse(JSON.stringify(startDate)));
+    this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(startDate))}`);
     this.fetchTourney(startDate);
     return;
+  }
+
+  handleTabChange(index, lastIndex, event) {
+    if (index!==lastIndex) {
+      if (index==='stats') {
+        this.props.history.replace('/battlefy/stats');
+      } else if (index==='events') {
+        this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(this.state.startDate))}`);
+      }
+    }
   }
 
   fetchTourney(startDate) {
@@ -140,12 +151,13 @@ class Battlefy extends Component {
   }
 
   render() {
+    const defaultActiveKey = this.props.location.pathname.split('/')[2]==='stats'?'stats' : 'events';
     let component;
     if (this.state.isLoaded && !this.state.error) {
       component = (
         <div className='container  mt-2'>
           <h2>Browse Hearthstone Master's Cup Tournaments</h2>
-          <Tabs defaultActiveKey="events">
+          <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
             <Tab eventKey="events" title="Tournaments">
               {this.renderTable()}
             </Tab>

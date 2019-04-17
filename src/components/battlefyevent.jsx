@@ -9,6 +9,7 @@ class BattlefyEvent extends Component {
 
   constructor() {
     super();
+    this.handleTabChange = this.handleTabChange.bind(this);
     this.processBracket = this.processBracket.bind(this);
     this.processClasses = this.processClasses.bind(this);
     this.processSwiss = this.processSwiss.bind(this);
@@ -24,6 +25,16 @@ class BattlefyEvent extends Component {
     input: '',
     id: '',
     bracketStarted: false
+  }
+
+  handleTabChange(index, lastIndex, event) {
+    if (index!==lastIndex) {
+      if (index==='stats') {
+        this.props.history.replace(`/battlefy/${this.state.id}/stats`);
+      } else if (index==='decks') {
+        this.props.history.replace(`/battlefy/${this.state.id}`);
+      }
+    }
   }
 
   processBracket(data) {
@@ -183,13 +194,14 @@ class BattlefyEvent extends Component {
   }
 
   render() {
+    const defaultActiveKey = this.props.location.pathname.split('/')[3]==='stats'?'stats' : 'events';
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <DocumentTitle title={this.state.name}>
           <div className='container mt-3'>
             <button className="btn btn-primary" onClick={this.props.history.goBack}>&lt; Back</button>
             <h2>{this.state.name}</h2>
-            <Tabs defaultActiveKey="decks">
+            <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
               <Tab eventKey="decks" title="Decks">
                 {this.renderTable()}
               </Tab>
