@@ -47,12 +47,12 @@ class BattlefyAggregateStats extends Component {
   fetchData(patch) {
     let params = '';
     if (patch==='Shadows') {
-      params = '?start=151';
+      params = '?start=151&tournamentId=vegas';
     }
     if (patch==='Intermission_1') {
-      params = '?start=132&end=150';
+      params = '?start=132&end=150&tournamentId=vegas';
     } else if (patch==='Rastakhan') {
-      params = '?start=1&end=131';
+      params = '?start=1&end=131&tournamentId=vegas';
     }
     const url1 = 'https://api.yaytears.com/stats'+params;
     const url2 = 'https://api.yaytears.com/topSwissStats'+params;
