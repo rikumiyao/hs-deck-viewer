@@ -5,6 +5,7 @@ import Conquest from './components/conquest';
 import Battlefy from './components/battlefy';
 import BattlefyEvent from './components/battlefyevent';
 import BattlefyDecks from './components/battlefydecks';
+import DeckViewer from './components/deckviewer';
 
 class Main extends Component {
   render() {
@@ -12,6 +13,7 @@ class Main extends Component {
       <main>
         <Switch>
           <Route exact path='/' component={Conquest}/>
+          <Route path='/specialist/(.+)' component={DeckViewer}/>
           <Route path='/specialist' component={Specialist}/>
           <Route path='/conquest' component={Conquest}/>
           <Route path='/battlefy/([0-9a-f]+)/([0-9a-f]+)' component={BattlefyDecks}/>

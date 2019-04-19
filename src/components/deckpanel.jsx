@@ -72,6 +72,9 @@ class DeckPanel extends Component {
         isValid: true,
         isValidSpecialist: validSpecialist
       });
+      if (validSpecialist && this.props.mode==='specialist') {
+        this.props.history.push(this.decksToURL(decks));
+      }
     }
   }
 
@@ -80,7 +83,7 @@ class DeckPanel extends Component {
   }
 
   decksToURL(decks) {
-    return `https://www.yaytears.com/specialist/${encodeURIComponent(condenseDeckstring(decks))}`;
+    return `/specialist/${encodeURIComponent(condenseDeckstring(decks))}`;
   }
 
   renderSpecialistURL() {
