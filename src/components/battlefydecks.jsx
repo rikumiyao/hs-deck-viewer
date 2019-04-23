@@ -85,7 +85,7 @@ class BattlefyDecks extends Component {
     if (this.state.isLoaded && !this.state.error && this.state.isValid) {
       const isSpecialist = this.state.decks.every(deck=>deck.class===this.state.decks[0].class);
       let decks;
-      if (this.state.isDiff) {
+      if (isSpecialist && this.state.isDiff) {
         decks = [];
         decks.push((
           <div key={'Deck'+(1)} className='col-sm'>
@@ -104,7 +104,7 @@ class BattlefyDecks extends Component {
         decks = this.state.decks.map((deck, i)=> {
           return (
             <div key={'Deck'+(i+1)} className='col-sm'>
-              <Deck index={i+1} deck={deck}></Deck>
+              <Deck index={isSpecialist ? i+1 : 0} deck={deck}></Deck>
             </div>
           );
         });
