@@ -228,7 +228,6 @@ export function parseDecks(deckcodes) {
     return [];
   }
   const deck1 = isValidDeckstring(deckcodes[0]);
-  console.log(deck1);
   const diffs1 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[1]);
   const diffs2 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[2]);
   const diffs3 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[3]);

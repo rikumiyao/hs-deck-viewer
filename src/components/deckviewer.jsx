@@ -95,6 +95,11 @@ class DeckViewer extends Component {
     };
     return (
       <div className='container mt-2'>
+        {this.props.history.location.state && this.props.history.location.state.created ? 
+          <div className='alert alert-success' role='alert'>
+            <strong>Success!</strong>
+          </div> : ''
+        }
         <Link className="btn btn-primary" role="button" to='/specialist'>Create More Decks</Link>
         {this.state.isValidSpecialist ? this.renderSpecialistURL() : ''}
         {this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}

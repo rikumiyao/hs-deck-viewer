@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { withRouter } from "react-router";
 
 import { validateDecks, compareDecks, findDeckCode, cardDiff, condenseDeckstring, parseDecks } from '../deckutils.js';
@@ -30,6 +29,7 @@ class DeckPanel extends Component {
     const pathname = this.props.location.pathname;
     const arr = pathname.split('/');
     if (this.props.mode==='specialist' && arr[2]) {
+      console.log(this.props.history.location.state);
       const codes = decodeURIComponent(arr[2]).split('.');
       const decks = parseDecks(codes);
       if (decks.length === 3) {
@@ -73,7 +73,7 @@ class DeckPanel extends Component {
         isValidSpecialist: validSpecialist
       });
       if (validSpecialist && this.props.mode==='specialist') {
-        this.props.history.push(this.decksToURL(decks));
+        this.props.history.push(this.decksToURL(decks), {created: true});
       }
     }
   }
@@ -84,20 +84,6 @@ class DeckPanel extends Component {
 
   decksToURL(decks) {
     return `/specialist/${encodeURIComponent(condenseDeckstring(decks))}`;
-  }
-
-  renderSpecialistURL() {
-    const url = this.decksToURL(this.state.decks);
-    return (
-      <div>
-        <CopyToClipboard className='m-2' text={url}
-          onCopy={() => this.setState({copied: true})}>
-          <button>Copy</button>
-        </CopyToClipboard>
-        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
-        <input type="text" className="form-control m-2" id={'listexport'} value={this.decksToURL(this.state.decks)} readOnly />
-      </div>
-    );
   }
 
   render() {
@@ -140,7 +126,6 @@ class DeckPanel extends Component {
       <div>
         <DeckForm mode={this.props.mode} onSubmit={this.handleSubmit} numDecks={this.props.numDecks} validDeck={this.state.validDeck}></DeckForm>
         {this.props.mode==='specialist' && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
-        {this.props.mode==='specialist' && this.state.isValidSpecialist ? this.renderSpecialistURL() : ''}
         <div className='container'>
           <div className='row'>
             {decks}
