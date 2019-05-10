@@ -5,7 +5,6 @@ import HttpsRedirect from 'react-https-redirect';
 
 import { BrowserRouter } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render((
 	<HttpsRedirect><BrowserRouter><App/></BrowserRouter></HttpsRedirect>

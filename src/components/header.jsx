@@ -16,6 +16,9 @@ class Header extends Component {
             <Link to="/specialist" className={"nav-item nav-link"+(component==="specialist"?" active":"")}><NavItem>Specialist</NavItem></Link>
             <Link to="/battlefy" className={"nav-item nav-link"+(component==="battlefy"?" active":"")}><NavItem>Battlefy</NavItem></Link>
           </Nav>
+          <button className="btn btn-outline-secondary mr-sm-2" onClick={this.props.onToggle}><i className="icon-cogs"></i>
+            {this.props.isDarkMode ? ' Disable Dark Mode' : ' Enable Dark Mode'}
+          </button>
         </Navbar.Collapse>
       </Navbar>
     );
