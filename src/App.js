@@ -5,8 +5,8 @@ import Cookies from 'js-cookie';
 import Header from './components/header';
 import Main from './main';
 
-const darkMode = process.env.PUBLIC_URL+'./css/darkly/bootstrap.min.css';
-const lightMode = process.env.PUBLIC_URL+'./css/flatly/bootstrap.min.css';
+const darkMode = '/css/darkly/bootstrap.min.css';
+const lightMode = '/css/flatly/bootstrap.min.css';
 
 class App extends Component {
 
