@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import DocumentTitle from 'react-document-title'
+import { Link } from 'react-router-dom';
 
 import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
 import DeckOptions from './deckoptions';
@@ -122,7 +123,7 @@ class GrandmasterDecks extends Component {
       return (
         <DocumentTitle title={this.state.player}>
           <div className='container mt-2'>
-            <button className="btn btn-primary" onClick={this.props.history.goBack}>&lt; Back</button>
+            <Link className="btn btn-primary" role="button" to={`/grandmasters`}>&lt; Back</Link>
             <h1>{this.state.player}'s Decks</h1>
             {this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
             <div className='row'>

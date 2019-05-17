@@ -199,7 +199,7 @@ class BattlefyEvent extends Component {
       return (
         <DocumentTitle title={this.state.name}>
           <div className='container mt-3'>
-            <button className="btn btn-primary" onClick={this.props.history.goBack}>&lt; Back</button>
+            <Link className="btn btn-primary" role="button" to={'/battlefy'}>&lt; Back</Link>
             <h2>{this.state.name}</h2>
             <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
               <Tab eventKey="decks" title="Decks">
