@@ -1,26 +1,22 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import { Tabs, Tab } from 'react-bootstrap';
 import DocumentTitle from 'react-document-title'
-
-import BattlefyAggregateStats from './battlefyaggregatestats'
 
 const dateFormat = require('dateformat');
 
-class Battlefy extends Component {
+class Grandmaster extends Component {
 
   constructor() {
     super();
     this.handleDate = this.handleDate.bind(this);
-    this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleBracket = this.handleBracket.bind(this);
   }
 
   state = {
     startDate : new Date(),
-    tournaments : {},
-    isLoaded : false,
-    error : null,
-    winners : {}
+    isLoaded: false,
+    matches : [],
+    error: false
   }
 
   handleDate(direction, event) {
@@ -30,34 +26,24 @@ class Battlefy extends Component {
     this.setState({
       startDate: startDate
     });
-    this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(startDate))}`);
-    this.fetchTourney(startDate);
+    this.props.history.replace(`/grandmasters/week/${JSON.parse(JSON.stringify(startDate))}`);
+    this.fetchGrandmaster(startDate);
     return;
   }
 
-  handleTabChange(index, lastIndex, event) {
-    if (index!==lastIndex) {
-      if (index==='stats') {
-        this.props.history.replace('/battlefy/stats');
-      } else if (index==='events') {
-        this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(this.state.startDate))}`);
-      }
-    }
-  }
-
-  fetchTourney(startDate) {
+  handleBracket(bracket, startDate) {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate()+7);
-    const fetchTourneyURL = `https://majestic.battlefy.com/hearthstone-masters/tournaments?start=${startDate.toJSON()}&end=${endDate.toJSON()}`
+    const matches = bracket.filter(match => match.startDate > this.state.startDate.getTime() && match.startDate < endDate.getTime());
+    this.setState({matches: matches, isLoaded: true});
+  }
 
+  fetchGrandmaster(startDate) {
+    const fetchTourneyURL = 'https://api.yaytears.com/grandmasters'
     fetch(fetchTourneyURL)
       .then(res => res.json())
       .then(
-        (result) => {
-          this.setState({
-            tournaments: result
-          });
-        },
+        res => this.handleBracket(res, startDate),
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
@@ -67,22 +53,7 @@ class Battlefy extends Component {
             error
           });
         }
-      )
-      .then(()=> {
-        const fetchWinnerURL = `https://api.yaytears.com/winners`;
-        return fetch(fetchWinnerURL);
-      })
-      .then(res => res.json())
-      .then((result) => {
-        const winnerDict = {};
-        result.forEach(entry => {
-          winnerDict[entry['_id']] = entry['name'];
-        })
-        this.setState({
-          winners: winnerDict,
-          isLoaded: true
-        })
-      });
+      );
   }
 
   componentDidMount() {
@@ -93,17 +64,18 @@ class Battlefy extends Component {
       this.setState({
         'startDate': date,
       });
-      this.fetchTourney(date);
+      console.log(date);
+      this.fetchGrandmaster(date);
     }
     else {
       const date = new Date();
       date.setHours(8-date.getTimezoneOffset()/60)
-      date.setDate(date.getDate()-((date.getDay()+5)%7))
+      date.setDate(date.getDate()-((date.getDay()+6)%7))
       date.setMinutes(0);
       this.setState({
         'startDate': date,
       });
-      this.fetchTourney(date);
+      this.fetchGrandmaster(date);
     }
   }
 
@@ -120,29 +92,25 @@ class Battlefy extends Component {
               </th>
           </tr>
           <tr>
-            <th scope='col'>Name</th>
-            <th scope='col'>Start Time</th>
-            <th scope='col'>Region</th>
-            <th scope='col'>Winner</th>
-            <th scope='col'>Deck Links</th>
+            <th scope='col'>Player 1</th>
+            <th scope='col'>Player 1 Class</th>
+            <th scope='col'>Player 2 Class</th>
+            <th scope='col'>Player 2</th>
+            <th scope='col'>Start Date</th>
           </tr>
         </thead>
         <tbody>
-          {this.state.tournaments.map(data=> {
-            const date = new Date(Date.parse(data['startTime']));
+          {this.state.matches.map(data=> {
+            const date = new Date(data.startDate);
+            const class1 = data.competitor_1_class;
+            const class2 = data.competitor_2_class;
             return (
-              <tr id={data['_id']}>
-                <th scope='row'>
-                  <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['_id']}/info`}  target='_blank' rel='noopener noreferrer'>
-                    {data['name']}
-                  </a>
-                </th>
+              <tr id={data['id']}>
+                <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_1}`}>{data.competitor_1}</Link></td>
+                <td>{class1 ? class1[0].toUpperCase()+class1.substring(1).toLowerCase() : ''}</td>
+                <td>{class2 ? class2[0].toUpperCase()+class2.substring(1).toLowerCase() : ''}</td>
+                <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_2}`}>{data.competitor_2}</Link></td>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
-                <td>{data['region']}</td>
-                <td>{this.state.winners[data['_id']]}</td>
-                <td>
-                  <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
-                </td>
               </tr>
             )})}
         </tbody>
@@ -151,20 +119,12 @@ class Battlefy extends Component {
   }
 
   render() {
-    const defaultActiveKey = this.props.location.pathname.split('/')[2]==='stats'?'stats' : 'events';
     let component;
     if (this.state.isLoaded && !this.state.error) {
       component = (
         <div className='container  mt-2'>
           <h2>Browse Hearthstone Master's Cup Tournaments</h2>
-          <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
-            <Tab eventKey="events" title="Tournaments">
-              {this.renderTable()}
-            </Tab>
-            <Tab eventKey="stats" title="Stats">
-              <BattlefyAggregateStats/>
-            </Tab>
-          </Tabs>
+          {this.renderTable()}
         </div>
       );
     } else if (this.state.error) {
@@ -178,4 +138,4 @@ class Battlefy extends Component {
   }
 }
 
-export default Battlefy;
+export default Grandmaster;

@@ -15,6 +15,7 @@ class Header extends Component {
             <Link to="/conquest" className={"nav-item nav-link"+(component==="conquest"?" active":"")}><NavItem>Conquest</NavItem></Link>
             <Link to="/specialist" className={"nav-item nav-link"+(component==="specialist"?" active":"")}><NavItem>Specialist</NavItem></Link>
             <Link to="/battlefy" className={"nav-item nav-link"+(component==="battlefy"?" active":"")}><NavItem>Battlefy</NavItem></Link>
+            <Link to="/grandmasters" className={"nav-item nav-link"+(component==="grandmasters"?" active":"")}><NavItem>Grandmasters</NavItem></Link>
           </Nav>
           <button className="btn btn-outline-secondary mr-sm-2" onClick={this.props.onToggle}><i className="icon-cogs"></i>
             {this.props.isDarkMode ? ' Disable Dark Mode' : ' Enable Dark Mode'}

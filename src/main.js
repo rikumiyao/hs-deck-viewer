@@ -6,6 +6,8 @@ import Battlefy from './components/battlefy';
 import BattlefyEvent from './components/battlefyevent';
 import BattlefyDecks from './components/battlefydecks';
 import DeckViewer from './components/deckviewer';
+import Grandmaster from './components/grandmaster';
+import GrandmasterDecks from './components/grandmasterdecks';
 
 class Main extends Component {
   render() {
@@ -20,6 +22,8 @@ class Main extends Component {
           <Route path='/battlefy/week/' component={Battlefy}/>
           <Route path='/battlefy/([0-9a-f]+)' component={BattlefyEvent}/>
           <Route path='/battlefy' component={Battlefy}/>
+          <Route path='/grandmasters/([0-9]+)' component={GrandmasterDecks}/>
+          <Route path='/grandmasters' component={Grandmaster}/>
         </Switch>
       </main>
     );
