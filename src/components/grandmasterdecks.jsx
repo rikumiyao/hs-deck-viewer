@@ -16,7 +16,8 @@ class GrandmasterDecks extends Component {
     decks : [],
     isLoaded : false,
     error : null,
-    isDiff : true
+    isDiff : true,
+    decksExist: true
   }
 
   constructor() {
@@ -63,7 +64,11 @@ class GrandmasterDecks extends Component {
           this.setState({
             player: player,
           });
-          this.processDecks(decks);
+          if (decks) {
+            this.processDecks(decks);
+          } else {
+            this.setState({decksExist: false});
+          }
           this.setState({isLoaded: true});
         },
         // Note: it's important to handle errors here
@@ -132,6 +137,8 @@ class GrandmasterDecks extends Component {
           </div>
         </DocumentTitle>
       );
+    } else if (!this.state.error && this.state.isLoaded && !this.state.decksExist) {
+      return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Decks Have Not Been Submitted Yet</h2></DocumentTitle>;
     } else if (!this.state.error && this.state.isLoaded && !this.state.isValid) {
       return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Unknown error in validating decks</h2></DocumentTitle>;
     }
