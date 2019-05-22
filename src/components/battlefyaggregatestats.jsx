@@ -46,10 +46,16 @@ class BattlefyAggregateStats extends Component {
 
   fetchData(patch) {
     let params = '';
-    if (patch==='Shadows') {
+    if (patch==='shadows_postnerf') {
+      params = '?start=63&tournamentId=seoul';
+    }
+    if (patch==='shadows_seoul') {
+    	params = '?start=1&end=65&tournamentId=seoul'
+    }
+    if (patch==='shadows') {
       params = '?start=151&tournamentId=vegas';
     }
-    if (patch==='Intermission_1') {
+    if (patch==='intermission_1') {
       params = '?start=132&end=150&tournamentId=vegas';
     } else if (patch==='Rastakhan') {
       params = '?start=1&end=131&tournamentId=vegas';
@@ -153,9 +159,11 @@ class BattlefyAggregateStats extends Component {
     return (
       <div>
         <select className="custom-select" value={this.state.patch} onChange={this.handleChange}>
-          <option value='Shadows'>Rise of Shadows (151-)</option>
-          <option value='Intermission_1'>Vargoth Meta Pre-rotation (132-150)</option>
-          <option value='Rastakhan'>Rastakhan (1-131)</option>
+          <option value='shadows_postnerf'>Rise of Shadows PostNerf (63-)</option>
+          <option value='shadows_seoul'>Rise of Shadows Seoul (1-65)</option>
+          <option value='shadows'>Rise of Shadows Vegas (151-240)</option>
+          <option value='intermission_1'>Vargoth Meta Pre-rotation (132-150)</option>
+          <option value='rastakhan'>Rastakhan (1-131)</option>
         </select>
         <CanvasJSChart options = {optionsTotal}/>
         <CanvasJSChart options = {optionsTopSwiss}/>
