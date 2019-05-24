@@ -24,7 +24,7 @@ class BattlefyAggregateStats extends Component {
     classes : [],
     topSwissClasses: [],
     top8Classes : [],
-    patch : 'Shadows'
+    patch : 'shadows_postnerf'
   }
 
 

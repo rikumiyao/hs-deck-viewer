@@ -113,8 +113,8 @@ class BattlefyEvent extends Component {
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const id = pathname.split('/')[2];
-    this.setState({id: id})
-    const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`
+    this.setState({id: id});
+    const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
     fetch(fetchTourneyURL)
       .then(res => res.json())
       .then(
@@ -149,7 +149,7 @@ class BattlefyEvent extends Component {
             error
           });
         }
-      )
+      );
   }
 
   handleChange(event) {

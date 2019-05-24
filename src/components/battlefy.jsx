@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
-import DocumentTitle from 'react-document-title'
+import DocumentTitle from 'react-document-title';
 
-import BattlefyAggregateStats from './battlefyaggregatestats'
+import BattlefyAggregateStats from './battlefyaggregatestats';
+import BattlefyTop8 from './battlefytop8';
 
 const dateFormat = require('dateformat');
 
@@ -41,6 +42,8 @@ class Battlefy extends Component {
         this.props.history.replace('/battlefy/stats');
       } else if (index==='events') {
         this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(this.state.startDate))}`);
+      } else if (index==='top8') {
+        this.props.history.replace(`/battlefy/top8`);
       }
     }
   }
@@ -151,7 +154,8 @@ class Battlefy extends Component {
   }
 
   render() {
-    const defaultActiveKey = this.props.location.pathname.split('/')[2]==='stats'?'stats' : 'events';
+    const defaultActiveKey = this.props.location.pathname.split('/')[2]==='stats'?'stats' : 
+      this.props.location.pathname.split('/')[2]==='top8' ? 'top8' : 'events';
     let component;
     if (this.state.isLoaded && !this.state.error) {
       component = (
@@ -163,6 +167,9 @@ class Battlefy extends Component {
             </Tab>
             <Tab eventKey="stats" title="Stats">
               <BattlefyAggregateStats/>
+            </Tab>
+            <Tab eventKey="top8" title="Top 8 Count">
+              <BattlefyTop8/>
             </Tab>
           </Tabs>
         </div>
