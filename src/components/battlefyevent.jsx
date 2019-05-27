@@ -14,6 +14,8 @@ class BattlefyEvent extends Component {
     this.processClasses = this.processClasses.bind(this);
     this.processSwiss = this.processSwiss.bind(this);
     this.processTop8 = this.processTop8.bind(this);
+    this.handleSwiss = this.handleSwiss.bind(this);
+    this.handleSingleElim = this.handleSingleElim.bind(this);
   }
 
   state = {
@@ -24,7 +26,8 @@ class BattlefyEvent extends Component {
     error : null,
     input: '',
     id: '',
-    bracketStarted: false
+    bracketStarted: false,
+    isSwiss: true
   }
 
   handleTabChange(index, lastIndex, event) {
@@ -110,6 +113,53 @@ class BattlefyEvent extends Component {
       });
   }
 
+  handleSwiss(id, stageId, top8Id) {
+    const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
+    this.setState({isSwiss:true});
+    fetch(fetchDecksUrl)
+      .then(res => res.json())
+      .then(this.processBracket)
+      .then(()=>this.processSwiss(stageId))
+      .then(()=>this.setState({isLoaded: true}))
+      .then(()=>this.processTop8(top8Id))
+      .then(()=>this.processClasses(id));
+  }
+
+  handleSingleElim(id, stageId) {
+    const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
+    this.setState({isSwiss:false});
+    fetch(fetchDecksUrl)
+      .then(res => res.json())
+      .then(this.processBracket)
+      .then(()=>this.processSingleElim(stageId))
+      .then(()=>this.setState({isLoaded: true}))
+      .then(()=>this.processClasses(id));
+  }
+
+
+  processSingleElim(stageId) {
+    const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
+    return fetch(metaDataUrl)
+      .then(res => res.json())
+      .then(res => res["bracket"]["currentRoundNumber"]+1 || res["currentRound"])
+      .then(roundNum => {
+        const standingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/standings`;
+        return fetch(standingsUrl)
+          .then(res => res.json())
+          .then(res => {
+            console.log(res);
+            res.forEach( (row, idx) => {
+              const name = row["team"]["name"];
+              const place = row["place"];
+              const players = this.state.players;
+              players[name]["place"] = place;
+              players[name]["position"] = place ? place : -1;
+              this.setState({players: players});
+            });
+          });
+      });
+  }
+
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const id = pathname.split('/')[2];
@@ -131,14 +181,16 @@ class BattlefyEvent extends Component {
             });
             return;
           }
-          const fetchBracketUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
+          const fetchBracketUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
           fetch(fetchBracketUrl)
             .then(res => res.json())
-            .then(this.processBracket)
-            .then(()=>this.processSwiss(stageId))
-            .then(()=>this.setState({isLoaded: true}))
-            .then(()=>this.processTop8(top8Id))
-            .then(()=>this.processClasses(id));
+            .then(res=>{
+              if (res['bracket']['type']==='swiss'||res['bracket']['type']==='custom') {
+                this.handleSwiss(id, stageId, top8Id);
+              } else {
+                this.handleSingleElim(id, stageId);
+              }
+            })
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -166,8 +218,8 @@ class BattlefyEvent extends Component {
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Class</th>
-              <th scope="col">Swiss Score</th>
-              <th scope="col">Top 8 Finish</th>
+              {this.state.isSwiss ? <th scope="col"> Swiss Score</th> : ''}
+              <th scope="col">{this.state.isSwiss ? 'Top 8 Finish' : 'Place'}</th>
             </tr>
            </thead>
           <tbody>
@@ -182,7 +234,7 @@ class BattlefyEvent extends Component {
                     <td>{i+1}</td>
                     <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
                     <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
-                    <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td>
+                    {this.state.isSwiss ? <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td> : ''}
                     <td>{value['place'] ? value['place'] : ''}</td>
                   </tr>);
               }
