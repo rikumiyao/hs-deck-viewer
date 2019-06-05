@@ -24,7 +24,7 @@ class BattlefyAggregateStats extends Component {
     classes : [],
     topSwissClasses: [],
     top8Classes : [],
-    patch : 'shadows_postnerf'
+    patch : 'shadows_postbuff'
   }
 
 
@@ -46,8 +46,11 @@ class BattlefyAggregateStats extends Component {
 
   fetchData(patch) {
     let params = '';
+    if (patch==='shadows_postbuff') {
+      params = '?start=133&tournamentId=seoul';
+    }
     if (patch==='shadows_postnerf') {
-      params = '?start=63&tournamentId=seoul';
+      params = '?start=63&end=132&tournamentId=seoul';
     }
     if (patch==='shadows_seoul') {
     	params = '?start=1&end=65&tournamentId=seoul'
@@ -159,7 +162,8 @@ class BattlefyAggregateStats extends Component {
     return (
       <div>
         <select className="custom-select" value={this.state.patch} onChange={this.handleChange}>
-          <option value='shadows_postnerf'>Rise of Shadows PostNerf (63-)</option>
+          <option value='shadows_postbuff'>Rise of Shadows PostBuff (133-)</option>
+          <option value='shadows_postnerf'>Rise of Shadows PostNerf (63-120)</option>
           <option value='shadows_seoul'>Rise of Shadows Seoul (1-65)</option>
           <option value='shadows'>Rise of Shadows Vegas (151-240)</option>
           <option value='intermission_1'>Vargoth Meta Pre-rotation (132-150)</option>
