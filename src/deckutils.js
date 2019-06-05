@@ -87,7 +87,7 @@ function validateCards(deck) {
     if (card['set'] && !['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN'].includes(card['set'])) {
       return 'Invalid card: ' + card['name'];
     }
-    if (card.id==='BOT_914') { //Whizbang
+    if (card.id==='BOT_914' || card.id==='DAL_800') { //Whizbang and Zayle
       return 'Invalid card: ' + card['name'];
     }
     return null;
