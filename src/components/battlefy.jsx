@@ -21,7 +21,7 @@ class Battlefy extends Component {
     tournaments : {},
     isLoaded : false,
     error : null,
-    winners : {}
+    qualified : {}
   }
 
   handleDate(direction, event) {
@@ -72,17 +72,17 @@ class Battlefy extends Component {
         }
       )
       .then(()=> {
-        const fetchWinnerURL = `https://api.yaytears.com/winners`;
-        return fetch(fetchWinnerURL);
+        const fetchQualifiedURL = `https://api.yaytears.com/qualified`;
+        return fetch(fetchQualifiedURL);
       })
       .then(res => res.json())
       .then((result) => {
-        const winnerDict = {};
+        const qualifiedDict = {};
         result.forEach(entry => {
-          winnerDict[entry['_id']] = entry['name'];
+          qualifiedDict[entry['_id']] = entry['qualified'];
         })
         this.setState({
-          winners: winnerDict,
+          qualified: qualifiedDict,
           isLoaded: true
         })
       });
@@ -126,7 +126,7 @@ class Battlefy extends Component {
             <th scope='col'>Name</th>
             <th scope='col'>Start Time</th>
             <th scope='col'>Region</th>
-            <th scope='col'>Winner</th>
+            <th scope='col'>Qualified</th>
             <th scope='col'>Deck Links</th>
           </tr>
         </thead>
@@ -142,7 +142,7 @@ class Battlefy extends Component {
                 </th>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
-                <td>{this.state.winners[data['_id']]}</td>
+                <td>{ this.state.qualified[data['_id']] ? this.state.qualified[data['_id']].join(' ') : ''}</td>
                 <td>
                   <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
                 </td>
