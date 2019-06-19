@@ -46,7 +46,7 @@ class BattlefyEvent extends Component {
       ['top', 'bottom'].forEach(pos=> {
         const team = row[pos];
         if (team['team']) {
-          players[team['team']['name']] = {matchId : row['_id']}
+          players[team['team']['name']] = {matchId : row['_id'], matchposition : pos}
         }
       })
     });
@@ -147,7 +147,6 @@ class BattlefyEvent extends Component {
         return fetch(standingsUrl)
           .then(res => res.json())
           .then(res => {
-            console.log(res);
             res.forEach( (row, idx) => {
               const name = row["team"]["name"];
               const place = row["place"];
@@ -232,7 +231,7 @@ class BattlefyEvent extends Component {
                 return (
                   <tr key={name}>
                     <td>{i+1}</td>
-                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}`}>{name}</Link></td>
+                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}&position=${value['matchposition']}`}>{name}</Link></td>
                     <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
                     {this.state.isSwiss ? <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td> : ''}
                     <td>{value['place'] ? value['place'] : ''}</td>

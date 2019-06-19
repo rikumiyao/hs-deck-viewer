@@ -31,28 +31,23 @@ class BattlefyDecks extends Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
+    const tourneyId = pathname.split('/')[2];
     const id = pathname.split('/')[3];
     const values = queryString.parse(this.props.location.search);
+    const position = values['position'];
     const player = values['player'];
-    const fetchURL = `https://dtmwra1jsgyb0.cloudfront.net/matches/${id}?extend%5Btop.team%5D%5Bplayers%5D%5Buser%5D=true&extend%5Bbottom.team%5D%5Bplayers%5D%5Buser%5D=true`;
+    const fetchURL = `https://majestic.battlefy.com/tournaments/${tourneyId}/matches/${id}/deckstrings`;
     fetch(fetchURL)
       .then(res => res.json())
       .then(
         (result) => {
-          ['top', 'bottom'].forEach(i=> {
-            if (!result[0][i]['team']) {
-              return;
-            }
-            const playerName = result[0][i]['team']['name'];
-            if (!player || player===playerName) {
-              const decks = result[0][i]['team']['players'][0]['gameAttributes']['deckStrings'];
-              this.setState({
-                player: playerName
-              })
-              this.processDecks(decks);
-              return;
-            }
-          });
+          const decks = result[position];
+          if (decks) {
+            this.setState({
+              player: player
+            });
+            this.processDecks(decks);
+          }
           this.setState({isLoaded: true});
         },
         // Note: it's important to handle errors here
