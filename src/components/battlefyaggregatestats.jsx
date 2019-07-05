@@ -24,7 +24,7 @@ class BattlefyAggregateStats extends Component {
     classes : [],
     topSwissClasses: [],
     top8Classes : [],
-    patch : 'shadows_postbuff'
+    patch : 'shadows_hof'
   }
 
 
@@ -46,6 +46,9 @@ class BattlefyAggregateStats extends Component {
 
   fetchData(patch) {
     let params = '';
+    if (patch==='shadows_hof') {
+      params = '?start=1&tournamentId=bucharest';
+    }
     if (patch==='shadows_postbuff') {
       params = '?start=133&tournamentId=seoul';
     }
@@ -162,12 +165,13 @@ class BattlefyAggregateStats extends Component {
     return (
       <div>
         <select className="custom-select" value={this.state.patch} onChange={this.handleChange}>
-          <option value='shadows_postbuff'>Rise of Shadows PostBuff (133-)</option>
-          <option value='shadows_postnerf'>Rise of Shadows PostNerf (63-120)</option>
-          <option value='shadows_seoul'>Rise of Shadows Seoul (1-65)</option>
-          <option value='shadows'>Rise of Shadows Vegas (151-240)</option>
-          <option value='intermission_1'>Vargoth Meta Pre-rotation (132-150)</option>
-          <option value='rastakhan'>Rastakhan (1-131)</option>
+          <option value='shadows_hof'>Rise of Shadows Hall of Fame</option>
+          <option value='shadows_postbuff'>Rise of Shadows PostBuff</option>
+          <option value='shadows_postnerf'>Rise of Shadows PostNerf</option>
+          <option value='shadows_seoul'>Rise of Shadows Seoul</option>
+          <option value='shadows'>Rise of Shadows Vegas</option>
+          <option value='intermission_1'>Vargoth Meta Pre-rotation</option>
+          <option value='rastakhan'>Rastakhan</option>
         </select>
         <CanvasJSChart options = {optionsTotal}/>
         <CanvasJSChart options = {optionsTopSwiss}/>

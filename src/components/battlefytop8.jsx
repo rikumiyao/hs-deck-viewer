@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title'
 class BattlefyTop8 extends Component {
 
   state = {
-    eventLocation: 'seoul',
+    eventLocation: 'bucharest',
     players: [],
     isLoaded : false,
     error : null

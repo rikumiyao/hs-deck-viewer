@@ -126,6 +126,7 @@ class Battlefy extends Component {
             <th scope='col'>Name</th>
             <th scope='col'>Start Time</th>
             <th scope='col'>Region</th>
+            <th scope='col'>Format</th>
             <th scope='col'>Qualified</th>
             <th scope='col'>Deck Links</th>
           </tr>
@@ -142,6 +143,7 @@ class Battlefy extends Component {
                 </th>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
+                <td>{date >= new Date('6-4-2019') && (date.getUTCHours()===12 || date.getUTCHours()===4 || date.getUTCHours()===20) ? 'Single-elim' : 'Swiss'}</td>
                 <td>{ this.state.qualified[data['_id']] ? this.state.qualified[data['_id']].join(' ') : ''}</td>
                 <td>
                   <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
