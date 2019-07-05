@@ -70,7 +70,7 @@ class Grandmaster extends Component {
     else {
       const date = new Date();
       date.setHours(8-date.getTimezoneOffset()/60)
-      date.setDate(date.getDate()-((date.getDay()+6)%7))
+      date.setDate(date.getDate()-((date.getDay()+4)%7))
       date.setMinutes(0);
       this.setState({
         'startDate': date,
@@ -94,6 +94,7 @@ class Grandmaster extends Component {
           <tr>
             <th scope='col'>Player 1</th>
             <th scope='col'>Player 1 Class</th>
+            <th scope='col'>Score</th>
             <th scope='col'>Player 2 Class</th>
             <th scope='col'>Player 2</th>
             <th scope='col'>Start Date</th>
@@ -108,6 +109,7 @@ class Grandmaster extends Component {
               <tr id={data['id']}>
                 <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_1}`}>{data.competitor_1}</Link></td>
                 <td>{class1 ? class1[0].toUpperCase()+class1.substring(1).toLowerCase() : ''}</td>
+                <td>{`${data.score[0]}-${data.score[1]}`}</td>
                 <td>{class2 ? class2[0].toUpperCase()+class2.substring(1).toLowerCase() : ''}</td>
                 <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_2}`}>{data.competitor_2}</Link></td>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
