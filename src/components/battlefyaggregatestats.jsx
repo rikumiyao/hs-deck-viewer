@@ -24,7 +24,7 @@ class BattlefyAggregateStats extends Component {
     classes : [],
     topSwissClasses: [],
     top8Classes : [],
-    patch : 'shadows_hof'
+    patch : 'uldum'
   }
 
 
@@ -46,8 +46,11 @@ class BattlefyAggregateStats extends Component {
 
   fetchData(patch) {
     let params = '';
+    if (patch==='uldum') {
+      params = '?start=76&tournamentId=bucharest';
+    }
     if (patch==='shadows_hof') {
-      params = '?start=1&tournamentId=bucharest';
+      params = '?start=1&end=75&tournamentId=bucharest';
     }
     if (patch==='shadows_postbuff') {
       params = '?start=133&tournamentId=seoul';
@@ -63,7 +66,8 @@ class BattlefyAggregateStats extends Component {
     }
     if (patch==='intermission_1') {
       params = '?start=132&end=150&tournamentId=vegas';
-    } else if (patch==='Rastakhan') {
+    }
+    if (patch==='Rastakhan') {
       params = '?start=1&end=131&tournamentId=vegas';
     }
     const url1 = 'https://api.yaytears.com/stats'+params;
@@ -165,6 +169,7 @@ class BattlefyAggregateStats extends Component {
     return (
       <div>
         <select className="custom-select" value={this.state.patch} onChange={this.handleChange}>
+          <option value='uldum'>Saviors of Uldum</option>
           <option value='shadows_hof'>Rise of Shadows Hall of Fame</option>
           <option value='shadows_postbuff'>Rise of Shadows PostBuff</option>
           <option value='shadows_postnerf'>Rise of Shadows PostNerf</option>
