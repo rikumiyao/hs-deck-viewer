@@ -93,9 +93,7 @@ class Grandmaster extends Component {
           </tr>
           <tr>
             <th scope='col'>Player 1</th>
-            <th scope='col'>Player 1 Class</th>
             <th scope='col'>Score</th>
-            <th scope='col'>Player 2 Class</th>
             <th scope='col'>Player 2</th>
             <th scope='col'>Start Date</th>
           </tr>
@@ -103,14 +101,10 @@ class Grandmaster extends Component {
         <tbody>
           {this.state.matches.map(data=> {
             const date = new Date(data.startDate);
-            const class1 = data.competitor_1_class;
-            const class2 = data.competitor_2_class;
             return (
               <tr id={data['id']}>
                 <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_1}`}>{data.competitor_1}</Link></td>
-                <td>{class1 ? class1[0].toUpperCase()+class1.substring(1).toLowerCase() : ''}</td>
                 <td>{`${data.score[0]}-${data.score[1]}`}</td>
-                <td>{class2 ? class2[0].toUpperCase()+class2.substring(1).toLowerCase() : ''}</td>
                 <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_2}`}>{data.competitor_2}</Link></td>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
               </tr>
@@ -125,7 +119,7 @@ class Grandmaster extends Component {
     if (this.state.isLoaded && !this.state.error) {
       component = (
         <div className='container  mt-2'>
-          <h2>Browse Hearthstone Master's Cup Tournaments</h2>
+          <h2>Browse Hearthstone Grandmaster Matches</h2>
           {this.renderTable()}
         </div>
       );
@@ -133,7 +127,7 @@ class Grandmaster extends Component {
       component = <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
   	return (
-      <DocumentTitle title='Browse Battlefy Tournaments'>
+      <DocumentTitle title='Browse Grandmaster Matches'>
         <div>{component}</div>
       </DocumentTitle>
     );

@@ -16,7 +16,7 @@ class GrandmasterDecks extends Component {
     decks : [],
     isLoaded : false,
     error : null,
-    isDiff : true,
+    isDiff : false,
     decksExist: true
   }
 
@@ -85,7 +85,7 @@ class GrandmasterDecks extends Component {
 
   processDecks(codes) {
     codes = codes.map(code => findDeckCode(code, true));
-    const result = validateDecks(codes, false);
+    const result = validateDecks(codes, 'conquest');
     if (!result[0]) {
       this.setState({
         isValid: false
@@ -120,7 +120,7 @@ class GrandmasterDecks extends Component {
         decks = this.state.decks.map((deck, i)=> {
           return (
             <div key={'Deck'+(i+1)} className='col-sm'>
-              <Deck index={i+1} deck={deck}></Deck>
+              <Deck index={0} deck={deck}></Deck>
             </div>
           );
         });
@@ -130,7 +130,6 @@ class GrandmasterDecks extends Component {
           <div className='container mt-2'>
             <Link className="btn btn-primary" role="button" to={`/grandmasters`}>&lt; Back</Link>
             <h1>{this.state.player}'s Decks</h1>
-            {this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
             <div className='row'>
               {decks}
             </div>
