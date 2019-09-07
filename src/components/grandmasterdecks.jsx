@@ -3,7 +3,6 @@ import DocumentTitle from 'react-document-title'
 import { Link } from 'react-router-dom';
 
 import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
-import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
 import Deck from './deck';
 
