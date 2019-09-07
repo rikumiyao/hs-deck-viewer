@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "dateformat": "^3.0.3",
     "deckstrings": "^2.1.0",
+    "express": "^4.17.1",
     "file-loader": "^3.0.1",
     "fs": "0.0.1-security",
     "jquery": "^3.4.1",
@@ -29,7 +30,7 @@
   },
   "scripts": {
     "dev": "react-scripts start",
-    "start": "serve -s build",
+    "start": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
