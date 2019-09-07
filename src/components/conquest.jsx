@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import DeckPanel from './deckpanel';
-import DocumentTitle from 'react-document-title'
+import DocumentTitle from 'react-document-title';
 class Conquest extends Component {
   render() {
     return (
