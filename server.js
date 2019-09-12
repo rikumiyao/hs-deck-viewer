@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const path = require('path');
 const DEFAULT_TITLE = 'YAYtears';
-const DEFAULT_DESCRIPTION = "Expolore Hearthstone Tournament Decklists";
+const DEFAULT_DESCRIPTION = "Explore Hearthstone Tournament Decklists";
 const DEFAULT_IMAGE = 'https://d33jl3tgfli0fm.cloudfront.net/helix/images/games/hearthstone-heroes-of-warcraft/icon.png';
 
 function setMeta(title, description, image) {
