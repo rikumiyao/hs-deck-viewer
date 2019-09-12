@@ -103,9 +103,9 @@ class Grandmaster extends Component {
             const date = new Date(data.startDate);
             return (
               <tr id={data['id']}>
-                <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_1}`}>{data.competitor_1}</Link></td>
+                <td>{data.competitor_1_decks.length!==0 ? <Link to={`/grandmasters/${data['id']}?player=${data.competitor_1}`}>{data.competitor_1}</Link> : data.competitor_1}</td>
                 <td>{`${data.score[0]}-${data.score[1]}`}</td>
-                <td><Link to={`/grandmasters/${data['id']}?player=${data.competitor_2}`}>{data.competitor_2}</Link></td>
+                <td>{data.competitor_2_decks.length!==0 ? <Link to={`/grandmasters/${data['id']}?player=${data.competitor_2}`}>{data.competitor_2}</Link> : data.competitor_2}</td>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
               </tr>
             )})}
