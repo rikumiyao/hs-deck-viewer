@@ -28,6 +28,7 @@ function createRoute(pathspec, setMetaFunc) {
         return console.log(err);
       }
       metaTags = setMetaFunc(request);
+      data = data.replace(/\$OG_URL/g, 'yaytears.com' + request.originalUrl)
       data = data.replace(/\$OG_TITLE/g, metaTags['title']);
       data = data.replace(/\$OG_DESCRIPTION/g, metaTags['description']);
       result = data.replace(/\$OG_IMAGE/g, metaTags['image']);
