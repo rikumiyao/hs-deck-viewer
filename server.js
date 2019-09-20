@@ -40,9 +40,7 @@ function createRoute(pathspec, setMetaFunc) {
 createRoute(/\/specialist\/(.+)/, setMeta(DEFAULT_TITLE, 'View Specialist Lineups', DEFAULT_IMAGE));
 createRoute('/specialist', setMeta(DEFAULT_TITLE, 'Create Specialist Lineups', DEFAULT_IMAGE));
 createRoute('/conquest', setMeta(DEFAULT_TITLE, 'Create Conquest Lineups', DEFAULT_IMAGE));
-createRoute(/\/battlefy\/([0-9a-f]+)\/([0-9a-f]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Masters Cup Decks', DEFAULT_IMAGE));
-createRoute(/\/battlefy\/([0-9a-f]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Masters Cup Decks', DEFAULT_IMAGE));
-createRoute('/battlefy', setMeta(DEFAULT_TITLE, 'Hearthstone Masters Cup Decks', DEFAULT_IMAGE));
+createRoute(/\/battlefy(\/.*)?/, setMeta(DEFAULT_TITLE, 'Hearthstone Masters Cup Decks', DEFAULT_IMAGE));
 createRoute(/\/grandmasters\/([0-9]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/grandmasters', setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/', setMeta(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE));
