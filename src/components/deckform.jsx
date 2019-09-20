@@ -24,8 +24,9 @@ class DeckForm extends Component {
           [...Array(this.props.numDecks).keys()].map((unused, i) => {
             return (
               <div className='form-group' key={'input'+(i+1)}>
-                <label>Deck code {i+1}</label>
-                <input type="text" className="form-control" id={'deck'+(i+1)} onChange={(e) => this.handleChange(i, e)} placeholder={'Enter Deck Code ' + (i+1)}/>
+                <label>Deck code {i+1} {i===3?' (Optional)' : ''}</label>
+                <input type="text" className="form-control" id={'deck'+(i+1)} onChange={(e) =>
+                 this.handleChange(i, e)} placeholder={'Enter Deck Code ' + (i+1)}/>
                 {this.props.validDeck[i] ? <div style={{color:'red'}}>{this.props.validDeck[i]}</div> : null}
               </div>
             )
