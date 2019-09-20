@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import DocumentTitle from 'react-document-title';
 
-import BattlefyAggregateStats from './battlefyaggregatestats';
 import BattlefyTop8 from './battlefytop8';
 
 const dateFormat = require('dateformat');
@@ -38,9 +37,7 @@ class Battlefy extends Component {
 
   handleTabChange(index, lastIndex, event) {
     if (index!==lastIndex) {
-      if (index==='stats') {
-        this.props.history.replace('/battlefy/stats');
-      } else if (index==='events') {
+      if (index==='events') {
         this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(this.state.startDate))}`);
       } else if (index==='top8') {
         this.props.history.replace(`/battlefy/top8`);
@@ -126,7 +123,6 @@ class Battlefy extends Component {
             <th scope='col'>Name</th>
             <th scope='col'>Start Time</th>
             <th scope='col'>Region</th>
-            <th scope='col'>Format</th>
             <th scope='col'>Qualified</th>
             <th scope='col'>Deck Links</th>
           </tr>
@@ -143,7 +139,6 @@ class Battlefy extends Component {
                 </th>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
-                <td>{date >= new Date(2019, 6, 4) && (date.getUTCHours()===12 || date.getUTCHours()===4 || date.getUTCHours()===20) ? 'Single-elim' : 'Swiss'}</td>
                 <td>{ this.state.qualified[data['_id']] ? this.state.qualified[data['_id']].join(' ') : ''}</td>
                 <td>
                   <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
@@ -166,9 +161,6 @@ class Battlefy extends Component {
           <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
             <Tab eventKey="events" title="Tournaments">
               {this.renderTable()}
-            </Tab>
-            <Tab eventKey="stats" title="Stats">
-              <BattlefyAggregateStats/>
             </Tab>
             <Tab eventKey="top8" title="Top 8 Count">
               <BattlefyTop8/>

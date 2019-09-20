@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Tabs, Tab } from 'react-bootstrap';
 import DocumentTitle from 'react-document-title'
-
-import BattlefyStats from './battlefystats';
 
 class BattlefyEvent extends Component {
 
@@ -245,21 +242,13 @@ class BattlefyEvent extends Component {
   }
 
   render() {
-    const defaultActiveKey = this.props.location.pathname.split('/')[3]==='stats' ? 'stats' : 'decks';
     if (this.state.isLoaded && !this.state.error && this.state.bracketStarted) {
       return (
         <DocumentTitle title={this.state.name}>
           <div className='container mt-3'>
             <Link className="btn btn-primary" role="button" to={'/battlefy'}>&lt; Back</Link>
             <h2>{this.state.name}</h2>
-            <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
-              <Tab eventKey="decks" title="Decks">
-                {this.renderTable()}
-              </Tab>
-              <Tab eventKey="stats" title="Stats">
-                <BattlefyStats classes={this.state.playerClasses} players={this.state.players}/>
-              </Tab>
-            </Tabs>
+            {this.renderTable()}
           </div>
         </DocumentTitle>
       );
