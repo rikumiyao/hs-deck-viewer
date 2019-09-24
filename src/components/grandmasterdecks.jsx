@@ -33,7 +33,7 @@ class GrandmasterDecks extends Component {
     const id = pathname.split('/')[2];
     const values = queryString.parse(this.props.location.search);
     const player = values['player'];
-    const fetchURL = 'https://api.yaytears.com/grandmasters'
+    const fetchURL = 'https://yaytears.com/api/grandmasters'
     fetch(fetchURL)
       .then(res => res.json())
       .then(

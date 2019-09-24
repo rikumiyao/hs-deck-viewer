@@ -11,7 +11,7 @@ class BattlefyTop8 extends Component {
   }
 
   componentDidMount() {
-    const fetchTop8URL = `https://api.yaytears.com/top8Count?region=${this.state.eventLocation}`;
+    const fetchTop8URL = `https://yaytears.com/api/top8Count?region=${this.state.eventLocation}`;
     fetch(fetchTop8URL)
       .then(res => res.json())
       .then(
