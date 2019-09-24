@@ -1,3 +1,4 @@
+const backend = require('./backend/index.js');
 const express = require('express');
 const fs = require('fs');
 
@@ -44,6 +45,8 @@ createRoute(/\/battlefy(\/.*)?/, setMeta(DEFAULT_TITLE, 'Hearthstone Masters Cup
 createRoute(/\/grandmasters\/([0-9]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/grandmasters', setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/', setMeta(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE));
+
+backend.routes(app);
 
 app.use(express.static(path.resolve(__dirname, './build')));
 
