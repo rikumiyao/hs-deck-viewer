@@ -10,7 +10,6 @@
     "express": "^4.17.1",
     "file-loader": "^3.0.1",
     "fs": "0.0.1-security",
-    "fsevents": "1.2.9",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
     "mdbreact": "^4.11.0",
