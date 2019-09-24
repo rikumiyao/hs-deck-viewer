@@ -69,7 +69,7 @@ class Battlefy extends Component {
         }
       )
       .then(()=> {
-        const fetchQualifiedURL = `https://yaytears.com/api/qualified`;
+        const fetchQualifiedURL = `/api/qualified`;
         return fetch(fetchQualifiedURL);
       })
       .then(res => res.json())

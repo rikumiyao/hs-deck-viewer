@@ -39,7 +39,7 @@ class Grandmaster extends Component {
   }
 
   fetchGrandmaster(startDate) {
-    const fetchTourneyURL = 'https://yaytears.com/api/grandmasters'
+    const fetchTourneyURL = '/api/grandmasters'
     fetch(fetchTourneyURL)
       .then(res => res.json())
       .then(

@@ -77,7 +77,7 @@ class BattlefyEvent extends Component {
   }
 
   processClasses(id) {
-    const url = `https://yaytears.com/api/classes?id=${id}`;
+    const url = `/api/classes?id=${id}`;
     return fetch(url)
       .then(res => res.json())
       .then(res => {
