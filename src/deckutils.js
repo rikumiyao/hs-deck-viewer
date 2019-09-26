@@ -282,3 +282,12 @@ function combine(base, removed, added) {
     'format': base.format
   });
 }
+
+export function decodeDeck(deckstring) {
+  const valid = isValidDeckstring(deckstring);
+  if (!valid) {
+    return null;
+  }
+  const deck = convertDeck(valid);
+  return deck;
+}

@@ -1,3 +1,5 @@
+
+import {decodeDeck} from '../src/deckutils'
 const url = require('url');
 const mongodb = require('mongodb');
 const uri = process.env.MONGODB_URI;
@@ -47,6 +49,18 @@ exports.routes = (app) => {
           client.close();
         });
       });
+    });
+  app.route('/api/decode')
+    .get((req, res) => {
+      const query = url.parse(req.url).query;
+      const i = query.indexOf('deckstring=');
+      const deckstring = query.substr(i+'deckstring='.length);
+      const deck = decodeDeck(deckstring);
+      if (!deck) {
+        res.json('Unable to decode deck');
+      } else {
+        res.json(deck);
+      }
     });
   app.route('/api/grandmasters')
     .get((req, res) => {

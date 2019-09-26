@@ -28,11 +28,11 @@ function createRoute(pathspec, setMetaFunc) {
       if (err) {
         return console.log(err);
       }
-      metaTags = setMetaFunc(request);
+      const metaTags = setMetaFunc(request);
       data = data.replace(/\$OG_URL/g, 'https://yaytears.com' + request.originalUrl)
       data = data.replace(/\$OG_TITLE/g, metaTags['title']);
       data = data.replace(/\$OG_DESCRIPTION/g, metaTags['description']);
-      result = data.replace(/\$OG_IMAGE/g, metaTags['image']);
+      const result = data.replace(/\$OG_IMAGE/g, metaTags['image']);
       response.send(result);
     });
   });
