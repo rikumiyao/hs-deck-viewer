@@ -44,7 +44,7 @@ class DeckPanel extends Component {
 
   handleSubmit(codes) {
     codes = codes.map(code => findDeckCode(code, false));
-    if (codes.lengt===4 && codes[3]==='') {
+    if (codes.length===4 && codes[3]==='') {
       codes = codes.slice(0,3)
     }
     const result = validateDecks(codes, this.props.mode, true);
