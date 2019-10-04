@@ -65,7 +65,7 @@ function handleSingleElim(id, slug, tournamentLoc, tournamentNum, stageId) {
 }
 
 function handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum) {
-  const qualified = standings.filter(e=>e['place']<=2).map(a=>a['team']['name']);
+  const qualified = standings.filter(e=>e['place']<=1).map(a=>a['team']['name']);
   if (qualified.length != 0) {
     writeWinner(id, qualified);
   }
