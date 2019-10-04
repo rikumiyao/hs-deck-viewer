@@ -6,7 +6,7 @@ class Specialist extends Component {
     return (
       <DocumentTitle title='Specialist Decks'>
         <div className='container mt-2'>
-          <h2>Preview Hearthstone Specialist Decks</h2>
+          <h2>Create Hearthstone Specialist Decks</h2>
           <DeckPanel mode='specialist' numDecks={3}/>
         </div>
       </DocumentTitle>

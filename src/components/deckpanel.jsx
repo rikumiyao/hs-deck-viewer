@@ -47,7 +47,7 @@ class DeckPanel extends Component {
     if (codes.length===4 && codes[3]==='') {
       codes = codes.slice(0,3)
     }
-    const result = validateDecks(codes, this.props.mode, true);
+    const result = validateDecks(codes, this.props.mode, false);
     if (!result[0]) {
       this.setState({
         validDeck:result[1],
