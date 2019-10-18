@@ -1,6 +1,8 @@
 const backend = require('./backend/index.js');
 const express = require('express');
 const fs = require('fs');
+const axios = require('axios');
+const url = require('url');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,12 +12,12 @@ const DEFAULT_DESCRIPTION = "Explore Hearthstone Tournament Decklists";
 const DEFAULT_IMAGE = 'https://d33jl3tgfli0fm.cloudfront.net/helix/images/games/hearthstone-heroes-of-warcraft/icon.png';
 
 function setMeta(title, description, image) {
-  return (request) => {
-    return {
+  return (request, callback) => {
+    callback({
       title: title,
       description:description,
       image:image
-    }
+    });
   }
 }
 
@@ -28,20 +30,47 @@ function createRoute(pathspec, setMetaFunc) {
       if (err) {
         return console.log(err);
       }
-      const metaTags = setMetaFunc(request);
-      data = data.replace(/\$OG_URL/g, 'https://yaytears.com' + request.originalUrl)
-      data = data.replace(/\$OG_TITLE/g, metaTags['title']);
-      data = data.replace(/\$OG_DESCRIPTION/g, metaTags['description']);
-      const result = data.replace(/\$OG_IMAGE/g, metaTags['image']);
-      response.send(result);
+      const metaTags = setMetaFunc(request, metaTags => {
+        data = data.replace(/\$OG_URL/g, 'https://yaytears.com' + request.originalUrl)
+        data = data.replace(/\$OG_TITLE/g, metaTags['title']);
+        data = data.replace(/\$OG_DESCRIPTION/g, metaTags['description']);
+        const result = data.replace(/\$OG_IMAGE/g, metaTags['image']);
+        response.send(result);
+      });
     });
   });
+}
+
+function setBattlefyMeta(request, callback) {
+  try {
+    const path = request.url;
+    components = path.split('/');
+    id = components[2];
+    if (!id) {
+      callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+      return;
+    }
+    const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
+    axios.get(fetchTourneyURL).then(response => {
+      const data = response.data;
+      callback({
+        title: data['name'],
+        description: `View Decks for ${data['name']}`,
+        image: DEFAULT_IMAGE
+      });
+    }).catch ( e => {
+      callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+    });
+  } catch (e) {
+    callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+  }
+  
 }
 
 createRoute(/\/specialist\/(.+)/, setMeta(DEFAULT_TITLE, 'View Specialist Lineups', DEFAULT_IMAGE));
 createRoute('/specialist', setMeta(DEFAULT_TITLE, 'Create Specialist Lineups', DEFAULT_IMAGE));
 createRoute('/conquest', setMeta(DEFAULT_TITLE, 'Create Conquest Lineups', DEFAULT_IMAGE));
-createRoute(/\/battlefy(\/.*)?/, setMeta(DEFAULT_TITLE, 'Hearthstone Masters Cup Decks', DEFAULT_IMAGE));
+createRoute(/\/battlefy(\/.*)?/, setBattlefyMeta);
 createRoute(/\/grandmasters\/([0-9]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/grandmasters', setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/', setMeta(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE));

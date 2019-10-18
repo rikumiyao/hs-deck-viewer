@@ -8,7 +8,6 @@ class BattlefyEvent extends Component {
     super();
     this.handleTabChange = this.handleTabChange.bind(this);
     this.processBracket = this.processBracket.bind(this);
-    this.processClasses = this.processClasses.bind(this);
     this.processSwiss = this.processSwiss.bind(this);
     this.processTop8 = this.processTop8.bind(this);
     this.handleSwiss = this.handleSwiss.bind(this);
@@ -18,7 +17,6 @@ class BattlefyEvent extends Component {
   state = {
     name: '',
     players: {},
-    playerClasses: {},
     isLoaded : false,
     error : null,
     input: '',
@@ -76,20 +74,6 @@ class BattlefyEvent extends Component {
       });
   }
 
-  processClasses(id) {
-    const url = `/api/classes?id=${id}`;
-    return fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        const playerClasses = res[0];
-        if (playerClasses) {
-          this.setState({
-            playerClasses: playerClasses
-          });
-        }
-      });
-  }
-
   processTop8(top8Id) {
     if (!top8Id) {
       return;
@@ -119,7 +103,6 @@ class BattlefyEvent extends Component {
       .then(()=>this.processSwiss(stageId))
       .then(()=>this.setState({isLoaded: true}))
       .then(()=>this.processTop8(top8Id))
-      .then(()=>this.processClasses(id));
   }
 
   handleSingleElim(id, stageId) {
@@ -130,7 +113,6 @@ class BattlefyEvent extends Component {
       .then(this.processBracket)
       .then(()=>this.processSingleElim(stageId))
       .then(()=>this.setState({isLoaded: true}))
-      .then(()=>this.processClasses(id));
   }
 
 
@@ -213,7 +195,6 @@ class BattlefyEvent extends Component {
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Class</th>
               {this.state.isSwiss ? <th scope="col"> Swiss Score</th> : ''}
               <th scope="col">{this.state.isSwiss ? 'Top 8 Finish' : 'Place'}</th>
             </tr>
@@ -224,12 +205,10 @@ class BattlefyEvent extends Component {
               .sort((entry1,entry2) => entry1[1]['position'] - entry2[1]['position']).map((entry,i) => {
                 const name = entry[0];
                 const value = entry[1];
-                const heroClass = this.state.playerClasses[name]
                 return (
                   <tr key={name}>
                     <td>{i+1}</td>
                     <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}&position=${value['matchposition']}`}>{name}</Link></td>
-                    <td>{ heroClass ? heroClass[0].toUpperCase()+heroClass.substring(1).toLowerCase():'' }</td>
                     {this.state.isSwiss ? <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td> : ''}
                     <td>{value['place'] ? value['place'] : ''}</td>
                   </tr>);
