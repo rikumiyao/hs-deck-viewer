@@ -80,7 +80,7 @@ function validateCards(deck) {
       return 'Invalid card count: ' + card['name'];
     }
     cardCount += count;
-    if (card['set'] && !['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN', 'ULDUM'].includes(card['set'])) {
+    if (card['set'] && !['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN', 'ULDUM', 'DRAGON'].includes(card['set'])) {
       return 'Invalid card: ' + card['name'];
     }
     if (card.id==='BOT_914' || card.id==='DAL_800') { //Whizbang and Zayle
