@@ -28,6 +28,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5",
     "reactstrap": "^7.1.0",
+    "request": "^2.88.0",
     "serve": "^10.1.2",
     "url-loader": "^1.1.2"
   },

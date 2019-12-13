@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
 
-import { validateDecks, compareDecks, findDeckCode, cardDiff, condenseDeckstring, parseDecks } from '../deckutils.js';
+import { validateDecks, compareDecks, findDeckCode, cardDiff, condenseDeckstring } from '../deckutils.js';
 import Deck from './deck';
 import DeckForm from './deckform';
 import DeckOptions from './deckoptions';
@@ -23,23 +23,6 @@ class DeckPanel extends Component {
     isDiff: true,
     isValidSpecialist: false,
     copied: false
-  }
-
-  componentDidMount() {
-    const pathname = this.props.location.pathname;
-    const arr = pathname.split('/');
-    if (this.props.mode==='specialist' && arr[2]) {
-      console.log(this.props.history.location.state);
-      const codes = decodeURIComponent(arr[2]).split('.');
-      const decks = parseDecks(codes);
-      if (decks.length === 3) {
-        this.setState({
-          decks: decks,
-          isValid: true,
-          isValidSpecialist: true
-        })
-      }
-    }
   }
 
   handleSubmit(codes) {
