@@ -31,13 +31,13 @@ class DeckPanel extends Component {
       codes = codes.slice(0,3)
     }
     const result = validateDecks(codes, this.props.mode, false);
-    if (!result[0]) {
+    if (!result['success']) {
       this.setState({
-        validDeck:result[1],
+        validDeck:result['errors'],
         isValid: false
       });
     } else {
-      const decks = result[1];
+      const decks = result['decks'];
       const validDeck = Array(this.state.numDecks).fill('');
       let validSpecialist = true;
       if (this.props.mode==='specialist') {

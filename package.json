@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "dateformat": "^3.0.3",
     "deckstrings": "^2.1.0",
@@ -26,7 +25,7 @@
     "react-router": "^4.3.1",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.5",
+    "react-scripts": "^3.3.0",
     "reactstrap": "^7.1.0",
     "request": "^2.88.0",
     "serve": "^10.1.2",

@@ -1,7 +1,7 @@
 const backend = require('./backend/index.js');
 const express = require('express');
 const fs = require('fs');
-const axios = require('axios');
+const request = require('request');
 const url = require('url');
 
 const app = express();
@@ -41,9 +41,9 @@ function createRoute(pathspec, setMetaFunc) {
   });
 }
 
-function setBattlefyMeta(request, callback) {
+function setBattlefyMeta(req, callback) {
   try {
-    const path = request.url;
+    const path = req.url;
     components = path.split('/');
     id = components[2];
     if (!id) {
@@ -51,15 +51,18 @@ function setBattlefyMeta(request, callback) {
       return;
     }
     const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
-    axios.get(fetchTourneyURL).then(response => {
-      const data = response.data;
+    request.get(fetchTourneyURL, (err, body, response) => {
+      if (err) {
+        callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+        console.log(err);
+        return;
+      }
+      const data = JSON.parse(response);
       callback({
         title: data['name'],
         description: `View Decks for ${data['name']}`,
         image: DEFAULT_IMAGE
       });
-    }).catch ( e => {
-      callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
     });
   } catch (e) {
     callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
