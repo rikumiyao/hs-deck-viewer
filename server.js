@@ -57,12 +57,17 @@ function setBattlefyMeta(req, callback) {
         console.log(err);
         return;
       }
-      const data = JSON.parse(response);
-      callback({
-        title: data['name'],
-        description: `View Decks for ${data['name']}`,
-        image: DEFAULT_IMAGE
-      });
+      try {
+        const data = JSON.parse(response);
+        callback({
+          title: data['name'],
+          description: `View Decks for ${data['name']}`,
+          image: DEFAULT_IMAGE
+        });
+      }
+      catch (e) {
+        callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+      }
     });
   } catch (e) {
     callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
