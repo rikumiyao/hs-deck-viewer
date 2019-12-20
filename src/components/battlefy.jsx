@@ -141,7 +141,7 @@ class Battlefy extends Component {
                 <td>{data['region']}</td>
                 <td>{ this.state.qualified[data['_id']] ? this.state.qualified[data['_id']].join(' ') : ''}</td>
                 <td>
-                  <Link to={`/battlefy/${data['_id']}`}>Decks</Link>
+                  { new Date() > date ? <Link to={`/battlefy/${data['_id']}`}>Decks</Link> : ''}
                 </td>
               </tr>
             )})}

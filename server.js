@@ -46,7 +46,7 @@ function setBattlefyMeta(req, callback) {
     const path = req.url;
     components = path.split('/');
     id = components[2];
-    if (!id) {
+    if (!id || id === 'week') {
       callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
       return;
     }
