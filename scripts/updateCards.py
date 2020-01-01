@@ -1,6 +1,6 @@
 import requests
 import json
-
+import api
 CARDS_URL = 'https://api.hearthstonejson.com/v1/latest/enUS/cards.collectible.json'
 
 def getCardsJson():
@@ -16,6 +16,11 @@ def getCardsJson():
     }
     if 'cost' in card:
       data[index]['cost'] = card['cost']
+    cardInfo = api.getCard(card['dbfId'])
+    if cardInfo:
+      data[index]['image'] = cardInfo['image']
+    else:
+      print(card['dbfId'])
   return data
 data = getCardsJson()
 
