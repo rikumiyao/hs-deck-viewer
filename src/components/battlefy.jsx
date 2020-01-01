@@ -171,7 +171,7 @@ class Battlefy extends Component {
     } else if (this.state.error) {
       component = <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
-  	return (
+    return (
       <DocumentTitle title='Browse Battlefy Tournaments'>
         <div>{component}</div>
       </DocumentTitle>
