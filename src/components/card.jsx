@@ -6,7 +6,8 @@ class Card extends Component {
   render() {
     const card = this.props.card;
     const options = {
-      followCursor: true
+      followCursor: true,
+      shiftY: -380
     };
     return (
       <div>
