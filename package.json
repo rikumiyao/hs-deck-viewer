@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "cron": "^1.7.2",
     "dateformat": "^3.0.3",
     "deckstrings": "^2.1.0",
     "esm": "^3.2.25",

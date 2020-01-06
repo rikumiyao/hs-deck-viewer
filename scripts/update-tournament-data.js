@@ -124,7 +124,7 @@ function processTop8(id, slug, standings, tournamentLoc, tournamentNum) {
 }
 
 function writeTop8(id, slug, players, tournamentLoc, tournamentNum) {
-  mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client) => {
+  mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => {
     if (err) throw err;
 
     const db = client.db();
@@ -143,7 +143,7 @@ function writeTop8(id, slug, players, tournamentLoc, tournamentNum) {
 }
 
 function writeWinner(id, name) {
-  mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client) => {
+  mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => {
     if (err) throw err;
 
     const db = client.db();
@@ -201,7 +201,7 @@ function handleGrandmaster(gmData) {
 }
 
 function writeGmData(gmData) {
-  mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client) => {
+  mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => {
     if (err) throw err;
 
     const db = client.db();
@@ -213,19 +213,22 @@ function writeGmData(gmData) {
   });
 }
 
-const sync = process.argv[2];
-if (sync === 'manual') {
-  const id = process.argv[3];
-  const slug = process.argv[4];
-  const tournamentLoc = process.argv[5];
-  const tournamentNum = process.argv[6];
-  manualTop8(id, slug, tournamentLoc, tournamentNum);
-}else if (sync === 'grandmaster') {
-  updateGrandmaster()
+function update(args) {
+  const sync = args[0];
+  if (sync === 'manual') {
+    const id = args[1];
+    const slug = args[2];
+    const tournamentLoc = args[3];
+    const tournamentNum = args[4];
+    manualTop8(id, slug, tournamentLoc, tournamentNum);
+  } else if (sync === 'grandmaster') {
+    updateGrandmaster()
+  } else {
+    const start = args[1];
+    const end = args[2];
+    updateGrandmaster();
+    updateTournaments(sync, start, end);
+  }
 }
-else {
-  const start = process.argv[3];
-  const end = process.argv[4];
-  updateGrandmaster();
-  updateTournaments(sync, start, end);
-}
+
+module.exports = update;

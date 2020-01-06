@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const request = require('request');
 const url = require('url');
+const cronJob = require('./scripts/cron');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -91,5 +92,5 @@ app.get('*', function(request, response) {
   const filePath = path.resolve(__dirname, './build', 'index.html');
   response.sendFile(filePath);
 });
-
+cronJob.startCronJob();
 app.listen(port, () => console.log(`Listening on port ${port}`));
