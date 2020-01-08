@@ -7,7 +7,7 @@ const uri = process.env.MONGODB_URI;
 exports.routes = (app) => {
   app.route('/api/winners')
     .get((req, res) => {
-      mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client)=> {
+      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});
           return;
@@ -28,7 +28,7 @@ exports.routes = (app) => {
     });
   app.route('/api/qualified')
     .get((req, res) => {
-      mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client)=> {
+      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});
           return;
@@ -62,7 +62,7 @@ exports.routes = (app) => {
     });
   app.route('/api/grandmasters')
     .get((req, res) => {
-      mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client)=> {
+      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});
           return;
@@ -84,12 +84,12 @@ exports.routes = (app) => {
   app.route('/api/top8count')
     .get((req, res) => {
       const region = req.query['region'];
-      mongodb.MongoClient.connect(uri, {useNewUrlParser: true}, (err, client)=> {
+      const page = req.query['page'];
+      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
-            res.status(500).json({'error': err});
-            return;
-          }
-
+          res.status(500).json({'error': err});
+          return;
+        }
         const db = client.db();
         const top8s = db.collection('top8');
         top8s.aggregate([
@@ -99,15 +99,14 @@ exports.routes = (app) => {
               "_id": 1
             }
           },
-          {$sort: {numTop8s: -1} },
-          {$limit: 50}
+          { $match: { "numTop8s": {$gte: 1}}},
+          { $sort: {numTop8s: -1} }
         ]).toArray(function (err, result) {
           if (err) {
             res.status(500).json({'error': err});
             client.close;
             return;
           }
-
           res.json(result);
           client.close();
         });

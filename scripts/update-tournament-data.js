@@ -37,10 +37,10 @@ function httpGet(url, options, callback) {
   });
 }
 
-function updateTournaments(sync, start, end) {
+function updateTournaments(isSync, start, end) {
   let startDate = new Date();
   let endDate = new Date();
-  if (sync==='sync') {
+  if (isSync) {
     startDate = new Date(start);
     endDate = new Date(end);
   } else {
@@ -213,21 +213,23 @@ function writeGmData(gmData) {
   });
 }
 
-function update(args) {
-  const sync = args[0];
-  if (sync === 'manual') {
-    const id = args[1];
-    const slug = args[2];
-    const tournamentLoc = args[3];
-    const tournamentNum = args[4];
+function update(type, args) {
+  if (type === 'manual') {
+    const id = args['id'];
+    const slug = args['slug'];
+    const tournamentLoc = args['tournamentLoc'];
+    const tournamentNum = args['tournamentNum'];
     manualTop8(id, slug, tournamentLoc, tournamentNum);
-  } else if (sync === 'grandmaster') {
+  } else if (type === 'grandmaster') {
     updateGrandmaster()
-  } else {
-    const start = args[1];
-    const end = args[2];
+  } else if (type === 'sync') {
+    const start = args['start'];
+    const end = args['sync'];
     updateGrandmaster();
-    updateTournaments(sync, start, end);
+    updateTournaments(true, start, end);
+  } else {
+    updateGrandmaster();
+    updateTournaments();
   }
 }
 

@@ -3,7 +3,7 @@ const update = require('./update-tournament-data');
 
 function startCronJob() {
   const job = new CronJob('0 0 * * * *', function() {
-    update([]);
+    update();
   });
 
   job.start();

@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import Header from './components/header';
 import Main from './main';
 
+import '../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 const darkMode = '/css/darkly/bootstrap.min.css';
 const lightMode = '/css/flatly/bootstrap.min.css';
 
@@ -35,7 +36,7 @@ class App extends Component {
       <DocumentTitle title='YAYtears'>
         <div>
           <link rel='stylesheet' type='text/css' 
-            href={this.state.isDarkMode ?  darkMode : lightMode} /> 
+            href={this.state.isDarkMode ?  darkMode : lightMode} />
           <Header isDarkMode={this.state.isDarkMode} onToggle={this.onToggleDarkMode}/>
           <Main/>
         </div>

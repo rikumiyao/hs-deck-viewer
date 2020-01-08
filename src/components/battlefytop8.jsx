@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import DocumentTitle from 'react-document-title'
+import DocumentTitle from 'react-document-title';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
 class BattlefyTop8 extends Component {
 
@@ -32,36 +33,31 @@ class BattlefyTop8 extends Component {
   }
 
   renderTable() {
+    const tournamentFormat = (cell, row) => {
+      const result = cell.map( data => {
+        return (
+          <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['id']}/info`}  target='_blank' rel='noopener noreferrer'>
+            {`#${data['tournamentNum']} `}
+          </a>
+        )
+      });
+      return (
+        <div>
+          {result}
+        </div>
+      );
+    }
+    const options = {
+      hideSizePerPage: true,
+      sizePerPage: 50
+    }
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Top 8 Count</th>
-            <th scope="col">Top 8 tournaments</th>
-          </tr>
-         </thead>
-        <tbody>
-          {
-            this.state.players.map((entry) => {
-              const name = entry['name'];
-              const top8s = entry['numTop8s'];
-              const list = entry['tournaments'].map(data=>
-                {return (
-                  <a href={`https://battlefy.com/hsesports/${data['slug']}/${data['id']}/info`}  target='_blank' rel='noopener noreferrer'>
-                    {`#${data['tournamentNum']} `}
-                  </a>
-                )});
-              return (
-                <tr key={name}>
-                  <td>{ name }</td>
-                  <td>{ top8s }</td>
-                  <td>{list}</td>
-                </tr>);
-            }
-          )}
-        </tbody>
-      </table>
+      <BootstrapTable
+        data={ this.state.players } pagination options={options}>
+        <TableHeaderColumn dataField='name' isKey>Name</TableHeaderColumn>
+        <TableHeaderColumn dataField='numTop8s'>Top 8 Count</TableHeaderColumn>
+        <TableHeaderColumn dataField='tournaments' dataFormat = {tournamentFormat}>Top 8 tournaments</TableHeaderColumn>
+      </BootstrapTable>
     );
   }
 
@@ -69,7 +65,7 @@ class BattlefyTop8 extends Component {
     if (this.state.isLoaded && !this.state.error) {
       return (
         <div className='m-1'>
-          <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)} (Top 50)</h3>
+          <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)}</h3>
           {this.renderTable()}
         </div>
       )
