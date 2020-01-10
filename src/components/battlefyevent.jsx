@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import DocumentTitle from 'react-document-title'
+import DocumentTitle from 'react-document-title';
+import Loader from 'react-loader-spinner';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 class BattlefyEvent extends Component {
 
   constructor() {
     super();
-    this.handleTabChange = this.handleTabChange.bind(this);
     this.processBracket = this.processBracket.bind(this);
     this.processSwiss = this.processSwiss.bind(this);
     this.processTop8 = this.processTop8.bind(this);
@@ -23,16 +24,6 @@ class BattlefyEvent extends Component {
     id: '',
     bracketStarted: false,
     isSwiss: true
-  }
-
-  handleTabChange(index, lastIndex, event) {
-    if (index!==lastIndex) {
-      if (index==='stats') {
-        this.props.history.replace(`/battlefy/${this.state.id}/stats`);
-      } else if (index==='decks') {
-        this.props.history.replace(`/battlefy/${this.state.id}`);
-      }
-    }
   }
 
   processBracket(data) {
@@ -245,7 +236,13 @@ class BattlefyEvent extends Component {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
     else {
-      return <DocumentTitle title='Loading Tournament...'></DocumentTitle>;
+      return (
+        <DocumentTitle title='Loading Tournament...'>
+          <div className='container mt-2'>
+            <Loader type="Oval" />
+          </div>
+        </DocumentTitle>
+      );
     }
   }
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import Loader from 'react-loader-spinner';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 class BattlefyTop8 extends Component {
 
@@ -74,7 +76,13 @@ class BattlefyTop8 extends Component {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
     else {
-      return <DocumentTitle title='Loading Data...'></DocumentTitle>;
+      return (
+        <DocumentTitle title='Loading Data...'>
+          <div className='container mt-2'>
+            <Loader type="Oval" />
+          </div>
+        </DocumentTitle>
+      );
     }
   }
 }

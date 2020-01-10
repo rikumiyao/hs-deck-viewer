@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import DocumentTitle from 'react-document-title'
+import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
 import DeckOptions from './deckoptions';
@@ -123,7 +125,13 @@ class BattlefyDecks extends Component {
     else if (this.state.error) {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
-    return <DocumentTitle title='Loading Decks...'></DocumentTitle>;
+    return (
+      <DocumentTitle title='Loading Decks...'>
+        <div className='container mt-2'>
+          <Loader type="Oval" />
+        </div>
+      </DocumentTitle>
+    );
   }
 }
 
