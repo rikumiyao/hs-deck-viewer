@@ -4,6 +4,7 @@ import Specialist from './components/specialist';
 import Conquest from './components/conquest';
 import Battlefy from './components/battlefy';
 import BattlefyEvent from './components/battlefyevent';
+import BattlefyPlayer from './components/battlefyplayer';
 import BattlefyDecks from './components/battlefydecks';
 import DeckViewer from './components/deckviewer';
 import Grandmaster from './components/grandmaster';
@@ -19,6 +20,7 @@ class Main extends Component {
           <Route path='/specialist' component={Specialist}/>
           <Route path='/conquest' component={Conquest}/>
           <Route path='/battlefy/([0-9a-f]+)/([0-9a-f]+)' component={BattlefyDecks}/>
+          <Route path='/battlefy/([0-9a-f]+)/(.+)' component={BattlefyPlayer}/>
           <Route path='/battlefy/week/' component={Battlefy}/>
           <Route path='/battlefy/([0-9a-f]+)' component={BattlefyEvent}/>
           <Route path='/battlefy' component={Battlefy}/>

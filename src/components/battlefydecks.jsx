@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -9,17 +8,17 @@ import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
 import Deck from './deck';
 
-const queryString = require('query-string');
+import {parse} from 'query-string';
 
 class BattlefyDecks extends Component {
 
   state = {
-    player : '',
     decks : [],
     isValid : false,
     isLoaded : false,
     error : null,
-    isDiff : true
+    isDiff : true,
+    player: ""
   }
 
   constructor() {
@@ -32,22 +31,30 @@ class BattlefyDecks extends Component {
   }
 
   componentDidMount() {
-    const pathname = this.props.location.pathname;
-    const tourneyId = pathname.split('/')[2];
-    const id = pathname.split('/')[3];
-    const values = queryString.parse(this.props.location.search);
-    const position = values['position'];
-    const player = values['player'];
-    const fetchURL = `https://majestic.battlefy.com/tournaments/${tourneyId}/matches/${id}/deckstrings`;
+    let tourneyId;
+    let matchId;
+    let position;
+    let player;
+    if (this.props.location) {
+      const pathname = this.props.location.pathname;
+      tourneyId = pathname.split('/')[2];
+      matchId = pathname.split('/')[3];
+      const values = parse(this.props.location.search);
+      position = values['position'];
+      player = values['player'];
+      this.setState({player});
+    } else {
+      tourneyId = this.props.tourneyId;
+      matchId = this.props.matchId;
+      position = this.props.position;
+    }
+    const fetchURL = `https://majestic.battlefy.com/tournaments/${tourneyId}/matches/${matchId}/deckstrings`;
     fetch(fetchURL)
       .then(res => res.json())
       .then(
         (result) => {
           const decks = result[position];
           if (decks) {
-            this.setState({
-              player: player
-            });
             this.processDecks(decks);
           }
           this.setState({isLoaded: true});
@@ -108,29 +115,25 @@ class BattlefyDecks extends Component {
         });
       }
       return (
-        <DocumentTitle title={this.state.player}>
-          <div className='container mt-2'>
-            <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.location.pathname.split('/')[2]}`}>&lt; Back</Link>
-            <h1>{this.state.player}'s Decks</h1>
-            {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
-            <div className='row'>
-              {decks}
-            </div>
+        <div className='container mt-2'>
+          <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.tourneyId}`}>&lt; Back</Link>
+          <h1>{this.state.player ? this.state.player : this.props.player}'s Decks</h1>
+          {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
+          <div className='row'>
+            {decks}
           </div>
-        </DocumentTitle>
+        </div>
       );
     } else if (!this.state.error && this.state.isLoaded && !this.state.isValid) {
-      return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Unknown error in validating decks</h2></DocumentTitle>;
+      return <h2 style={{'color':'red'}}>Unknown error in validating decks</h2>;
     }
     else if (this.state.error) {
       return <h2 style={{'color':'red'}}>Error in fetching data</h2>;
     }
     return (
-      <DocumentTitle title='Loading Decks...'>
-        <div className='container mt-2'>
-          <Loader type="Oval" />
-        </div>
-      </DocumentTitle>
+      <div className='container mt-2'>
+        <Loader type="Oval" />
+      </div>
     );
   }
 }

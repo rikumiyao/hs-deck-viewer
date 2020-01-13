@@ -8,7 +8,6 @@ class BattlefyEvent extends Component {
 
   constructor() {
     super();
-    this.processBracket = this.processBracket.bind(this);
     this.processSwiss = this.processSwiss.bind(this);
     this.processTop8 = this.processTop8.bind(this);
     this.handleSwiss = this.handleSwiss.bind(this);
@@ -26,21 +25,6 @@ class BattlefyEvent extends Component {
     isSwiss: true
   }
 
-  processBracket(data) {
-    const players = {};
-    data.forEach(row => {
-      ['top', 'bottom'].forEach(pos=> {
-        const team = row[pos];
-        if (team['team']) {
-          players[team['team']['name']] = {matchId : row['_id'], matchposition : pos}
-        }
-      })
-    });
-    this.setState({
-      players: players
-    })
-  }
-
   processSwiss(stageId) {
     const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
     return fetch(metaDataUrl)
@@ -51,16 +35,14 @@ class BattlefyEvent extends Component {
         return fetch(standingsUrl)
           .then(res => res.json())
           .then(res => {
+            const players = {};
             res.forEach( (row, idx) => {
               const name = row["team"]["name"];
               const wins = row["wins"];
               const losses = row["losses"];
-              const players = this.state.players;
-              players[name]["wins"] = wins;
-              players[name]["losses"] = losses;
-              players[name]["position"] = idx;
-              this.setState({players: players});
+              players[name]["wins"] = {"wins": wins, "losses": losses, "position": idx};
             });
+            this.setState({players: players});
           });
       });
   }
@@ -86,23 +68,15 @@ class BattlefyEvent extends Component {
   }
 
   handleSwiss(id, stageId, top8Id) {
-    const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
     this.setState({isSwiss:true});
-    fetch(fetchDecksUrl)
-      .then(res => res.json())
-      .then(this.processBracket)
-      .then(()=>this.processSwiss(stageId))
+    this.processSwiss(stageId)
       .then(()=>this.setState({isLoaded: true}))
       .then(()=>this.processTop8(top8Id))
   }
 
   handleSingleElim(id, stageId) {
-    const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
     this.setState({isSwiss:false});
-    fetch(fetchDecksUrl)
-      .then(res => res.json())
-      .then(this.processBracket)
-      .then(()=>this.processSingleElim(stageId))
+    this.processSingleElim(stageId)
       .then(()=>this.setState({isLoaded: true}))
   }
 
@@ -117,14 +91,13 @@ class BattlefyEvent extends Component {
         return fetch(standingsUrl)
           .then(res => res.json())
           .then(res => {
+            const players = {};
             res.forEach( (row, idx) => {
               const name = row["team"]["name"];
               const place = row["place"];
-              const players = this.state.players;
-              players[name]["place"] = place;
-              players[name]["position"] = place ? place : -1;
-              this.setState({players: players});
+              players[name] = {"place": place, "position": place ? place : -1};
             });
+            this.setState({players: players});
           });
       });
   }
@@ -199,7 +172,7 @@ class BattlefyEvent extends Component {
                 return (
                   <tr key={name}>
                     <td>{i+1}</td>
-                    <td><Link to={`/battlefy/${this.state.id}/${value['matchId']}?player=${encodeURIComponent(name)}&position=${value['matchposition']}`}>{name}</Link></td>
+                    <td><Link to={`/battlefy/${this.state.id}/${encodeURIComponent(name)}`}>{name}</Link></td>
                     {this.state.isSwiss ? <td>{value['wins'] ? value['wins']+"-"+value['losses'] : ''}</td> : ''}
                     <td>{value['place'] ? value['place'] : ''}</td>
                   </tr>);
