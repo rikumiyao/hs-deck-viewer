@@ -4,6 +4,7 @@ import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import BattlefyDecks from './battlefydecks';
+import BattlefyStats from './battlefystats';
 
 class BattlefyPlayer extends Component {
 
@@ -13,16 +14,28 @@ class BattlefyPlayer extends Component {
   }
 
   state = {
-    player : '',
+    player: '',
     matchId: '',
     matchPosition: '',
     tourneyId: '',
+    matches: [],
     isLoaded: false,
     found: false,
     error: null
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.updateState()
+    }
+  }
+
   componentDidMount() {
+    this.updateState()
+  }
+
+  updateState() {
+    console.log(this.props);
     const pathname = this.props.location.pathname;
     const tourneyId = pathname.split('/')[2];
     const player = decodeURIComponent(pathname.split('/')[3]);
@@ -35,17 +48,32 @@ class BattlefyPlayer extends Component {
         (result) => {
           this.setState({name: result['name']})
           const stageId = result['stageIDs'][0];
-          const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
+          const stage2Id = result['stageIDs'][1];
+          const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches`;
+          const fetchBracket2Url = stage2Id ? `https://dtmwra1jsgyb0.cloudfront.net/stages/${stage2Id}/matches` : '';
           fetch(fetchDecksUrl)
             .then(res => res.json())
             .then(this.processBracket)
             .then(res => {
               this.setState({
-                isLoaded: true,
                 matchPosition: res.matchPosition,
                 matchId: res.matchId,
-                found: res.found
+                found: res.found,
+                matches: res.matches.sort((a,b) => b.ts - a.ts)
               });
+            })
+            .then(()=> {
+              if (fetchBracket2Url) {
+                return fetch(fetchBracket2Url)
+                  .then(res => res.json())
+                  .then(this.processBracket)
+                  .then(res => this.setState({
+                    matches: this.state.matches.concat(res.matches).sort((a,b) => b.ts - a.ts)
+                  }))
+              }
+            })
+            .then(() => {
+              this.setState({isLoaded: true});
             });
         },
         // Note: it's important to handle errors here
@@ -58,24 +86,28 @@ class BattlefyPlayer extends Component {
           });
         }
       );
-    // Later: Have a new component handle match data
   }
 
   processBracket(data) {
     let found = false;
     let matchId = '';
     let matchPosition = '';
+    const matches = [];
     data.forEach(row => {
       ['top', 'bottom'].forEach(pos=> {
         const team = row[pos];
         if (team['team'] && team['team']['name'] === this.state.player) {
-          matchId = row['_id'];
-          matchPosition = pos;
-          found = true;
+          if (!found) {
+            matchId = row['_id'];
+            matchPosition = pos;
+            found = true;
+          }
+          if (row['completedAt'])
+            matches.push({matchId: row['_id'], ts: Date.parse(row['completedAt'])});
         }
       });
     });
-    return {found: found, matchId: matchId, matchPosition: matchPosition}
+    return {found, matchId, matchPosition, matches}
   }
 
   render() {
@@ -86,11 +118,17 @@ class BattlefyPlayer extends Component {
     } else if (this.state.isLoaded) {
       return (
         <DocumentTitle title={this.state.player}>
-          <BattlefyDecks 
-            player={this.state.player} 
-            position={this.state.matchPosition}
-            matchId={this.state.matchId}
-            tourneyId={this.state.tourneyId}/>
+          <div className='container mt-2'>
+            <BattlefyDecks 
+              player={this.state.player} 
+              position={this.state.matchPosition}
+              matchId={this.state.matchId}
+              tourneyId={this.state.tourneyId}/>
+            <BattlefyStats
+              matches={this.state.matches}
+              player={this.state.player}
+            />
+          </div>
         </DocumentTitle>
       )
     }

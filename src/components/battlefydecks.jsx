@@ -24,13 +24,24 @@ class BattlefyDecks extends Component {
   constructor() {
     super();
     this.handleToggleDiff = this.handleToggleDiff.bind(this);
+    this.loadDecks = this.loadDecks.bind(this);
   }
 
   handleToggleDiff(isDiff) {
     this.setState({isDiff: isDiff});
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.loadDecks();
+    }
+  }
+
   componentDidMount() {
+    this.loadDecks();
+  }
+
+  loadDecks() {
     let tourneyId;
     let matchId;
     let position;

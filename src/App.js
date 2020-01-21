@@ -8,6 +8,7 @@ import Main from './main';
 import '../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 const darkMode = '/css/darkly/bootstrap.min.css';
 const lightMode = '/css/flatly/bootstrap.min.css';
+const mystyles = '/css/styles.css';
 
 class App extends Component {
 
@@ -37,6 +38,7 @@ class App extends Component {
         <div>
           <link rel='stylesheet' type='text/css' 
             href={this.state.isDarkMode ?  darkMode : lightMode} />
+          <link rel='stylesheet' type='text/css' href={mystyles} />
           <Header isDarkMode={this.state.isDarkMode} onToggle={this.onToggleDarkMode}/>
           <Main/>
         </div>
