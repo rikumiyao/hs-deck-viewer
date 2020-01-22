@@ -32,7 +32,8 @@ class BattlefyDecks extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (prevProps.location !== this.props.location) {
+      this.setState({ isLoaded: false });
       this.loadDecks();
     }
   }
