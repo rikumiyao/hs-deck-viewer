@@ -10,12 +10,13 @@ body = {
 r = requests.post(oauthurl, data=body, auth=auth)
 
 token = r.json()['access_token']
-def getCards():
+def getCards(page=0):
     params = {
         'region' : 'us',
         'locale' : 'en_US',
         'access_token' : token,
-        'collectible' : 1
+        'collectible' : 1,
+        'page': page
     }
     
     url = 'https://us.api.blizzard.com/hearthstone/cards'

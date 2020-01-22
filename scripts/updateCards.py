@@ -12,7 +12,8 @@ def getCardsJson():
       'dbfId': card['dbfId'],
       'name': card['name'],
       'id': card['id'],
-      'rarity': card['rarity']
+      'rarity': card['rarity'],
+      'set': card['set']
     }
     if 'cost' in card:
       data[index]['cost'] = card['cost']

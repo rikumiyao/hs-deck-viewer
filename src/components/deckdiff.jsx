@@ -18,7 +18,7 @@ class DeckDiff extends Component {
     const deck = this.props.deck;
     return (
       <div>
-        <CopyToClipboard className='m-2' text={encodeDeck(this.props.deck)}
+        <CopyToClipboard className='m-2 btn btn-primary' text={encodeDeck(this.props.deck)}
           onCopy={() => this.setState({copied: true})}>
           <button>Copy Deck Code</button>
         </CopyToClipboard>
@@ -46,7 +46,7 @@ class DeckDiff extends Component {
             ) 
           }
         </ul>
-      </div>                                                                                                      
+      </div>
     );
   }
 

@@ -7,7 +7,6 @@ class Conquest extends Component {
       <DocumentTitle title='Conquest Decks'>
           <div className="container mt-2">
             <h2>Create Hearthstone Conquest Lineups</h2>
-            <h4>(Now Supports Wild!)</h4>
             <DeckPanel mode='conquest' numDecks={4}/>
           </div>
       </DocumentTitle>

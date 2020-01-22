@@ -54,9 +54,9 @@ class DeckViewer extends Component {
     return (
       <div className='row'>
         <div className='col-1'>
-          <CopyToClipboard className='m-2' text={url}
+          <CopyToClipboard className='m-2 btn btn-primary' text={url}
             onCopy={() => this.setState({copied: true})}>
-            <button>Copy</button>
+            <button>Copy Deck Code</button>
           </CopyToClipboard>
         {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
         </div>

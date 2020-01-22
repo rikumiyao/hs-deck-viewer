@@ -22,7 +22,7 @@ class Deck extends Component {
     const deck = this.props.deck;
     return (
       <div>
-        <CopyToClipboard className='m-2' text={encodeDeck(deck)}
+        <CopyToClipboard className='m-2 btn btn-primary' text={encodeDeck(deck)}
           onCopy={() => {this.setState({copied: true})}}>
           <button>Copy Deck Code</button>
         </CopyToClipboard>

@@ -1,7 +1,7 @@
 import { encode, decode } from "deckstrings";
 import data from './resources/cards.compact.json';
 
-const ACTIVE_SETS = ['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN', 'ULDUM', 'DRAGONS'];
+const ACTIVE_SETS = ['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN', 'ULDUM', 'DRAGONS', 'YEAR_OF_THE_DRAGON'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const cardsDict = {};
 const heroDict = {
@@ -100,7 +100,7 @@ function validateCards(deck) {
       return 'Invalid card count: ' + card['name'];
     }
     cardCount += count;
-    if (card['set'] && !ACTIVE_SETS.includes(card['set'])) {
+    if (!ACTIVE_SETS.includes(card['set'])) {
       return 'Invalid card: ' + card['name'];
     }
     if (BANNED_CARDS.includes(card.id)) {
