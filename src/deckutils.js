@@ -249,7 +249,8 @@ function condenseConquest(decks) {
   return decks.map(encodeDeck).join('.');
 }
 
-export function parseDecks(deckcodes, mode) {
+export function parseDecks(code, mode) {
+  const deckcodes = code.split('.');
   if (mode === 'conquest') {
     return parseConquest(deckcodes);
   } else {

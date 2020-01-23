@@ -32,7 +32,7 @@ class BattlefyDecks extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.location !== this.props.location) {
+    if (prevProps !== this.props) {
       this.setState({ isLoaded: false });
       this.loadDecks();
     }
@@ -43,23 +43,10 @@ class BattlefyDecks extends Component {
   }
 
   loadDecks() {
-    let tourneyId;
-    let matchId;
-    let position;
-    let player;
-    if (this.props.location) {
-      const pathname = this.props.location.pathname;
-      tourneyId = pathname.split('/')[2];
-      matchId = pathname.split('/')[3];
-      const values = parse(this.props.location.search);
-      position = values['position'];
-      player = values['player'];
-      this.setState({player});
-    } else {
-      tourneyId = this.props.tourneyId;
-      matchId = this.props.matchId;
-      position = this.props.position;
-    }
+    const player = this.props.player;
+    const tourneyId = this.props.tourneyId;
+    const matchId = this.props.matchId;
+    const position = this.props.position;
     const fetchURL = `https://majestic.battlefy.com/tournaments/${tourneyId}/matches/${matchId}/deckstrings`;
     fetch(fetchURL)
       .then(res => res.json())

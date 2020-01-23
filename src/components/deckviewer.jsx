@@ -29,8 +29,8 @@ class DeckViewer extends Component {
     const pathname = this.props.location.pathname;
     const arr = pathname.split('/');
     const mode = arr[1].toLowerCase();
-    const codes = decodeURIComponent(arr[2]).split('.');
-    const decks = parseDecks(codes, mode);
+    const code = decodeURIComponent(arr[2]);
+    const decks = parseDecks(code, mode);
     if (decks.length !== 0) {
       this.setState({
         mode,
