@@ -86,7 +86,7 @@ class GrandmasterDecks extends Component {
 
   processDecks(codes) {
     codes = codes.map(code => findDeckCode(code, true));
-    const result = validateDecks(codes, 'conquest');
+    const result = validateDecks(codes, 'conquest', 'standard');
     if (!result['success']) {
       this.setState({
         isValid: false

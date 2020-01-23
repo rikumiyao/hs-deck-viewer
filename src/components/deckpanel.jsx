@@ -40,12 +40,12 @@ class DeckPanel extends Component {
     });
   }
 
-  handleSubmit(codes) {
+  handleSubmit(codes, format) {
     codes = codes.map(code => findDeckCode(code, false));
     if (codes.length===4 && codes[3]==='') {
       codes = codes.slice(0,3)
     }
-    const result = validateDecks(codes, this.state.mode, false);
+    const result = validateDecks(codes, this.state.mode, format);
     if (!result['success']) {
       this.setState({
         errors: result['errors'],

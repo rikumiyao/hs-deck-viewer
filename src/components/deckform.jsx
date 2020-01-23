@@ -5,10 +5,12 @@ class DeckForm extends Component {
   constructor() {
     super();
     this.handleChange = this.handleChange.bind(this);
+    this.handleFormat = this.handleFormat.bind(this);
   }
 
   state = {
-    codes : []
+    codes : [],
+    format: "standard"
   }
 
   handleChange(i, event) {
@@ -17,9 +19,21 @@ class DeckForm extends Component {
     this.setState({codes});
   }
 
+  handleFormat(event) {
+    this.setState({ "format": event.target.value });
+  }
+
   render() {
     return (
       <div>
+        <div className="row">
+          <label className="col-sm-1 col-form-label">Format</label>
+          <select className="form-control col-sm-2" id="format"
+            defaultValue={this.state.format} onChange={this.handleFormat}>
+            <option value="standard">Standard</option>
+            <option value="wild">Wild</option>
+          </select>
+        </div>
         {
           [...Array(this.props.numDecks).keys()].map((unused, i) => {
             return (
@@ -34,7 +48,7 @@ class DeckForm extends Component {
         }
         <button 
           className="btn btn-primary" 
-          onClick={() => this.props.onSubmit(this.pad(this.state.codes, this.props.numDecks))}>
+          onClick={() => this.props.onSubmit(this.pad(this.state.codes, this.props.numDecks), this.state.format)}>
             {this.props.mode==='specialist' ? "View Specialist Decks" : "View Conquest Decks" }
         </button>
       </div>

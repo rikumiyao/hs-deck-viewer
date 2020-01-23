@@ -8,8 +8,6 @@ import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
 import Deck from './deck';
 
-import {parse} from 'query-string';
-
 class BattlefyDecks extends Component {
 
   state = {
@@ -17,8 +15,7 @@ class BattlefyDecks extends Component {
     isValid : false,
     isLoaded : false,
     error : null,
-    isDiff : true,
-    player: ""
+    isDiff : true
   }
 
   constructor() {
@@ -43,7 +40,6 @@ class BattlefyDecks extends Component {
   }
 
   loadDecks() {
-    const player = this.props.player;
     const tourneyId = this.props.tourneyId;
     const matchId = this.props.matchId;
     const position = this.props.position;
@@ -72,7 +68,7 @@ class BattlefyDecks extends Component {
 
   processDecks(codes) {
     codes = codes.map(code => findDeckCode(code, true));
-    const result = validateDecks(codes, "", false);
+    const result = validateDecks(codes, "", "");
     if (!result['success']) {
       this.setState({
         isValid: false
@@ -116,7 +112,7 @@ class BattlefyDecks extends Component {
       return (
         <div className='container mt-2'>
           <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.tourneyId}`}>&lt; Back</Link>
-          <h1>{this.state.player ? this.state.player : this.props.player}'s Decks</h1>
+          <h1>{this.props.player}'s Decks</h1>
           {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
           <div className='row'>
             {decks}

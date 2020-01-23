@@ -39,7 +39,7 @@ export function findDeckCode(text, hasNewLine) {
   return matches!=null ? matches[0] : text;
 }
 
-export function validateDecks(deckstrings, validateSets, mode) {
+export function validateDecks(deckstrings, mode, format) {
   const valid = deckstrings.map(isValidDeckstring);
   if (!valid.every(i=>i)) {
     return {
@@ -54,7 +54,7 @@ export function validateDecks(deckstrings, validateSets, mode) {
       errors: decks.map(i=>i? '' : 'Invalid code')
     };
   }
-  const cardsValid = decks.map((deck) => validateCards(deck, validateSets));
+  const cardsValid = decks.map((deck) => validateCards(deck, format));
   if (cardsValid.some(i=>i)) {
     return {
       success: false,
@@ -86,7 +86,7 @@ export function validateDecks(deckstrings, validateSets, mode) {
   };
 }
 
-function validateCards(deck, validateSets) {
+function validateCards(deck, format) {
   let cardCount = 0;
   const valid = deck.cards.map(value => {
     const card = value[0];
@@ -98,13 +98,13 @@ function validateCards(deck, validateSets) {
       return 'Invalid card count: ' + card['name'];
     }
     cardCount += count;
-    if (validateSets) {
+    if (format==='standard') {
       if (!ACTIVE_SETS.includes(card['set'])) {
         return 'Invalid card: ' + card['name'];
       }
-      if (BANNED_CARDS.includes(card.id)) {
-        return 'Invalid card: ' + card['name'];
-      }
+    }
+    if (BANNED_CARDS.includes(card.id)) {
+      return 'Invalid card: ' + card['name'];
     }
     return null;
   })
@@ -136,10 +136,11 @@ function convertDeck(deck) {
   const cards = deck.cards.map(x => {
     return [cardsDict[x[0]], x[1]];
   }).sort(compare);
+  const format = deck.format===2 ? 'standard' : 'wild'
   if (!heroClass || !cards.every(card=>card[0])) {
     return null;
   }
-  return {'class': heroClass, 'cards': cards};
+  return {'class': heroClass, 'cards': cards, 'format': format};
 }
 
 export function encodeDeck(deck) {
@@ -148,7 +149,7 @@ export function encodeDeck(deck) {
   return encode({
     'cards': cards.map(card => [card[0]['dbfId'], card[1]]),
     'heroes': [heroDict[hero]],
-    'format': 2 //Standard
+    'format': deck.format==='standard' ? 2 : 1 //Standard or Wild
   });
 }
 
