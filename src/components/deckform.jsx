@@ -27,7 +27,7 @@ class DeckForm extends Component {
                 <label>Deck code {i+1} {i===3?' (Optional)' : ''}</label>
                 <input type="text" className="form-control" id={'deck'+(i+1)} onChange={(e) =>
                  this.handleChange(i, e)} placeholder={'Enter Deck Code ' + (i+1)}/>
-                {this.props.validDeck[i] ? <div style={{color:'red'}}>{this.props.validDeck[i]}</div> : null}
+                {this.props.errors[i] ? <div style={{color:'red'}}>{this.props.errors[i]}</div> : null}
               </div>
             )
           })

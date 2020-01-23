@@ -39,7 +39,7 @@ export function findDeckCode(text, hasNewLine) {
   return matches!=null ? matches[0] : text;
 }
 
-export function validateDecks(deckstrings, mode, validateDeck=false) {
+export function validateDecks(deckstrings, validateSets, mode) {
   const valid = deckstrings.map(isValidDeckstring);
   if (!valid.every(i=>i)) {
     return {
@@ -54,14 +54,12 @@ export function validateDecks(deckstrings, mode, validateDeck=false) {
       errors: decks.map(i=>i? '' : 'Invalid code')
     };
   }
-  if (validateDeck) {
-    const cardsValid = decks.map(validateCards);
-    if (cardsValid.some(i=>i)) {
-      return {
-        success: false,
-        errors: cardsValid
-      };
-    }
+  const cardsValid = decks.map((deck) => validateCards(deck, validateSets));
+  if (cardsValid.some(i=>i)) {
+    return {
+      success: false,
+      errors: cardsValid
+    };
   }
   if (mode==='specialist') {
     if (!decks.every(deck=>decks[0].class===deck.class)) {
@@ -88,7 +86,7 @@ export function validateDecks(deckstrings, mode, validateDeck=false) {
   };
 }
 
-function validateCards(deck) {
+function validateCards(deck, validateSets) {
   let cardCount = 0;
   const valid = deck.cards.map(value => {
     const card = value[0];
@@ -100,11 +98,13 @@ function validateCards(deck) {
       return 'Invalid card count: ' + card['name'];
     }
     cardCount += count;
-    if (!ACTIVE_SETS.includes(card['set'])) {
-      return 'Invalid card: ' + card['name'];
-    }
-    if (BANNED_CARDS.includes(card.id)) {
-      return 'Invalid card: ' + card['name'];
+    if (validateSets) {
+      if (!ACTIVE_SETS.includes(card['set'])) {
+        return 'Invalid card: ' + card['name'];
+      }
+      if (BANNED_CARDS.includes(card.id)) {
+        return 'Invalid card: ' + card['name'];
+      }
     }
     return null;
   })
@@ -220,7 +220,15 @@ export function compareDecks(deck1, deck2) {
   return [result1, result2];
 }
 
-export function condenseDeckstring(decks) {
+export function condenseDeckstring(decks, mode) {
+  if (mode === 'conquest') {
+    return condenseConquest(decks);
+  } else {
+    return condenseSpecialist(decks);
+  }
+}
+
+function condenseSpecialist(decks) {
   const hero = decks[0].class;
   const deck1 = encodeDeck(decks[0]);
   const diffs1 = compareDecks(decks[0],decks[1]);
@@ -234,12 +242,44 @@ export function condenseDeckstring(decks) {
     'heroes': [heroDict[hero]],
     'format': 2
   }).substring(6)
-  const codes = [deck1, encodePart(cards1),encodePart(cards2),encodePart(cards3),encodePart(cards4)].join('.');
-  return codes;
+  return [deck1, encodePart(cards1),encodePart(cards2),encodePart(cards3),encodePart(cards4)].join('.');
 }
 
-// Note: only works for Specialist
-export function parseDecks(deckcodes) {
+function condenseConquest(decks) {
+  return decks.map(encodeDeck).join('.');
+}
+
+export function parseDecks(deckcodes, mode) {
+  if (mode === 'conquest') {
+    return parseConquest(deckcodes);
+  } else {
+    return parseSpecialist(deckcodes);
+  }
+}
+
+function parseConquest(deckcodes) {
+  if (deckcodes.length === 0) {
+    return [];
+  }
+  const isValid = deckcodes.map(isValidDeckstring);
+  if (!isValid.every(i => i)) {
+    return [];
+  }
+  const decks = isValid.map(convertDeck);
+  if (!decks.every(i=>i)) {
+    return [];
+  }
+  const cardsValid = decks.map(deck => validateCards(deck, true));
+  if (cardsValid.some(i=>i)) {
+    return [];
+  }
+  if (!decks.every((deck1,index1)=>decks.every((deck2, index2) => index2<=index1 || deck1.class!==deck2.class))) {
+    return [];
+  }
+  return decks;
+}
+
+function parseSpecialist(deckcodes) {
   if (deckcodes.length !== 5) {
     return [];
   }
@@ -257,7 +297,7 @@ export function parseDecks(deckcodes) {
   if (!decks.every(i=>i)) {
     return [];
   }
-  const cardsValid = decks.map(validateCards);
+  const cardsValid = decks.map(deck => validateCards(deck, true));
   if (cardsValid.some(i=>i)) {
     return [];
   }
@@ -272,8 +312,6 @@ export function parseDecks(deckcodes) {
 
 function combine(base, removed, added) {
   const cards = [...base.cards];
-  //console.log(cards);
-  //console.log(removed);
   removed.cards.forEach((cardArr) => {
     const id = cardArr[0];
     const count = cardArr[1];

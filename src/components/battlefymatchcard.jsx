@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
+import { validateDecks, findDeckCode } from '../deckutils.js';
 
 class BattlefyMatchCard extends Component {
 
@@ -52,7 +52,7 @@ class BattlefyMatchCard extends Component {
     return fetch(fetchURL)
       .then(res => {return res.json()})
       .then(res => {
-        ['top', 'bottom'].map(pos => {
+        ['top', 'bottom'].forEach(pos => {
           const codes = res[pos].map(code => findDeckCode(code, true));
           const result = validateDecks(codes, false);
           const classes = result.decks.map(deck => deck['class']);
@@ -110,7 +110,7 @@ class BattlefyMatchCard extends Component {
   }
 
   renderClasses(player) {
-    const classes = player['classes'].filter(className => className != player['bannedClass']).map(className => (
+    const classes = player['classes'].filter(className => className !== player['bannedClass']).map(className => (
         <img width="34px" height="34px"
           src={require(`../resources/icons/icon_${className}.png`)} alt={className} className='mx-1'/>));
     if (player['bannedClass']) {

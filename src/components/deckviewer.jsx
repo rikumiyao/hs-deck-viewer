@@ -21,23 +21,22 @@ class DeckViewer extends Component {
     validDeck : [],
     isValid : false,
     isDiff: true,
-    isValidSpecialist: false,
-    copied: false
+    copied: false,
+    mode: 'conquest'
   }
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const arr = pathname.split('/');
-    if (arr[2]) {
-      const codes = decodeURIComponent(arr[2]).split('.');
-      const decks = parseDecks(codes);
-      if (decks.length === 3) {
-        this.setState({
-          decks: decks,
-          isValid: true,
-          isValidSpecialist: true
-        })
-      }
+    const mode = arr[1].toLowerCase();
+    const codes = decodeURIComponent(arr[2]).split('.');
+    const decks = parseDecks(codes, mode);
+    if (decks.length !== 0) {
+      this.setState({
+        mode,
+        decks,
+        isValid: true
+      })
     }
   }
 
@@ -45,39 +44,47 @@ class DeckViewer extends Component {
     this.setState({isDiff: isDiff});
   }
 
-  decksToURL(decks) {
-    return `https://www.yaytears.com/specialist/${encodeURIComponent(condenseDeckstring(decks))}`;
+  decksToURL(decks, mode) {
+    return `https://www.yaytears.com/${mode}/${encodeURIComponent(condenseDeckstring(decks, mode))}`;
   }
 
-  renderSpecialistURL() {
-    const url = this.decksToURL(this.state.decks);
+  renderURL() {
+    const url = this.decksToURL(this.state.decks, this.state.mode);
     return (
       <div className='row'>
         <div className='col-1'>
           <CopyToClipboard className='m-2 btn btn-primary' text={url}
             onCopy={() => this.setState({copied: true})}>
-            <button>Copy Deck Code</button>
+            <button>Copy</button>
           </CopyToClipboard>
         {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
         </div>
         <div className='col-10'>
-          <input type="text" className="form-control m-2" id={'listexport'} value={this.decksToURL(this.state.decks)} readOnly />
+          <input type="text" className="form-control m-2" id={'listexport'} value={url} readOnly />
         </div>
       </div>
     );
   }
 
-  render() {
-    let decks;
-    if (this.state.isDiff) {
-      decks = [];
-      decks.push((
+  renderDecks(decks, mode) {
+    let deckComponents;
+    if (mode==='conquest') {
+      deckComponents = decks.map((deck, i)=> {
+        return (
+          <div key={'Deck'+(i+1)} className='col-sm'>
+            <Deck index={0} deck={deck}></Deck>
+          </div>
+        );
+      });
+    } else if (this.state.isDiff) {
+      deckComponents = [];
+      deckComponents.push((
         <div key={'Deck'+(1)} className='col-sm'>
-          <Deck index={1} deck={this.state.decks[0]}></Deck>
+          <Deck index={1} deck={decks[0]}></Deck>
         </div>
       ))
-      decks = decks.concat(this.state.decks.slice(1).map((deck, i)=> {
-        const diffs = compareDecks(this.state.decks[0],deck);
+      deckComponents = deckComponents.concat(decks.slice(1).map((deck, i)=> {
+        const diffs = compareDecks(decks[0],deck);
         return (
           <div key={'Diff'+(i+1)} className='col-sm'>
             <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]}></DeckDiff>
@@ -85,14 +92,19 @@ class DeckViewer extends Component {
         );
       }));
     } else {
-      decks = this.state.decks.map((deck, i)=> {
+      deckComponents = this.state.decks.map((deck, i)=> {
         return (
           <div key={'Deck'+(i+1)} className='col-sm'>
             <Deck index={i+1} deck={deck}></Deck>
           </div>
         );
-      })
-    };
+      });
+    }
+    console.log(deckComponents);
+    return deckComponents;
+  }
+
+  render() {
     return (
       <div className='container mt-2'>
         {this.props.history.location.state && this.props.history.location.state.created ? 
@@ -100,12 +112,12 @@ class DeckViewer extends Component {
             <strong>Success!</strong>
           </div> : ''
         }
-        <Link className="btn btn-primary" role="button" to='/specialist'>Create More Decks</Link>
-        {this.state.isValidSpecialist ? this.renderSpecialistURL() : ''}
+        <Link className="btn btn-primary" role="button" to={`/${this.state.mode}`}>Create More Decks</Link>
+        {this.state.isValid ? this.renderURL() : ''}
         {this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
         <div className='container'>
           <div className='row'>
-            {decks}
+            {this.renderDecks(this.state.decks, this.state.mode)}
           </div>
         </div>
       </div>

@@ -85,7 +85,7 @@ class BattlefyDecks extends Component {
 
   processDecks(codes) {
     codes = codes.map(code => findDeckCode(code, true));
-    const result = validateDecks(codes, false);
+    const result = validateDecks(codes, "", false);
     if (!result['success']) {
       this.setState({
         isValid: false

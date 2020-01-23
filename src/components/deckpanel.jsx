@@ -1,28 +1,43 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
 
-import { validateDecks, compareDecks, findDeckCode, cardDiff, condenseDeckstring } from '../deckutils.js';
-import Deck from './deck';
+import { validateDecks, findDeckCode, cardDiff, condenseDeckstring } from '../deckutils.js';
 import DeckForm from './deckform';
-import DeckOptions from './deckoptions';
-import DeckDiff from './deckdiff';
+import DocumentTitle from 'react-document-title';
 
 class DeckPanel extends Component {
 
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleToggleDiff = this.handleToggleDiff.bind(this);
-    this.state.numDecks = this.props.numDecks;
-  }
-
   state = {
     decks : [],
-    validDeck : [],
-    isValid : false,
-    isDiff: true,
-    isValidSpecialist: false,
-    copied: false
+    errors : [],
+    numDecks: 4,
+    mode: ""
+  }
+
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateState = this.updateState.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.updateState()
+    }
+  }
+
+  componentDidMount() {
+    this.updateState()
+  }
+
+  updateState() {
+    const pathname = this.props.location.pathname;
+    const arr = pathname.split('/');
+    const mode = arr[1] ? arr[1].toLowerCase() : 'conquest';
+    this.setState({
+      mode,
+      numDecks: mode==='conquest' ? 4 : 3
+    });
   }
 
   handleSubmit(codes) {
@@ -30,96 +45,58 @@ class DeckPanel extends Component {
     if (codes.length===4 && codes[3]==='') {
       codes = codes.slice(0,3)
     }
-    const result = validateDecks(codes, this.props.mode, false);
+    const result = validateDecks(codes, this.state.mode, false);
     if (!result['success']) {
       this.setState({
-        validDeck:result['errors'],
-        isValid: false
+        errors: result['errors'],
       });
     } else {
       const decks = result['decks'];
-      const validDeck = Array(this.state.numDecks).fill('');
-      let validSpecialist = true;
+      const errors = Array(this.state.numDecks).fill('');
+      let success = true;
       if (this.props.mode==='specialist') {
         const diffs1 = cardDiff(decks[0],decks[1]);
         const diffs2 = cardDiff(decks[0], decks[2]);
         if (diffs1 > 5) {
-          validDeck[1] = `Invalid number of swaps: ${diffs1}`;
-          validSpecialist = false;
+          errors[1] = `Invalid number of swaps: ${diffs1}`;
+          success = false;
         }
         if (diffs2 > 5) {
-          validDeck[2] = `Invalid number of swaps: ${diffs2}`;
-          validSpecialist = false;
+          errors[2] = `Invalid number of swaps: ${diffs2}`;
+          success = false;
         }
       }
-      this.setState({
-        validDeck: validDeck,
-        decks: decks,
-        isValid: true,
-        isValidSpecialist: validSpecialist
-      });
-      if (validSpecialist && this.props.mode==='specialist') {
-        this.props.history.push(this.decksToURL(decks), {created: true});
+      if (success) {
+        this.props.history.push(this.decksToURL(decks, this.state.mode), {created: true});
+      } else {
+        this.setState({
+          errors: errors
+        });
       }
     }
   }
 
-  handleToggleDiff(isDiff) {
-    this.setState({isDiff: isDiff});
-  }
-
-  decksToURL(decks) {
-    return `/specialist/${encodeURIComponent(condenseDeckstring(decks))}`;
+  decksToURL(decks, mode) {
+    return `/${mode}/${encodeURIComponent(condenseDeckstring(decks, mode))}`;
   }
 
   render() {
-    let decks;
-    if (this.props.mode==='conquest') {
-      decks = this.state.decks.map((deck, i)=> {
-        return (
-          <div key={'Deck'+(i+1)} className='col-sm'>
-            <Deck index={0} deck={deck}></Deck>
-          </div>
-        );
-      });
-    } else {
-      if (this.state.isDiff) {
-        decks = [];
-        decks.push((
-          <div key={'Deck'+(1)} className='col-sm'>
-            <Deck index={1} deck={this.state.decks[0]}></Deck>
-          </div>
-        ))
-        decks = decks.concat(this.state.decks.slice(1).map((deck, i)=> {
-          const diffs = compareDecks(this.state.decks[0],deck);
-          return (
-            <div key={'Diff'+(i+1)} className='col-sm'>
-              <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]}></DeckDiff>
-            </div>
-          );
-        }));
-      } else {
-        decks = this.state.decks.map((deck, i)=> {
-        return (
-          <div key={'Deck'+(i+1)} className='col-sm'>
-            <Deck index={i+1} deck={deck}></Deck>
-          </div>
-        );
-      });
-      }
+    if (!this.state.mode) {
+      return "";
     }
     return (
-      <div>
-        <DeckForm mode={this.props.mode} onSubmit={this.handleSubmit} numDecks={this.props.numDecks} validDeck={this.state.validDeck}></DeckForm>
-        {this.props.mode==='specialist' && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
-        <div className='container'>
-          <div className='row'>
-            {decks}
-          </div>
+      <DocumentTitle title={`${capitalize(this.state.mode)} Decks`}>
+        <div className="container mt-2">
+          <h2>{`Create Hearthstone ${capitalize(this.state.mode)} Lineups`}</h2>
+          <DeckForm mode={this.state.mode} onSubmit={this.handleSubmit} numDecks={this.state.numDecks} errors={this.state.errors}></DeckForm>
         </div>
-      </div>
+      </DocumentTitle>
     );
   }
+}
+
+function capitalize(word) {
+  return word[0].toUpperCase() + word.slice(1).toLowerCase();
 }
 
 export default withRouter(DeckPanel);
