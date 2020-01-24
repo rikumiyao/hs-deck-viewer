@@ -4,7 +4,6 @@ import BattlefyMatchCard from './battlefymatchcard';
 class BattlefyStats extends Component {
 
   render() {
-    console.log(this.props.matches);
     return (
       <table className="table">
         <thead>

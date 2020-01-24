@@ -12,6 +12,7 @@ class BattlefyEvent extends Component {
     this.processTop8 = this.processTop8.bind(this);
     this.handleSwiss = this.handleSwiss.bind(this);
     this.handleSingleElim = this.handleSingleElim.bind(this);
+    this.processBracket = this.processBracket.bind(this);
   }
 
   state = {
@@ -25,6 +26,23 @@ class BattlefyEvent extends Component {
     isSwiss: true
   }
 
+  processBracket(data) {
+    const players = {};
+    data.forEach(row => {
+      ['top', 'bottom'].forEach(pos=> {
+        const team = row[pos];
+        if (team['team']) {
+          const name = team['team']['name'];
+          players[name] = {name};
+        }
+      })
+    });
+    console.log(players);
+    this.setState({
+      players: players
+    })
+  }
+
   processSwiss(stageId) {
     const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
     return fetch(metaDataUrl)
@@ -35,12 +53,12 @@ class BattlefyEvent extends Component {
         return fetch(standingsUrl)
           .then(res => res.json())
           .then(res => {
-            const players = {};
+            const players = this.state.players;
             res.forEach( (row, idx) => {
               const name = row["team"]["name"];
               const wins = row["wins"];
               const losses = row["losses"];
-              players[name]["wins"] = {"wins": wins, "losses": losses, "position": idx};
+              players[name] = {"wins": wins, "losses": losses, "position": idx, "name": name};
             });
             this.setState({players: players});
           });
@@ -83,7 +101,11 @@ class BattlefyEvent extends Component {
 
   processSingleElim(stageId) {
     const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
-    return fetch(metaDataUrl)
+    const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
+    return fetch(fetchDecksUrl)
+      .then(res => res.json())
+      .then(this.processBracket)
+      .then(() => fetch(metaDataUrl))
       .then(res => res.json())
       .then(res => res["bracket"]["currentRoundNumber"]+1 || res["currentRound"])
       .then(roundNum => {
@@ -91,11 +113,12 @@ class BattlefyEvent extends Component {
         return fetch(standingsUrl)
           .then(res => res.json())
           .then(res => {
-            const players = {};
+            const players = this.state.players;
             res.forEach( (row, idx) => {
               const name = row["team"]["name"];
               const place = row["place"];
-              players[name] = {"place": place, "position": place ? place : -1};
+              players[name]["place"] = place;
+              players[name]["position"] = place ? place : -1;
             });
             this.setState({players: players});
           });

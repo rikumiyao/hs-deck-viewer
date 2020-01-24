@@ -135,11 +135,13 @@ function convertDeck(deck) {
   const heroClass = cardsDict[hero]['cardClass'].toLowerCase();
   const cards = deck.cards.map(x => {
     return [cardsDict[x[0]], x[1]];
-  }).sort(compare);
-  const format = deck.format===2 ? 'standard' : 'wild'
+  });
   if (!heroClass || !cards.every(card=>card[0])) {
     return null;
   }
+  cards.sort(compare);
+  const format = deck.format===2 ? 'standard' : 'wild'
+  
   return {'class': heroClass, 'cards': cards, 'format': format};
 }
 

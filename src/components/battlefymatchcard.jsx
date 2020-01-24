@@ -55,6 +55,9 @@ class BattlefyMatchCard extends Component {
         ['top', 'bottom'].forEach(pos => {
           const codes = res[pos].map(code => findDeckCode(code, true));
           const result = validateDecks(codes, false);
+          if (!result['success']) {
+            throw("Invalid Deck");
+          }
           const classes = result.decks.map(deck => deck['class']);
           match[pos+"Player"]['classes'] = classes;
         });
@@ -135,9 +138,9 @@ class BattlefyMatchCard extends Component {
         </tr>
       )
     } else if (!this.state.isLoaded) {
-      return (<th><Loader type="Oval" /></th>)
+      return (<tr><Loader type="Oval" /></tr>)
     } else {
-      return this.state.error.message;
+      return <tr> <h2 style={{'color':'red'}}>{this.state.error.message ? this.state.error.message : this.state.error} </h2></tr>;
     }
   }
 }

@@ -34,7 +34,6 @@ class BattlefyPlayer extends Component {
   }
 
   updateState() {
-    console.log(this.props);
     const pathname = this.props.location.pathname;
     const tourneyId = pathname.split('/')[2];
     const player = decodeURIComponent(pathname.split('/')[3]);
