@@ -44,8 +44,12 @@ class BattlefyEvent extends Component {
   }
 
   processSwiss(stageId) {
+    const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
     const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
-    return fetch(metaDataUrl)
+    return fetch(fetchDecksUrl)
+      .then(res => res.json())
+      .then(this.processBracket)
+      .then(() => fetch(metaDataUrl))
       .then(res => res.json())
       .then(res => res["bracket"]["currentRoundNumber"]+1 || res["currentRound"])
       .then(roundNum => {
@@ -100,16 +104,12 @@ class BattlefyEvent extends Component {
 
 
   processSingleElim(stageId) {
-    const metaDataUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
     const fetchDecksUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches?roundNumber=1`;
+    const standingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/standings`;
     return fetch(fetchDecksUrl)
       .then(res => res.json())
       .then(this.processBracket)
-      .then(() => fetch(metaDataUrl))
-      .then(res => res.json())
-      .then(res => res["bracket"]["currentRoundNumber"]+1 || res["currentRound"])
-      .then(roundNum => {
-        const standingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/standings`;
+      .then(() => {
         return fetch(standingsUrl)
           .then(res => res.json())
           .then(res => {
