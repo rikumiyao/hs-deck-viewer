@@ -7,7 +7,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 class BattlefyTop8 extends Component {
 
   state = {
-    eventLocation: 'indonesia',
+    eventLocation: 'jönköping',
     players: [],
     isLoaded : false,
     error : null

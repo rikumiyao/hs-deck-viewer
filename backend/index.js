@@ -83,8 +83,9 @@ exports.routes = (app) => {
     });
   app.route('/api/top8count')
     .get((req, res) => {
-      const region = req.query['region'];
+      const region = decodeURIComponent(req.query['region']);
       const page = req.query['page'];
+      console.log(region);
       mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});
