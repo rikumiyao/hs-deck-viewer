@@ -85,7 +85,6 @@ exports.routes = (app) => {
     .get((req, res) => {
       const region = decodeURIComponent(req.query['region']);
       const page = req.query['page'];
-      console.log(region);
       mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});

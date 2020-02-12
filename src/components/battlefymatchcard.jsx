@@ -56,7 +56,7 @@ class BattlefyMatchCard extends Component {
           const codes = res[pos].map(code => findDeckCode(code, true));
           const result = validateDecks(codes, false);
           if (!result['success']) {
-            throw("Invalid Deck");
+            throw new Error("Invalid Deck");
           }
           const classes = result.decks.map(deck => deck['class']);
           match[pos+"Player"]['classes'] = classes;
