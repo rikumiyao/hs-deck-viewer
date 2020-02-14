@@ -4,6 +4,7 @@ const fs = require('fs');
 const request = require('request');
 const url = require('url');
 const cronJob = require('./scripts/cron');
+const _ = require('lodash');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -61,8 +62,8 @@ function setBattlefyMeta(req, callback) {
       try {
         const data = JSON.parse(response);
         callback({
-          title: data['name'],
-          description: `View Decks for ${data['name']}`,
+          title: _.escape(data['name']),
+          description: `View Decks for ${_.escape(data['name'])}`,
           image: DEFAULT_IMAGE
         });
       }

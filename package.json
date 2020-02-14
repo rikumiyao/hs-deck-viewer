@@ -13,6 +13,7 @@
     "fs": "0.0.1-security",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
+    "lodash": "^4.17.15",
     "mdbreact": "^4.11.0",
     "mongodb": "^3.3.2",
     "node-sass": "^4.12.0",

@@ -37,7 +37,6 @@ class BattlefyEvent extends Component {
         }
       })
     });
-    console.log(players);
     this.setState({
       players: players
     })
