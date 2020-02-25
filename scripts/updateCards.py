@@ -21,8 +21,10 @@ def getCardsJson():
     if cardInfo:
       data[index]['image'] = cardInfo['image']
     else:
-      print(card['dbfId'])
+      print('No card data found for {} ({})'.format(card['name'], card['dbfId']))
   return data
+
+print("Fetching cards from {}".format(CARDS_URL))
 data = getCardsJson()
 
 with open('../src/resources/cards.compact.json', 'w') as file:

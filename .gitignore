@@ -10,6 +10,9 @@
 
 # production
 /build
+/src/resources/Tiles
+/src/resources/cards.compact.json
+/scripts/__pycache__
 
 # misc
 .DS_Store

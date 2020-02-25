@@ -53,7 +53,11 @@ def process(cardid):
     color_palette = [(41,48,58,255), (93, 68, 68, 0)]
 
     image = '{}{}.png'.format(tile_loc, card['id'])
-    im = Image.open(image)
+    try:
+        im = Image.open(image)
+    except Exception as e:
+        print(e)
+        return
     master = Image.new('RGBA', (width, height))
     master.paste(im, (xoff,3, xoff+130, 37))
     gradient = Image.new('RGBA', (width, height))
@@ -125,9 +129,13 @@ def process_hero(card):
         draw.text((22, 75-h), title, font=font)
         imclass.save('{}/{}_{}.jpg'.format(hero_dest, card['cardClass'].lower(), i+1))
 
+print("Generating tiles in {}".format(tile_dest))
+
 if not os.path.exists(tile_dest):
     os.mkdir(tile_dest)
 #if not os.path.exists(hero_dest):
 #    os.mkdir(hero_dest)
 for card in card_dict:
     process(card)
+
+print("Finished generating tiles")
