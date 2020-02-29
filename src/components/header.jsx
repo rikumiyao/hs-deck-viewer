@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 
 class Header extends Component {
   render() {
@@ -12,8 +12,11 @@ class Header extends Component {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Link to="/conquest" className={"nav-item nav-link"+(component==="conquest"?" active":"")}><NavItem>Conquest</NavItem></Link>
-            <Link to="/specialist" className={"nav-item nav-link"+(component==="specialist"?" active":"")}><NavItem>Specialist</NavItem></Link>
+            <NavDropdown title="Hearthstone" id="hearthstone-nav-dropdown">
+              <NavDropdown.Item href="/conquest" className={(component==="conquest"?" active":"")}>Conquest</NavDropdown.Item>
+              <NavDropdown.Item href="/specialist" className={(component==="specialist"?" active":"")}>Specialist</NavDropdown.Item>
+              <NavDropdown.Item href="/deck" className={(component==="deck"?" active":"")}>Deck</NavDropdown.Item>
+            </NavDropdown>
             <Link to="/battlefy" className={"nav-item nav-link"+(component==="battlefy"?" active":"")}><NavItem>Battlefy</NavItem></Link>
             <Link to="/grandmasters" className={"nav-item nav-link"+(component==="grandmasters"?" active":"")}><NavItem>Grandmasters</NavItem></Link>
           </Nav>

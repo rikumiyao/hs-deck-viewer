@@ -1,7 +1,8 @@
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom';
 import React, {Component} from 'react';
 import DeckPanel from './components/deckpanel';
 import DeckViewer from './components/deckviewer';
+import HearthstoneDeck from './components/hearthstonedeck';
 import Battlefy from './components/battlefy';
 import BattlefyEvent from './components/battlefyevent';
 import BattlefyPlayer from './components/battlefyplayer';
@@ -17,6 +18,8 @@ class Main extends Component {
           <Route exact path='/' component={DeckPanel}/>
           <Route path='/(specialist|conquest)/(.+)' component={DeckViewer}/>
           <Route path='/(specialist|conquest)' component={DeckPanel}/>
+          <Route path='/deck/(.+)' component={DeckViewer}/>
+          <Route path='/deck' component={HearthstoneDeck}/>
           <Route path='/battlefy/([0-9a-f]+)/([0-9a-f]+)' component={BattlefyDecks}/>
           <Route path='/battlefy/([0-9a-f]+)/(.+)' component={BattlefyPlayer}/>
           <Route path='/battlefy/week/' component={Battlefy}/>

@@ -15,13 +15,17 @@ class Deck extends Component {
     listStyleType: "none"
 	};
 
+  deckstyles = {
+    maxWidth: 340
+  }
+
   renderDeck() {
     if (!this.props.deck) {
       return (null);
     }
     const deck = this.props.deck;
     return (
-      <div>
+      <div style={this.deckstyles}>
         <CopyToClipboard className='m-2 btn btn-primary' text={encodeDeck(deck)}
           onCopy={() => {this.setState({copied: true})}}>
           <button>Copy Deck Code</button>

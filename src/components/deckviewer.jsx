@@ -10,10 +10,9 @@ import DeckDiff from './deckdiff';
 
 class DeckViewer extends Component {
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.handleToggleDiff = this.handleToggleDiff.bind(this);
-    this.state.numDecks = this.props.numDecks;
   }
 
   state = {
@@ -68,7 +67,7 @@ class DeckViewer extends Component {
 
   renderDecks(decks, mode) {
     let deckComponents;
-    if (mode==='conquest') {
+    if (mode==='conquest' || mode==='deck') {
       deckComponents = decks.map((deck, i)=> {
         return (
           <div key={'Deck'+(i+1)} className='col-sm'>
@@ -100,7 +99,6 @@ class DeckViewer extends Component {
         );
       });
     }
-    console.log(deckComponents);
     return deckComponents;
   }
 
@@ -114,7 +112,8 @@ class DeckViewer extends Component {
         }
         <Link className="btn btn-primary" role="button" to={`/${this.state.mode}`}>Create More Decks</Link>
         {this.state.isValid ? this.renderURL() : ''}
-        {this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
+        {this.state.isValid && this.state.mode==='specialist' ? 
+          <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
         <div className='container'>
           <div className='row'>
             {this.renderDecks(this.state.decks, this.state.mode)}

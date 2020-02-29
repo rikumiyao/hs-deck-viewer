@@ -224,7 +224,7 @@ export function compareDecks(deck1, deck2) {
 }
 
 export function condenseDeckstring(decks, mode) {
-  if (mode === 'conquest') {
+  if (mode === 'conquest' || mode === 'deck') {
     return condenseConquest(decks);
   } else {
     return condenseSpecialist(decks);
@@ -252,7 +252,10 @@ function condenseConquest(decks) {
   return decks.map(encodeDeck).join('.');
 }
 
-export function parseDecks(code, mode) {
+export function parseDecks(code, mode) {  
+  if (mode === 'deck') {
+    return parseConquest([code]);
+  }
   const deckcodes = code.split('.');
   if (mode === 'conquest') {
     return parseConquest(deckcodes);
