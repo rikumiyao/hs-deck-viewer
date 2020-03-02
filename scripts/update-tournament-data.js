@@ -74,13 +74,14 @@ function handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamen
 }
 
 function manualTop8(id, slug, tournamentLoc, tournamentNum) {
-  const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`
+  const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
+
   httpGet(fetchTourneyURL, {}, result=> {
-    const stageId = result['stageIDs'][1];
+    const stageId = result['stageIDs'][0];
     if (stageId) {
       const fetchStandingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/standings`;
       httpGet(fetchStandingsUrl, {}, standings => {
-        processTop8(id, slug, standings, tournamentLoc, tournamentNum);
+        handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum)
       });
     }
   });
@@ -224,12 +225,32 @@ function update(type, args) {
     updateGrandmaster()
   } else if (type === 'sync') {
     const start = args['start'];
-    const end = args['sync'];
+    const end = args['end'];
     updateGrandmaster();
     updateTournaments(true, start, end);
   } else {
     updateGrandmaster();
     updateTournaments();
+  }
+}
+
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const type = args[0];
+  if (type === 'manual') {
+    update(type, {
+      'id': args[1],
+      'slug': args[2],
+      'tournamentLoc': args[3],
+      'tournamentNum': args[4]
+    });
+  } else if (type === 'sync') {
+    update(type, {
+      'start': args[1],
+      'end': args[2]
+    });
+  } else {
+    update(type);
   }
 }
 
