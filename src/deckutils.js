@@ -36,6 +36,7 @@ function isValidDeckstring(deckstring) {
 
 export function findDeckCode(text, hasNewLine) {
   const regex = hasNewLine ? /^AAE([A-Za-z0-9+=/](?: ?))+/m : /AAE([A-Za-z0-9+=/](?: ?))+/;
+  text = text.replace(/\./g,'')
   const matches = text.match(regex)
   return matches!=null ? matches[0] : text;
 }
