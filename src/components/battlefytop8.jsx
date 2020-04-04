@@ -7,7 +7,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 class BattlefyTop8 extends Component {
 
   state = {
-    eventLocation: 'jönköping',
+    eventLocation: 'pacific',
     players: [],
     isLoaded : false,
     error : null
@@ -67,7 +67,7 @@ class BattlefyTop8 extends Component {
     if (this.state.isLoaded && !this.state.error) {
       return (
         <div className='m-1'>
-          <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)}</h3>
+          <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation=='pacific' ? 'Online Asia-Pacific' : this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)}</h3>
           {this.renderTable()}
         </div>
       )
