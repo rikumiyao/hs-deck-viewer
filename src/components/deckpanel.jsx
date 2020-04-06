@@ -54,7 +54,7 @@ class DeckPanel extends Component {
       const decks = result['decks'];
       const errors = Array(this.state.numDecks).fill('');
       let success = true;
-      if (this.props.mode==='specialist') {
+      if (this.state.mode==='specialist') {
         const diffs1 = cardDiff(decks[0],decks[1]);
         const diffs2 = cardDiff(decks[0], decks[2]);
         if (diffs1 > 5) {
