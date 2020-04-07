@@ -1,11 +1,11 @@
 import { encode, decode } from "deckstrings";
 import data from './resources/cards.compact.json';
 
-const ACTIVE_SETS = ['CORE','EXPERT1', 'GILNEAS','BOOMSDAY', 'TROLL', 'DALARAN', 'ULDUM',
-  'DRAGONS', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE'];
+const ACTIVE_SETS = ['CORE','EXPERT1', 'DALARAN', 'ULDUM', 'DRAGONS', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE', 'DEMON_HUNTER_INITIATE'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const cardsDict = {};
 const heroDict = {
+  'demonhunter': 56550,
   'mage': 637,
   'shaman': 1066,
   'rogue': 930,

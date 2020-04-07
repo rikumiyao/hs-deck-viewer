@@ -51,10 +51,11 @@ class DeckDiff extends Component {
   }
 
   getClassImg(deckClass, index) {
+    const extension = deckClass==='demonhunter' ? '.png' : '.jpg'
     if (index===0)
-      return require('../resources/classes/'+deckClass+'.jpg');
+      return require('../resources/classes/'+deckClass+extension);
     else
-      return require('../resources/classes/'+deckClass+'_'+index+'.jpg');
+      return require('../resources/classes/'+deckClass+'_'+index+extension);
   }
 
   render() {
