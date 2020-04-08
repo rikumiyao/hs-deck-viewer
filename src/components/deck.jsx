@@ -94,7 +94,7 @@ class Deck extends Component {
   }
 
   getClassImg(deckClass, index) {
-    const extension = deckClass==='demonhunter' ? '.png' : '.jpg'
+    const extension = '.png';
     if (index===0)
       return require('../resources/classes/'+deckClass+extension);
     else
