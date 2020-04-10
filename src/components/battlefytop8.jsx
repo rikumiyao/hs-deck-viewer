@@ -13,7 +13,24 @@ class BattlefyTop8 extends Component {
     error : null
   }
 
+  tournaments = ['online','jönköping','indonesia'];
+
+  constructor() {
+    super();
+    this.loadTop8 = this.loadTop8.bind(this);
+  }
+
   componentDidMount() {
+    this.loadTop8();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.eventLocation !== prevState.eventLocation) {
+      this.loadTop8();
+    }
+  }
+
+  loadTop8() {
     const fetchTop8URL = `/api/top8Count?region=${this.state.eventLocation}`;
     fetch(fetchTop8URL)
       .then(res => res.json())
@@ -68,6 +85,17 @@ class BattlefyTop8 extends Component {
       return (
         <div className='m-1'>
           <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation==='online' ? 'Online' : this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)}</h3>
+          <div className="m-1 row">
+            <label className="col-sm-2 col-form-label">Tournament</label>
+            <select className="form-control col-sm-2" id="format"
+              defaultValue={this.state.eventLocation} onChange={event => {this.setState({isLoaded:false, eventLocation:event.target.value})}}>
+              {
+                this.tournaments.map(tournament => {
+                  return (<option value={tournament}>{tournament[0].toUpperCase()+tournament.substring(1)}</option>)
+                })
+              }
+            </select>
+          </div>
           {this.renderTable()}
         </div>
       )
