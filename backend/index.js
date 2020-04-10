@@ -92,10 +92,13 @@ exports.routes = (app) => {
         }
         const db = client.db();
         const top8s = db.collection('top8');
+        const regionfilter = region==='online'?
+          {$filter: {input: "$tournaments", cond: {$or: [{$eq: ["$$this.tournamentId",'4']},{$eq: ["$$this.tournamentId",'pacific']}]}}} :
+          {$filter: {input: "$tournaments", cond: {$eq: ["$$this.tournamentId",region]}}}
         top8s.aggregate([
           { $project: {
-              "numTop8s": {$size: {$filter: {input: "$tournaments", cond: {$eq: ["$$this.tournamentId",region]}}}},
-              "tournaments": {$filter: {input: "$tournaments", cond: {$eq: ["$$this.tournamentId",region]}}},
+              "numTop8s": {$size: regionfilter},
+              "tournaments": regionfilter,
               "_id": 1
             }
           },
