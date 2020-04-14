@@ -13,6 +13,8 @@ class Battlefy extends Component {
     super();
     this.handleDate = this.handleDate.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   state = {
@@ -20,6 +22,8 @@ class Battlefy extends Component {
     tournaments : {},
     isLoaded : false,
     error : null,
+    invalidUrl: false,
+    value: '',
     qualified : {}
   }
 
@@ -43,6 +47,28 @@ class Battlefy extends Component {
         this.props.history.replace(`/battlefy/top8`);
       }
     }
+  }
+
+  handleChange(e) {
+    this.setState({value: e.target.value})
+  }
+
+  handleSubmit(e) {
+    console.log(this.state.value);
+    const regex = /^(?:https:\/\/)?\/?battlefy.com\/([^:/\s]+)\/([^:\/\s]+)\/([\w\d]+)\/.*$/;
+    const matches = this.state.value.match(regex);
+    if (matches) {
+      const code = matches[3];
+      this.setState({invalidUrl: false});
+      this.props.history.push(this.tournamentCodeToUrl(code), {created: true});
+    } else {
+      this.setState({invalidUrl: true});
+    }
+    e.preventDefault();
+  }
+
+  tournamentCodeToUrl(code) {
+    return `/battlefy/${encodeURIComponent(code)}`
   }
 
   fetchTourney(startDate) {
@@ -150,6 +176,25 @@ class Battlefy extends Component {
     );
   }
 
+  renderBattlefyForm() {
+    return (
+      <div className='m-1'>
+        <form onSubmit={this.handleSubmit}>
+          <div className='form-group'>
+            <label for="battlefyurl">Battlefy Url</label>
+            <input type="text" className="form-control" id='battlefyurl' onChange={(e) =>
+              this.handleChange(e)} placeholder='Enter Battlefy Url'/>
+            <button
+              className="btn btn-primary mt-2">
+              Submit
+            </button>
+            {this.state.invalidUrl ? <div style={{color:'red'}}>Invalid Battlefy Url</div> : null}
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   render() {
     const defaultActiveKey = this.props.location.pathname.split('/')[2]==='stats'?'stats' : 
       this.props.location.pathname.split('/')[2]==='top8' ? 'top8' : 'events';
@@ -160,6 +205,7 @@ class Battlefy extends Component {
           <h2>Browse Hearthstone Master's Cup Tournaments</h2>
           <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
             <Tab eventKey="events" title="Tournaments">
+              {this.renderBattlefyForm()}
               {this.renderTable()}
             </Tab>
             <Tab eventKey="top8" title="Top 8 Count">
