@@ -65,7 +65,7 @@ class GrandmasterDecks extends Component {
           this.setState({
             player: player,
           });
-          if (decks) {
+          if (decks && decks.every(deck=>deck)) {
             this.processDecks(decks);
           } else {
             this.setState({decksExist: false});
@@ -138,7 +138,7 @@ class GrandmasterDecks extends Component {
         </DocumentTitle>
       );
     } else if (!this.state.error && this.state.isLoaded && !this.state.decksExist) {
-      return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Decks Have Not Been Submitted Yet</h2></DocumentTitle>;
+      return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Decks Are Not Available Yet</h2></DocumentTitle>;
     } else if (!this.state.error && this.state.isLoaded && !this.state.isValid) {
       return <DocumentTitle title={this.state.player}><h2 style={{'color':'red'}}>Unknown error in validating decks</h2></DocumentTitle>;
     }
