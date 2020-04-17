@@ -172,11 +172,17 @@ function handleGrandmaster(gmData) {
           const player2 = match.competitors[1] ? match.competitors[1].name : '';
           let player1Decks;
           if (!match.attributes.competitor_1) {
-            player1Decks = []
-            player2Decks = []
+            player1Decks = [];
+            player2Decks = [];
+            player1Classes = [];
+            player2Classes = [];
           } else {
             player1Decks = match.attributes.competitor_1.decklist.map(a=>a['deckCode']);
             player2Decks = match.attributes.competitor_2.decklist.map(a=>a['deckCode']);
+            player1Classes = match.attributes.competitor_1.decklist.map(
+              a=>{return {class: a['class'],banned:a['attributes']==='Banned'}});
+            player2Classes = match.attributes.competitor_2.decklist.map(
+              a=>{return {class: a['class'],banned:a['attributes']==='Banned'}});
           }
           const score = match.scores.map(a=>a.value);
           const id = match.id;
@@ -186,7 +192,9 @@ function handleGrandmaster(gmData) {
             competitor_1: player1,
             competitor_2: player2,
             competitor_1_decks: player1Decks,
+            competitor_1_classes: player1Classes,
             competitor_2_decks: player2Decks,
+            competitor_2_classes: player2Classes,
             score: score,
             startDate: startDate
           };

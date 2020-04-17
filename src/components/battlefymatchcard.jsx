@@ -113,7 +113,9 @@ class BattlefyMatchCard extends Component {
   }
 
   renderClasses(player) {
-    const classes = player['classes'].filter(className => className !== player['bannedClass']).map(className => (
+    const classes = player['classes'].filter(className => className !== player['bannedClass'])
+      .sort()
+      .map(className => (
         <img width="34px" height="34px"
           src={require(`../resources/icons/icon_${className}.png`)} alt={className} className='mx-1'/>));
     if (player['bannedClass']) {

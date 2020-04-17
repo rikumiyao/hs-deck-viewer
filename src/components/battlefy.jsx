@@ -156,6 +156,7 @@ class Battlefy extends Component {
         <tbody>
           {this.state.tournaments.map(data=> {
             const date = new Date(Date.parse(data['startTime']));
+            const qualified = this.state.qualified[data['_id']] ? this.state.qualified[data['_id']][0] : '';
             return (
               <tr id={data['_id']}>
                 <th scope='row'>
@@ -165,7 +166,9 @@ class Battlefy extends Component {
                 </th>
                 <td>{dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</td>
                 <td>{data['region']}</td>
-                <td>{ this.state.qualified[data['_id']] ? this.state.qualified[data['_id']].join(' ') : ''}</td>
+                <td>
+                  {qualified ? <Link to={`/battlefy/${data['_id']}/${encodeURIComponent(qualified)}`}>{qualified}</Link> : ''}
+                </td>
                 <td>
                   { new Date() > date ? <Link to={`/battlefy/${data['_id']}`}>Decks</Link> : ''}
                 </td>
