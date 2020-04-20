@@ -46,8 +46,9 @@ function createRoute(pathspec, setMetaFunc) {
 function setBattlefyMeta(req, callback) {
   try {
     const path = req.url;
-    components = path.split('/');
-    id = components[2];
+    const components = path.split('/');
+    const id = components[2];
+    const name = components[3];
     if (!id || id === 'week') {
       callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
       return;
@@ -61,11 +62,19 @@ function setBattlefyMeta(req, callback) {
       }
       try {
         const data = JSON.parse(response);
-        callback({
-          title: _.escape(data['name']),
-          description: `View Decks for ${_.escape(data['name'])}`,
-          image: DEFAULT_IMAGE
-        });
+        if (name) {
+          callback({
+            title: `${_.escape(decodeURIComponent(name))}`,
+            description: `View ${_.escape(decodeURIComponent(name))}'s Decks for ${_.escape(data['name'])}`,
+            image: DEFAULT_IMAGE
+          });
+        } else {
+          callback({
+            title: _.escape(data['name']),
+            description: `View Decks for ${_.escape(data['name'])}`,
+            image: DEFAULT_IMAGE
+          });
+        }
       }
       catch (e) {
         callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
