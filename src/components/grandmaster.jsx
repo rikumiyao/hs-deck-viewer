@@ -143,7 +143,7 @@ class Grandmaster extends Component {
       .map(a => (
         <img width="34px" height="34px"
           src={require(`../resources/icons/icon_${a['class']}.png`)} alt={a['class']} className='mx-1'/>));
-    const bannedClasses = classes.filter(a => a['banned']);
+    const bannedClasses = classes.filter(a => a['banned'] && a['class']);
     if (bannedClasses.length === 1) {
       const bannedClass = bannedClasses[0]['class'];
       classArr.push(<img width="34px" height="34px" className='banned mx-1'
