@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { encodeDeck } from '../deckutils';
 
-import Card from './card'
+import Card from './card';
 
 class Deck extends Component {
 
@@ -10,10 +10,10 @@ class Deck extends Component {
     copied: false
   }
 
-	styles = {
+  styles = {
     paddingLeft: 0,
     listStyleType: "none"
-	};
+  };
 
   deckstyles = {
     maxWidth: 340
@@ -78,8 +78,8 @@ class Deck extends Component {
         j++;
       }
     }
-    while (i < cards.length) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-      result.push(<li key={cards[i][0].name}><Card card={cards[i]} change={0}/></li>);
+    while (i < cards.length) {
+          result.push(<li key={cards[i][0].name}><Card card={cards[i]} change={0}/></li>);
       i++;
     }
     while (j < diff.length) {

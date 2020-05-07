@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 
 import { validateDecks, findDeckCode } from '../deckutils.js';
 import DocumentTitle from 'react-document-title';

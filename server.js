@@ -92,6 +92,7 @@ createRoute('/deck(\/.*)?', setMeta(DEFAULT_TITLE, 'Create Hearthstone Deck', DE
 createRoute(/\/battlefy(\/.*)?/, setBattlefyMeta);
 createRoute(/\/grandmasters\/([0-9]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/grandmasters', setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
+createRoute('/runeterra(\/.*)?', setMeta(DEFAULT_TITLE, 'Runeterra', DEFAULT_IMAGE));
 createRoute('/', setMeta(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE));
 
 backend.routes(app);

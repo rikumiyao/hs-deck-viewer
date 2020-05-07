@@ -16,7 +16,7 @@
     "lodash": "^4.17.15",
     "mdbreact": "^4.11.0",
     "mongodb": "^3.3.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "query-string": "^6.3.0",
     "react": "^16.8.3",
     "react-bootstrap": "^1.0.0-beta.5",
@@ -33,6 +33,7 @@
     "react-scripts": "^3.3.0",
     "reactstrap": "^7.1.0",
     "request": "^2.88.0",
+    "runeterra": "^0.1.0",
     "serve": "^10.1.2",
     "url-loader": "^1.1.2"
   },
