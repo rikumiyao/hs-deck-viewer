@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { encodeDeck } from '../lordeckutils';
 import RuneterraCard from './runeterracard';
+import DeckOptions from './deckoptions';
 
 class RuneterraDeck extends Component {
 
   state = {
-    copied: false
+    copied: false,
+    sortByType: true
   }
 
   styles = {
@@ -16,6 +18,53 @@ class RuneterraDeck extends Component {
 
   deckstyles = {
     //maxWidth: 340
+  }
+
+  constructor() {
+    super();
+    this.handleToggleSort = this.handleToggleSort.bind(this);
+  }
+
+  handleToggleSort(sortByType) {
+    this.setState({sortByType});
+  }
+
+  renderSortType(cards) {
+    const champions = cards.filter(card => card[0].type==='Champion');
+    const spells = cards.filter(card => card[0].type==='Spell');
+    const units = cards.filter(card => card[0].type==='Unit');
+    return (
+      <div className='container'>
+        <div className='row'>
+          <div key='Champions' className='col-sm'>
+            <h2>Champions</h2>
+            {this.renderSortCost(champions)}
+          </div>
+          <div key='Followers' className='col-sm'>
+            <h2>Followers</h2>
+            {this.renderSortCost(units)}
+          </div>
+          <div key='Spells' className='col-sm'>
+            <h2>Spells</h2>
+            {this.renderSortCost(spells)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderSortCost(cards) {
+    return (
+      <ul style={this.styles}>
+        {
+          cards.map(card => 
+            <li key={card[0].name}>
+              <RuneterraCard card={card}/>
+            </li>
+          ) 
+        }
+      </ul>
+    );
   }
 
   renderDeck() {
@@ -37,15 +86,11 @@ class RuneterraDeck extends Component {
             <img src={this.getRegionImg(region.toLowerCase())} alt={region}></img> 
           )
         }
-        <ul style={this.styles}>
-          {
-            deck.cards.map(card => 
-              <li key={card[0].name}>
-                <RuneterraCard card={card}/>
-              </li>
-            ) 
-          }
-        </ul>
+        <div className='row'>
+          <DeckOptions enabledText="Sort by Cost" disabledText="Sort by Type" 
+            onToggleDiff={this.handleToggleSort}></DeckOptions>
+        </div>
+        {this.state.sortByType ? this.renderSortType(deck.cards) : this.renderSortCost(deck.cards)}
       </div>
     );
   }

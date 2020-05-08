@@ -113,7 +113,8 @@ class DeckViewer extends Component {
         <Link className="btn btn-primary" role="button" to={`/${this.state.mode}`}>Create More Decks</Link>
         {this.state.isValid ? this.renderURL() : ''}
         {this.state.isValid && this.state.mode==='specialist' ? 
-          <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
+          <DeckOptions onToggleDiff={this.handleToggleDiff} 
+            disabledText="Show Differences" enabledText="Hide Differences"></DeckOptions> : null}
         <div className='container'>
           <div className='row'>
             {this.renderDecks(this.state.decks, this.state.mode)}

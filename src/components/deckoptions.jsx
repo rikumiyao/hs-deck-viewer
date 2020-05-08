@@ -19,7 +19,9 @@ class DeckOptions extends Component {
 
   render() {
     return (
-      <button type="button" className="btn btn-primary m-2" onClick={this.handleCheck}>{this.state.diffChecked ? "Hide Differences" : "Show Differences"}</button>
+      <button type="button" className="btn btn-primary m-2" onClick={this.handleCheck}>
+        {this.state.diffChecked ? this.props.enabledText : this.props.disabledText}
+      </button>
     );
   }
 }

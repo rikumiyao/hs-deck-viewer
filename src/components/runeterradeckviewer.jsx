@@ -12,6 +12,7 @@ class RuneterraDeckViewer extends Component {
     deck : null,
     code : '',
     isValid : false,
+    copied: false
   }
 
   componentDidMount() {
@@ -28,6 +29,25 @@ class RuneterraDeckViewer extends Component {
     }
   }
 
+  renderURL() {
+    const url = `https://www.yaytears.com/runeterra/${encodeURIComponent(this.state.code)}`;
+    return (
+      <div className='row'>
+        <div className='col-1'>
+          <CopyToClipboard className='m-2 btn btn-primary' text={url}
+            onCopy={() => this.setState({copied: true})}>
+            <button>Copy</button>
+          </CopyToClipboard>
+        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
+        </div>
+        <div className='col-10'>
+          <input type="text" className="form-control m-2" id={'listexport'} value={url} readOnly />
+        </div>
+      </div>
+    );
+  }
+
+
   render() {
     return (
       <div className='container mt-2'>
@@ -37,6 +57,7 @@ class RuneterraDeckViewer extends Component {
           </div> : ''
         }
         <Link className="btn btn-primary" role="button" to={`/runeterra`}>Create More Decks</Link>
+        {this.state.isValid ? this.renderURL() : ''}
         <div className='container'>
           <div className='row'>
             <RuneterraDeck deck={this.state.deck} code={this.state.code}></RuneterraDeck>
