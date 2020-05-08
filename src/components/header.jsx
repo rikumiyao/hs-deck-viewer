@@ -17,6 +17,7 @@ class Header extends Component {
               <NavDropdown.Item href="/specialist" className={(component==="specialist"?" active":"")}>Specialist</NavDropdown.Item>
               <NavDropdown.Item href="/deck" className={(component==="deck"?" active":"")}>Deck</NavDropdown.Item>
             </NavDropdown>
+            <Link to="/runeterra" className={"nav-item nav-link"+(component==="runeterra"?" active":"")}><NavItem>Runeterra</NavItem></Link>
             <Link to="/battlefy" className={"nav-item nav-link"+(component==="battlefy"?" active":"")}><NavItem>Battlefy</NavItem></Link>
             <Link to="/grandmasters" className={"nav-item nav-link"+(component==="grandmasters"?" active":"")}><NavItem>Grandmasters</NavItem></Link>
           </Nav>
