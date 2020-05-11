@@ -38,7 +38,7 @@ function validateCards(cards) {
   if (cards.reduce((acc, cur)=>acc+cur[1],0) !== 40) {
     return 'Deck must have 40 cards';
   }
-  if (cards.filter(card=>card[0]["type"]=='Champion').reduce((acc, cur)=>acc+cur[1],0) > 6) {
+  if (cards.filter(card=>card[0]["type"]==='Champion').reduce((acc, cur)=>acc+cur[1],0) > 6) {
     return 'Deck cannot have more than 6 champions';
   }
   if (cards.some(card=> card[1] < 0 || card[1] > 3)) {
