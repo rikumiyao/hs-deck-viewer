@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { decodeDeck } from '../lordeckutils.js'
+import { fetchLorDeck } from '../lordeckutils.js'
 
 import DocumentTitle from 'react-document-title';
 
@@ -19,12 +19,14 @@ class Runeterra extends Component {
   }
 
   handleSubmit(code) {
-   const result = decodeDeck(code);
-    if (result['success']) {
-      this.props.history.push(this.deckCodeToURL(code), {created: true});
-    } else {
-      this.setState({ error: result['error'] });
-    }
+   fetchLorDeck(code)
+     .then(deck => {
+       if (!deck) {
+         this.setState({ error: 'Invalid deck code' });
+       } else {
+         this.props.history.push(this.deckCodeToURL(code), {created: true});
+       }
+     })
   }
 
   handleChange(event) {

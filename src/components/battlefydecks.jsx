@@ -52,7 +52,6 @@ class BattlefyDecks extends Component {
           if (decks) {
             this.processDecks(decks);
           }
-          this.setState({isLoaded: true});
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -78,7 +77,8 @@ class BattlefyDecks extends Component {
         } else {
           this.setState({
             decks: result['decks'],
-            isValid: true
+            isValid: true,
+            isLoaded: true
           });
         }
       });

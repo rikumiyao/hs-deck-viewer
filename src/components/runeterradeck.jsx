@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { encodeDeck } from '../lordeckutils';
 import RuneterraCard from './runeterracard';
 import DeckOptions from './deckoptions';
 

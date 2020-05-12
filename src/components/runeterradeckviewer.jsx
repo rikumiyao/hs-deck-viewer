@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-
-import { decodeDeck } from '../lordeckutils.js';
+import { fetchLorDeck } from '../lordeckutils.js'
 import RuneterraDeck from './runeterradeck';
 
 class RuneterraDeckViewer extends Component {
@@ -19,14 +18,16 @@ class RuneterraDeckViewer extends Component {
     const pathname = this.props.location.pathname;
     const arr = pathname.split('/');
     const code = decodeURIComponent(arr[2]);
-    const response = decodeDeck(code);
-    if (response['success']) {
-      this.setState({
-        deck: response['deck'],
-        code: code,
-        isValid: true
-      })
-    }
+    fetchLorDeck(code).then(
+      deck=> {
+        if (deck) {
+          this.setState({
+            deck: deck,
+            code: code,
+            isValid: true
+          })
+        }
+      });
   }
 
   renderURL() {
