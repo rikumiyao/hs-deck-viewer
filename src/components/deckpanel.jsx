@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
 
-import { validateDecks, findDeckCode, cardDiff, condenseDeckstring } from '../deckutils.js';
+import { validateDecks, findDeckCode, cardDiff, condenseDeckstring, fetchDeck } from '../deckutils.js';
 import DeckForm from './deckform';
 import DocumentTitle from 'react-document-title';
 
@@ -45,35 +45,38 @@ class DeckPanel extends Component {
     if (codes.length===4 && codes[3]==='') {
       codes = codes.slice(0,3)
     }
-    const result = validateDecks(codes, this.state.mode, format);
-    if (!result['success']) {
-      this.setState({
-        errors: result['errors'],
-      });
-    } else {
-      const decks = result['decks'];
-      const errors = Array(this.state.numDecks).fill('');
-      let success = true;
-      if (this.state.mode==='specialist') {
-        const diffs1 = cardDiff(decks[0],decks[1]);
-        const diffs2 = cardDiff(decks[0], decks[2]);
-        if (diffs1 > 5) {
-          errors[1] = `Invalid number of swaps: ${diffs1}`;
-          success = false;
+    Promise.all(codes.map(fetchDeck))
+      .then(decks => {
+        const result = validateDecks(decks, this.state.mode, format);
+        if (!result['success']) {
+          this.setState({
+            errors: result['errors'],
+          });
+        } else {
+          const decks = result['decks'];
+          const errors = Array(this.state.numDecks).fill('');
+          let success = true;
+          if (this.state.mode==='specialist') {
+            const diffs1 = cardDiff(decks[0],decks[1]);
+            const diffs2 = cardDiff(decks[0], decks[2]);
+            if (diffs1 > 5) {
+              errors[1] = `Invalid number of swaps: ${diffs1}`;
+              success = false;
+            }
+            if (diffs2 > 5) {
+              errors[2] = `Invalid number of swaps: ${diffs2}`;
+              success = false;
+            }
+          }
+          if (success) {
+            this.props.history.push(this.decksToURL(decks, this.state.mode), {created: true});
+          } else {
+            this.setState({
+              errors: errors
+            });
+          }
         }
-        if (diffs2 > 5) {
-          errors[2] = `Invalid number of swaps: ${diffs2}`;
-          success = false;
-        }
-      }
-      if (success) {
-        this.props.history.push(this.decksToURL(decks, this.state.mode), {created: true});
-      } else {
-        this.setState({
-          errors: errors
-        });
-      }
-    }
+    });
   }
 
   decksToURL(decks, mode) {

@@ -1,4 +1,4 @@
-import {decodeDeck} from '../src/deckutils';
+import {decodeDeck} from './utils';
 import {getCard} from './api.js';
 const url = require('url');
 const mongodb = require('mongodb');

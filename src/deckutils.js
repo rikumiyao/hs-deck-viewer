@@ -1,9 +1,7 @@
 import { encode, decode } from "deckstrings";
-import data from './resources/cards.compact.json';
 
 const ACTIVE_SETS = ['CORE','EXPERT1', 'DALARAN', 'ULDUM', 'DRAGONS', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE', 'DEMON_HUNTER_INITIATE'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
-const cardsDict = {};
 const heroDict = {
   'demonhunter': 56550,
   'mage': 637,
@@ -17,12 +15,7 @@ const heroDict = {
   'hunter': 31
 };
 
-for (var x=0;x<data.length;x++) {
-  const card = data[x]
-  cardsDict[card.dbfId] = card
-}
-
-function isValidDeckstring(deckstring) {
+export function isValidDeckstring(deckstring) {
   for (var i=0;i<2;i++) {
     try {
       return decode(deckstring);
@@ -41,19 +34,11 @@ export function findDeckCode(text, hasNewLine) {
   return matches!=null ? matches[0] : text;
 }
 
-export function validateDecks(deckstrings, mode, format) {
-  const valid = deckstrings.map(isValidDeckstring);
-  if (!valid.every(i=>i)) {
-    return {
-      success: false,
-      errors: valid.map(i=>i? '' : 'Invalid code')
-    };
-  }
-  const decks = valid.map(convertDeck);
+export function validateDecks(decks, mode, format) {
   if (!decks.every(i=>i)) {
     return {
       success: false,
-      errors: decks.map(i=>i? '' : 'Invalid code')
+      errors: decks.map(i=>i? '' : 'Invalid deck')
     };
   }
   const cardsValid = decks.map((deck) => validateCards(deck, format));
@@ -65,7 +50,7 @@ export function validateDecks(deckstrings, mode, format) {
   }
   if (mode==='specialist') {
     if (!decks.every(deck=>decks[0].class===deck.class)) {
-      const result = Array(deckstrings.length).fill('');
+      const result = Array(decks.length).fill('');
       result[0] = 'Specialist Decks must all be of same class';
       return {
         success: false,
@@ -74,7 +59,7 @@ export function validateDecks(deckstrings, mode, format) {
     }
   } else if (mode==='conquest') {
     if (!decks.every((deck1,index1)=>decks.every((deck2, index2) => index2<=index1 || deck1.class!==deck2.class))) {
-      const result = Array(deckstrings.length).fill('');
+      const result = Array(decks.length).fill('');
       result[0] = 'Conquest Decks must all have different classes';
       return {
         success: false,
@@ -130,21 +115,6 @@ function compare(a,b) {
       return 1;
     }
   }
-}
-
-function convertDeck(deck) {
-  const hero = deck.heroes[0];
-  const heroClass = cardsDict[hero]['cardClass'].toLowerCase();
-  const cards = deck.cards.map(x => {
-    return [cardsDict[x[0]], x[1]];
-  });
-  if (!heroClass || !cards.every(card=>card[0])) {
-    return null;
-  }
-  cards.sort(compare);
-  const format = deck.format===2 ? 'standard' : 'wild'
-  
-  return {'class': heroClass, 'cards': cards, 'format': format};
 }
 
 export function encodeDeck(deck) {
@@ -254,72 +224,7 @@ function condenseConquest(decks) {
   return decks.map(encodeDeck).join('.');
 }
 
-export function parseDecks(code, mode) {  
-  if (mode === 'deck') {
-    return parseConquest([code]);
-  }
-  const deckcodes = code.split('.');
-  if (mode === 'conquest') {
-    return parseConquest(deckcodes);
-  } else {
-    return parseSpecialist(deckcodes);
-  }
-}
-
-function parseConquest(deckcodes) {
-  if (deckcodes.length === 0) {
-    return [];
-  }
-  const isValid = deckcodes.map(isValidDeckstring);
-  if (!isValid.every(i => i)) {
-    return [];
-  }
-  const decks = isValid.map(convertDeck);
-  if (!decks.every(i=>i)) {
-    return [];
-  }
-  const cardsValid = decks.map(deck => validateCards(deck, true));
-  if (cardsValid.some(i=>i)) {
-    return [];
-  }
-  if (!decks.every((deck1,index1)=>decks.every((deck2, index2) => index2<=index1 || deck1.class!==deck2.class))) {
-    return [];
-  }
-  return decks;
-}
-
-function parseSpecialist(deckcodes) {
-  if (deckcodes.length !== 5) {
-    return [];
-  }
-  const deck1 = isValidDeckstring(deckcodes[0]);
-  const diffs1 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[1]);
-  const diffs2 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[2]);
-  const diffs3 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[3]);
-  const diffs4 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[4]);
-  if (!diffs1 || !diffs2 || !diffs3 || !diffs4) {
-    return [];
-  }
-  const deck2 = combine(deck1, diffs1, diffs2);
-  const deck3 = combine(deck1, diffs3, diffs4);
-  const decks = [deck1, deck2, deck3].map(convertDeck);
-  if (!decks.every(i=>i)) {
-    return [];
-  }
-  const cardsValid = decks.map(deck => validateCards(deck, true));
-  if (cardsValid.some(i=>i)) {
-    return [];
-  }
-  if (!decks.every(deck=>decks[0].class===deck.class)) {
-    return [];
-  }
-  if (cardDiff(decks[0], decks[1]) > 5 || cardDiff(decks[0], decks[2]) > 5) {
-    return [];
-  }
-  return decks;
-}
-
-function combine(base, removed, added) {
+export function combine(base, removed, added) {
   const cards = [...base.cards];
   removed.cards.forEach((cardArr) => {
     const id = cardArr[0];
@@ -350,11 +255,19 @@ function combine(base, removed, added) {
   });
 }
 
-export function decodeDeck(deckstring) {
-  const valid = isValidDeckstring(deckstring);
-  if (!valid) {
-    return null;
-  }
-  const deck = convertDeck(valid);
-  return deck;
+export function fetchDeck(code) {
+  const fetchURL = `/api/decode?deckstring=${code}`;
+  return fetch(fetchURL)
+    .then(res => res.json())
+    .then((deck) => {
+        if (deck === "Invalid Deckstring") {
+          return "";
+        } else {
+          return deck;
+        }
+      },
+      (error) => {
+        return "";
+      }
+    )
 }

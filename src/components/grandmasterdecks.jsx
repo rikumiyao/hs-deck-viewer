@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-import { validateDecks, compareDecks, findDeckCode } from '../deckutils.js';
+import { validateDecks, compareDecks, findDeckCode, fetchDeck } from '../deckutils.js';
 import DeckDiff from './deckdiff';
 import Deck from './deck';
 
@@ -86,17 +86,20 @@ class GrandmasterDecks extends Component {
 
   processDecks(codes) {
     codes = codes.map(code => findDeckCode(code, true));
-    const result = validateDecks(codes, 'conquest', 'standard');
-    if (!result['success']) {
-      this.setState({
-        isValid: false
+    Promise.all(codes.map(fetchDeck))
+      .then(decks => {
+        const result = validateDecks(decks);
+        if (!result['success']) {
+          this.setState({
+            isValid: false
+          });
+        } else {
+          this.setState({
+            decks: result['decks'],
+            isValid: true
+          });
+        }
       });
-    } else {
-      this.setState({
-        decks: result['decks'],
-        isValid: true
-      });
-    }
   }
 
   render() {

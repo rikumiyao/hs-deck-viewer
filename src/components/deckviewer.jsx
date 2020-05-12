@@ -3,7 +3,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { compareDecks, condenseDeckstring, parseDecks } from '../deckutils.js';
+import { compareDecks, condenseDeckstring, 
+  fetchDeck, combine, validateDecks, isValidDeckstring } from '../deckutils.js';
 import Deck from './deck';
 import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
@@ -29,14 +30,15 @@ class DeckViewer extends Component {
     const arr = pathname.split('/');
     const mode = arr[1].toLowerCase();
     const code = decodeURIComponent(arr[2]);
-    const decks = parseDecks(code, mode);
-    if (decks.length !== 0) {
-      this.setState({
-        mode,
-        decks,
-        isValid: true
-      })
-    }
+    this.parseDecks(code, mode, result => {
+      if (result['success']) {
+        this.setState({
+          mode,
+          decks: result['decks'],
+          isValid: true
+        });
+      }
+    });
   }
 
   handleToggleDiff(isDiff) {
@@ -123,6 +125,50 @@ class DeckViewer extends Component {
       </div>
     );
   }
+
+  parseDecks(code, mode, callback) {
+    if (mode === 'deck') {
+      return this.parseConquest([code], callback);
+    }
+    else {
+      const deckcodes = code.split('.');
+      if (mode === 'conquest') {
+        this.parseConquest(deckcodes, callback);
+      } else {
+        this.parseSpecialist(deckcodes, callback);
+      }
+    }
+  }
+
+  parseConquest(deckcodes, callback) {
+    Promise.all(deckcodes.map(fetchDeck))
+      .then(decks => {
+        const result = validateDecks(decks, 'conquest');
+        callback(result);
+      });
+  }
+
+  parseSpecialist(deckcodes, callback) {
+    if (deckcodes.length !== 5) {
+      callback({success: 'false', errors: ['Invalid url']});
+    }
+    const deck1 = isValidDeckstring(deckcodes[0]);
+    const diffs1 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[1]);
+    const diffs2 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[2]);
+    const diffs3 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[3]);
+    const diffs4 = isValidDeckstring(deckcodes[0].substring(0,6)+deckcodes[4]);
+    if (!diffs1 || !diffs2 || !diffs3 || !diffs4) {
+      return [];
+    }
+    const deck2 = combine(deck1, diffs1, diffs2);
+    const deck3 = combine(deck1, diffs3, diffs4);
+    Promise.all([deck1, deck2, deck3].map(fetchDeck))
+      .then(decks => {
+        const result = validateDecks(decks, 'specialist');
+        callback(result);
+      });
+  }
+
 }
 
 export default withRouter(DeckViewer);

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { validateDecks, findDeckCode } from '../deckutils.js';
+import { validateDecks, findDeckCode, fetchDeck } from '../deckutils.js';
 
 class BattlefyMatchCard extends Component {
 
@@ -52,16 +52,24 @@ class BattlefyMatchCard extends Component {
     return fetch(fetchURL)
       .then(res => {return res.json()})
       .then(res => {
-        ['top', 'bottom'].forEach(pos => {
+        return Promise.all(['top', 'bottom'].map(pos => {
           const codes = res[pos].map(code => findDeckCode(code, true));
-          const result = validateDecks(codes, false);
-          if (!result['success']) {
-            throw new Error("Invalid Deck");
-          }
-          const classes = result.decks.map(deck => deck['class']);
-          match[pos+"Player"]['classes'] = classes;
-        });
-        return match;
+          return Promise.all(codes.map(fetchDeck))
+            .then(decks => {
+              const result = validateDecks(decks, false);
+              if (!result['success']) {
+                throw new Error("Invalid Deck");
+              }
+              const classes = result.decks.map(deck => deck['class']);
+              return { player: pos+"Player", classes: classes }
+            })
+        }));
+      })
+      .then(res => {
+        res.forEach(player=> {
+          match[player.player]['classes'] = player.classes;
+        })
+        return match
       });
   }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
-import { validateDecks, findDeckCode } from '../deckutils.js';
+import { validateDecks, findDeckCode, fetchDeck } from '../deckutils.js';
 import DocumentTitle from 'react-document-title';
 
 class HearthstoneDeck extends Component {
@@ -19,15 +19,30 @@ class HearthstoneDeck extends Component {
   }
 
   handleSubmit(code) {
-   code = findDeckCode(code, false);
-   const result = validateDecks([code]);
-    if (!result['success']) {
-      this.setState({
-        error: result['errors'][0],
+    code = findDeckCode(code, false);
+    fetchDeck(code)
+      .then((deck) => {
+        if (!deck) {
+          this.setState({
+            error: "Invalid Deckstring",
+          });
+          return;
+        }
+        const result = validateDecks([deck]);
+        if (!result['success']) {
+          this.setState({
+            error: result['errors'][0],
+          });
+        } else {
+          this.props.history.push(this.deckCodeToURL(code), {created: true});
+        }
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
       });
-    } else {
-      this.props.history.push(this.deckCodeToURL(code), {created: true});
-    }
   }
 
   handleChange(event) {
