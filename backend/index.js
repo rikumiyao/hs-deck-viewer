@@ -1,5 +1,4 @@
 import {hsDecodeDeck, lorDecodeDeck} from './utils';
-import {getCard} from './api.js';
 const url = require('url');
 const mongodb = require('mongodb');
 const uri = process.env.MONGODB_URI;
@@ -125,17 +124,6 @@ exports.routes = (app) => {
           res.json(result);
           client.close();
         });
-      });
-    });
-  app.route('/api/card')
-    .get((req, res) => {
-      const cardId = req.query['id'];
-      getCard(cardId, (err, card) => {
-        if (err) {
-          res.status(500).json(err);
-          return;
-        }
-        res.json(card);
       });
     });
 };

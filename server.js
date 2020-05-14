@@ -1,7 +1,7 @@
 const backend = require('./backend/index.js');
 const express = require('express');
 const fs = require('fs');
-const request = require('request');
+const axios = require('axios');
 const url = require('url');
 const cronJob = require('./scripts/cron');
 const _ = require('lodash');
@@ -44,22 +44,17 @@ function createRoute(pathspec, setMetaFunc) {
 }
 
 function setBattlefyMeta(req, callback) {
-  try {
-    const path = req.url;
-    const components = path.split('/');
-    const id = components[2];
-    const name = components[3];
-    if (!id || id === 'week') {
-      callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
-      return;
-    }
-    const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
-    request.get(fetchTourneyURL, (err, body, response) => {
-      if (err) {
-        callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
-        console.log(err);
-        return;
-      }
+  const path = req.url;
+  const components = path.split('/');
+  const id = components[2];
+  const name = components[3];
+  if (!id || id === 'week') {
+    callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+    return;
+  }
+  const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
+  axios.get(fetchTourneyURL, {timeout: 20*1000})
+    .then(response => {
       try {
         const data = JSON.parse(response);
         if (name) {
@@ -79,11 +74,12 @@ function setBattlefyMeta(req, callback) {
       catch (e) {
         callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
       }
+    })
+    .catch(err => {
+      callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
+      console.log(err);
+      return;
     });
-  } catch (e) {
-    callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
-  }
-  
 }
 
 createRoute(/\/specialist(\/.*)?/, setMeta(DEFAULT_TITLE, 'View Specialist Lineups', DEFAULT_IMAGE));
