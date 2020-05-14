@@ -57,7 +57,7 @@ class DeckPanel extends Component {
           const errors = Array(this.state.numDecks).fill('');
           let success = true;
           if (this.state.mode==='specialist') {
-            const diffs1 = cardDiff(decks[0],decks[1]);
+            const diffs1 = cardDiff(decks[0], decks[1]);
             const diffs2 = cardDiff(decks[0], decks[2]);
             if (diffs1 > 5) {
               errors[1] = `Invalid number of swaps: ${diffs1}`;

@@ -135,8 +135,9 @@ export function cardDiff(deck1, deck2) {
   let i = 0;
   let j = 0;
   while (i < cards1.length && j < cards2.length) {
-    if (cards1[i][0] === cards2[j][0]) {
+    if (cards1[i][0].dbfId === cards2[j][0].dbfId) {
       if (cards1[i][1]>cards2[j][1]) {
+        console.log('test' + i + "test1 " + j)
         count += Math.abs(cards1[i][1]-cards2[j][1]);
       }
       i++;
@@ -166,7 +167,7 @@ export function compareDecks(deck1, deck2) {
   let i = 0;
   let j = 0;
   while (i < cards1.length && j < cards2.length) {
-    if (cards1[i][0] === cards2[j][0]) {
+    if (cards1[i][0].dbfId === cards2[j][0].dbfId) {
       if (cards1[i][1]<cards2[j][1]) {
         result2.push([cards2[j][0], cards2[j][1] - cards1[i][1]])
       } else if (cards2[j][1]<cards1[i][1]) {

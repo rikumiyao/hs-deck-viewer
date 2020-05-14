@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { compareDecks, condenseDeckstring, 
   fetchDeck, combine, validateDecks, isValidDeckstring } from '../deckutils.js';
+import { encode } from "deckstrings";
 import Deck from './deck';
 import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
@@ -162,7 +163,7 @@ class DeckViewer extends Component {
     }
     const deck2 = combine(deck1, diffs1, diffs2);
     const deck3 = combine(deck1, diffs3, diffs4);
-    Promise.all([deck1, deck2, deck3].map(fetchDeck))
+    Promise.all([deck1, deck2, deck3].map(encode).map(fetchDeck))
       .then(decks => {
         const result = validateDecks(decks, 'specialist');
         callback(result);
