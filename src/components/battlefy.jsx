@@ -81,7 +81,8 @@ class Battlefy extends Component {
       .then(
         (result) => {
           this.setState({
-            tournaments: result
+            tournaments: result,
+            isLoaded: true
           });
         },
         // Note: it's important to handle errors here
@@ -106,7 +107,6 @@ class Battlefy extends Component {
         })
         this.setState({
           qualified: qualifiedDict,
-          isLoaded: true
         })
       });
   }
