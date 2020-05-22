@@ -53,7 +53,7 @@ function setBattlefyMeta(req, callback) {
     return;
   }
   const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
-  axios.get(fetchTourneyURL, {timeout: 20*1000})
+  axios.get(fetchTourneyURL, {timeout: 10*1000})
     .then(response => {
       try {
         const data = JSON.parse(response);
