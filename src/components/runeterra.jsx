@@ -19,14 +19,15 @@ class Runeterra extends Component {
   }
 
   handleSubmit(code) {
-   fetchLorDeck(code)
-     .then(deck => {
-       if (!deck) {
-         this.setState({ error: 'Invalid deck code' });
-       } else {
-         this.props.history.push(this.deckCodeToURL(code), {created: true});
-       }
-     })
+    code = code.trim()
+    fetchLorDeck(code)
+      .then(deck => {
+        if (!deck) {
+          this.setState({ error: 'Invalid deck code' });
+        } else {
+          this.props.history.push(this.deckCodeToURL(code), {created: true});
+        }
+      })
   }
 
   handleChange(event) {
