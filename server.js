@@ -48,7 +48,7 @@ function setBattlefyMeta(req, callback) {
   const components = path.split('/');
   const id = components[2];
   const name = components[3];
-  if (!id || id === 'week') {
+  if (!id || id === 'week' || id === 'top8') {
     callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
     return;
   }

@@ -6,14 +6,14 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 class BattlefyTop8 extends Component {
 
+  tournaments = ['montréal', 'online','jönköping','indonesia'];
+
   state = {
-    eventLocation: 'online',
+    eventLocation: this.tournaments[0],
     players: [],
     isLoaded : false,
     error : null
   }
-
-  tournaments = ['online','jönköping','indonesia'];
 
   constructor() {
     super();
@@ -84,7 +84,7 @@ class BattlefyTop8 extends Component {
     if (this.state.isLoaded && !this.state.error) {
       return (
         <div className='m-1'>
-          <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation==='online' ? 'Online' : this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)}</h3>
+          <h3>Top 8 Counts for Hearthstone Masters Qualifiers {this.state.eventLocation[0].toUpperCase()+this.state.eventLocation.substring(1)}</h3>
           <div className="m-1 row">
             <label className="col-sm-2 col-form-label">Tournament</label>
             <select className="form-control col-sm-2" id="format"
