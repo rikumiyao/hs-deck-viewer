@@ -29,7 +29,8 @@ class BattlefyDecks extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (prevProps.player !== this.props.player || prevProps.position !== this.props.position
+      || prevProps.matchId !== this.props.matchId || prevProps.tourneyId !== this.props.tourneyId) {
       this.setState({ isLoaded: false });
       this.loadDecks();
     }

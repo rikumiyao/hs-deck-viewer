@@ -81,7 +81,7 @@ class BattlefyMatchCard extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (prevProps.match !== this.props.match || prevProps.player !== this.props.player) {
       this.setState({ isLoaded: false });
       this.loadData();
     }
