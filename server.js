@@ -56,7 +56,7 @@ function setBattlefyMeta(req, callback) {
   axios.get(fetchTourneyURL, {timeout: 10*1000})
     .then(response => {
       try {
-        const data = JSON.parse(response);
+        const data = response.data;
         if (name) {
           callback({
             title: `${_.escape(decodeURIComponent(name))}`,
