@@ -54,7 +54,6 @@ class Battlefy extends Component {
   }
 
   handleSubmit(e) {
-    console.log(this.state.value);
     const regex = /^(?:https:\/\/)?\/?battlefy.com\/([^:/\s]+)\/([^:\/\s]+)\/([\w\d]+)\/.*$/;
     const matches = this.state.value.match(regex);
     if (matches) {

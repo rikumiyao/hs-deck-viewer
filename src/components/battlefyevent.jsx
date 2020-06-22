@@ -23,7 +23,8 @@ class BattlefyEvent extends Component {
     input: '',
     id: '',
     bracketStarted: false,
-    isSwiss: true
+    isSwiss: true,
+    slug: ''
   }
 
   processBracket(data) {
@@ -133,7 +134,7 @@ class BattlefyEvent extends Component {
       .then(res => res.json())
       .then(
         (result) => {
-          this.setState({name: result['name']})
+          this.setState({name: result['name'], slug: result['slug']})
           const stageId = result['stageIDs'][0];
           const top8Id = result['stageIDs'][1];
           if (stageId) {
@@ -212,7 +213,12 @@ class BattlefyEvent extends Component {
         <DocumentTitle title={this.state.name}>
           <div className='container mt-3'>
             <Link className="btn btn-primary" role="button" to={'/battlefy'}>&lt; Back</Link>
-            <h2>{this.state.name}</h2>
+            <h2>
+              <a href={`https://battlefy.com/hsesports/${this.state.slug}/${this.state.id}/info`}
+                target='_blank' rel='noopener noreferrer'>
+                {this.state.name}
+              </a>
+            </h2>
             {this.renderTable()}
           </div>
         </DocumentTitle>
