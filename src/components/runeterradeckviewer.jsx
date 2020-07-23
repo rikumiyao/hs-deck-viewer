@@ -57,7 +57,7 @@ class RuneterraDeckViewer extends Component {
             <strong>Success!</strong>
           </div> : ''
         }
-        <Link className="btn btn-primary" role="button" to={`/runeterra`}>Create More Decks</Link>
+        <Link className="btn btn-primary" role="button" to={`/runeterra`}>Back</Link>
         {this.state.isValid ? this.renderURL() : ''}
         <div className='container'>
           <div className='row'>

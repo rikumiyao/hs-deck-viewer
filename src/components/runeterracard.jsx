@@ -4,6 +4,7 @@ import ReactHover from 'react-hover';
 class RuneterraCard extends Component {
 
   styles = {
+    height: 50
   };
 
   render() {
