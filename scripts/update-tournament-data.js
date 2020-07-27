@@ -1,7 +1,7 @@
 const https = require('https');
 const mongodb = require('mongodb')
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.DB_URI;
 
 function httpGet(url, options, callback) {
   return https.get(url, options, (res) => {

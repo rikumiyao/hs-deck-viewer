@@ -1,7 +1,7 @@
 import {hsDecodeDeck, lorDecodeDeck} from './utils';
 const url = require('url');
 const mongodb = require('mongodb');
-const uri = process.env.MONGODB_URI;
+const uri = process.env.DB_URI;
 
 exports.routes = (app) => {
   app.route('/api/winners')
