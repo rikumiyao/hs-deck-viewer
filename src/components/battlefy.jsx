@@ -7,6 +7,10 @@ import BattlefyTop8 from './battlefytop8';
 
 const dateFormat = require('dateformat');
 
+function dateToString(date) {
+  return date.toJSON();
+}
+
 class Battlefy extends Component {
 
   constructor() {
@@ -34,7 +38,7 @@ class Battlefy extends Component {
     this.setState({
       startDate: startDate
     });
-    this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(startDate))}`);
+    this.props.history.replace(`/battlefy/week/${dateToString(startDate)}`);
     this.fetchTourney(startDate);
     return;
   }
@@ -42,7 +46,7 @@ class Battlefy extends Component {
   handleTabChange(index, lastIndex, event) {
     if (index!==lastIndex) {
       if (index==='events') {
-        this.props.history.replace(`/battlefy/week/${JSON.parse(JSON.stringify(this.state.startDate))}`);
+        this.props.history.replace(`/battlefy/week/${dateToString(this.state.startDate)}`);
       } else if (index==='top8') {
         this.props.history.replace(`/battlefy/top8`);
       }
@@ -73,7 +77,7 @@ class Battlefy extends Component {
   fetchTourney(startDate) {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate()+7);
-    const fetchTourneyURL = `https://majestic.battlefy.com/hearthstone-masters/tournaments?start=${startDate.toJSON()}&end=${endDate.toJSON()}`
+    const fetchTourneyURL = `https://majestic.battlefy.com/hearthstone-masters/tournaments?start=${dateToString(startDate)}&end=${dateToString(endDate)}`
 
     fetch(fetchTourneyURL)
       .then(res => res.json())
@@ -95,7 +99,7 @@ class Battlefy extends Component {
         }
       )
       .then(()=> {
-        const fetchQualifiedURL = `/api/qualified`;
+        const fetchQualifiedURL = `/api/qualified?startTime=${dateToString(startDate)}&endTime=${dateToString(endDate)}`;
         return fetch(fetchQualifiedURL);
       })
       .then(res => res.json())

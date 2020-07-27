@@ -50,24 +50,24 @@ function updateTournaments(isSync, start, end) {
   httpGet(fetchTourneysURL, {}, processTournaments);
 }
 
-function handleSwiss(id, slug, tournamentLoc, tournamentNum, stageId, top8Id) {
+function handleSwiss(id, slug, tournamentLoc, tournamentNum, stageId, top8Id, startTime) {
   if (top8Id) {
     const fetchTop8Url = `https://dtmwra1jsgyb0.cloudfront.net/stages/${top8Id}/standings`;
-    httpGet(fetchTop8Url, {}, standings => processTop8(id, slug, standings, tournamentLoc, tournamentNum));
+    httpGet(fetchTop8Url, {}, standings => processTop8(id, slug, standings, tournamentLoc, tournamentNum, startTime));
   }
 }
 
-function handleSingleElim(id, slug, tournamentLoc, tournamentNum, stageId) {
+function handleSingleElim(id, slug, tournamentLoc, tournamentNum, stageId, startTime) {
   const fetchStandingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/standings`;
   httpGet(fetchStandingsUrl, {}, standings => {
-    handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum);
+    handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum, startTime);
   });
 }
 
-function handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum) {
+function handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum, startTime) {
   const qualified = standings.filter(e=>e['place']<=1).map(a=>a['team']['name']);
   if (qualified.length != 0) {
-    writeWinner(id, qualified);
+    writeWinner(id, qualified, startTime);
   }
   const top8 = standings.filter(e=>e['place']<=8).map(x=>x['team']['name']).filter(x=>x);
   writeTop8(id, slug, top8, tournamentLoc, tournamentNum);
@@ -99,13 +99,14 @@ function processTournaments(data) {
       const tournamentLoc = parts[parts.length-2];
       const tournamentNum = parseInt(parts[parts.length-1], 10);
       const fetchBracketUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}`;
+      const startTime = new Date(result['startTime']);
       if (stageId) {
         httpGet(fetchBracketUrl, {}, res => {
           if (res['bracket']['type']) {
             if (res['bracket']['type']==='swiss'||res['bracket']['type']==='custom') {
-              handleSwiss(id, slug, tournamentLoc, tournamentNum, stageId, top8Id);
+              handleSwiss(id, slug, tournamentLoc, tournamentNum, stageId, top8Id, startTime);
             } else {
-              handleSingleElim(id, slug, tournamentLoc, tournamentNum, stageId);
+              handleSingleElim(id, slug, tournamentLoc, tournamentNum, stageId, startTime);
             }
           }
         });
@@ -114,11 +115,11 @@ function processTournaments(data) {
   });
 }
 
-function processTop8(id, slug, standings, tournamentLoc, tournamentNum) {
+function processTop8(id, slug, standings, tournamentLoc, tournamentNum, startTime) {
   const top2 = tournamentLoc === 'seoul' && tournamentNum >= 133 || tournamentLoc === 'bucharest';
   const qualified = top2 ? standings.filter(e=>e['place']<=2).map(a=>a['team']['name']) : standings.filter(e=>e['place']<=1).map(a=>a['team']['name']);
   if (qualified.length != 0) {
-    writeWinner(id, qualified);
+    writeWinner(id, qualified, startTime);
   }
   const top8 = standings.map(x=>x['team']['name']).filter(x=>x);
   writeTop8(id, slug, top8, tournamentLoc, tournamentNum);
@@ -143,13 +144,13 @@ function writeTop8(id, slug, players, tournamentLoc, tournamentNum) {
   });
 }
 
-function writeWinner(id, name) {
+function writeWinner(id, name, startTime) {
   mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => {
     if (err) throw err;
 
     const db = client.db();
     const winners = db.collection('winners');
-    winners.updateOne({_id: id},{$set: {name: name}}, {upsert:true}, (err, res) => {
+    winners.updateOne({_id: id},{$set: {name: name, startTime: startTime}}, {upsert:true}, (err, res) => {
       if (err) throw err;
       client.close();
     });

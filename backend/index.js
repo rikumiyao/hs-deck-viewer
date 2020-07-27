@@ -4,29 +4,10 @@ const mongodb = require('mongodb');
 const uri = process.env.DB_URI;
 
 exports.routes = (app) => {
-  app.route('/api/winners')
-    .get((req, res) => {
-      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
-        if (err) {
-          res.status(500).json({'error': err});
-          return;
-        }
-
-        const db = client.db();
-        const winners = db.collection('winners');
-        winners.find().toArray(function (err, result) {
-          if (err) {
-            res.status(500).json({'error': err});
-            client.close();
-            return;
-          }
-          res.json(result);
-          client.close();
-        });
-      });
-    });
   app.route('/api/qualified')
     .get((req, res) => {
+      const startTime = new Date(req.query['startTime']);
+      const endTime = new Date(req.query['endTime']);
       mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});
@@ -35,7 +16,9 @@ exports.routes = (app) => {
 
         const db = client.db();
         const winners = db.collection('winners');
-        winners.find().toArray(function (err, result) {
+        winners.find({
+          'startTime': {$gte: startTime, $lte: endTime}
+        }).toArray(function (err, result) {
           if (err) {
             res.status(500).json({'error': err});
             client.close();
