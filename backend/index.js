@@ -78,7 +78,6 @@ exports.routes = (app) => {
   app.route('/api/top8count')
     .get((req, res) => {
       const region = decodeURIComponent(req.query['region']);
-      const page = req.query['page'];
       mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
         if (err) {
           res.status(500).json({'error': err});
@@ -105,6 +104,27 @@ exports.routes = (app) => {
             return;
           }
           res.json(result);
+          client.close();
+        });
+      });
+    });
+  app.route('/api/leaderboardlor')
+    .get((req, res) => {
+      const region = decodeURIComponent(req.query['region']);
+      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
+        if (err) {
+          res.status(500).json({'error': err});
+          return;
+        }
+        const db = client.db();
+        const leaderboards = db.collection('leaderboard_lor');
+        leaderboards.findOne({_id: region}, (err, document) => {
+          if (err) {
+            res.status(500).json({'error': err});
+            client.close;
+            return;
+          }
+          res.json(document['data']);
           client.close();
         });
       });

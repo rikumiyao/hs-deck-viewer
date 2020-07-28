@@ -36,7 +36,7 @@ class Runeterra extends Component {
   }
 
   deckCodeToURL(code) {
-    return `/runeterra/${encodeURIComponent(code)}`;
+    return `/runeterra/deck/${encodeURIComponent(code)}`;
   }
 
   render() {

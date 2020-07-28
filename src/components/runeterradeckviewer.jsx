@@ -17,7 +17,7 @@ class RuneterraDeckViewer extends Component {
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const arr = pathname.split('/');
-    const code = decodeURIComponent(arr[2]);
+    const code = decodeURIComponent(arr[3]);
     fetchLorDeck(code).then(
       deck=> {
         if (deck) {
@@ -31,7 +31,7 @@ class RuneterraDeckViewer extends Component {
   }
 
   renderURL() {
-    const url = `https://www.yaytears.com/runeterra/${encodeURIComponent(this.state.code)}`;
+    const url = `https://www.yaytears.com/runeterra/deck/${encodeURIComponent(this.state.code)}`;
     return (
       <div className='row'>
         <div className='col-1'>
