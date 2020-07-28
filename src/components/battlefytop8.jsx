@@ -72,7 +72,7 @@ class BattlefyTop8 extends Component {
     }
     return (
       <BootstrapTable
-        data={ this.state.players } pagination options={options}>
+        data={ this.state.players } pagination options={options} className="table-striped">
         <TableHeaderColumn dataField='name' isKey>Name</TableHeaderColumn>
         <TableHeaderColumn dataField='numTop8s'>Top 8 Count</TableHeaderColumn>
         <TableHeaderColumn dataField='tournaments' dataFormat = {tournamentFormat}>Top 8 tournaments</TableHeaderColumn>

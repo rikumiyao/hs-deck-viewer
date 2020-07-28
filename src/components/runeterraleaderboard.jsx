@@ -70,7 +70,7 @@ class RuneterraLeaderboard extends Component {
     }
     return (
       <BootstrapTable
-        data={ this.state.displayedPlayers } pagination options={options}>
+        data={ this.state.displayedPlayers } pagination options={options} className="table-striped">
         <TableHeaderColumn dataField='rank'>Rank</TableHeaderColumn>
         <TableHeaderColumn dataField='name' isKey>Name</TableHeaderColumn>
         <TableHeaderColumn dataField='lp'>LP</TableHeaderColumn>

@@ -177,7 +177,7 @@ class BattlefyEvent extends Component {
     return (
       <Fragment>
         <input type="text" className="form-control m-1" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th scope="col">#</th>

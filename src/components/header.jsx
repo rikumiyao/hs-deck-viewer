@@ -22,6 +22,7 @@ class Header extends Component {
               <NavDropdown.Item href="/runeterra/deck" className={(component==="runeterra"&&component2==="deck"?" active":"")}>Deck</NavDropdown.Item>
               <NavDropdown.Item href="/runeterra/leaderboard" className={(component==="runeterra"&&component2==="leaderboard"?" active":"")}>Leaderboard</NavDropdown.Item>
             </NavDropdown>
+            <Link to="/battlefy" className={"nav-item nav-link"+(component==="battlefy"?" active":"")}><NavItem>Battlefy</NavItem></Link>
             <Link to="/grandmasters" className={"nav-item nav-link"+(component==="grandmasters"?" active":"")}><NavItem>Grandmasters</NavItem></Link>
           </Nav>
           <button className="btn btn-outline-secondary mr-sm-2" onClick={this.props.onToggle}><i className="icon-cogs"></i>
