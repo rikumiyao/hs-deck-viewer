@@ -207,7 +207,7 @@ class Battlefy extends Component {
     let component;
     if (this.state.isLoaded && !this.state.error) {
       component = (
-        <div className='container  mt-2'>
+        <div className='container mt-2'>
           <h2>Browse Hearthstone Master's Cup Tournaments</h2>
           <Tabs defaultActiveKey={defaultActiveKey} onSelect={this.handleTabChange}>
             <Tab eventKey="events" title="Tournaments">

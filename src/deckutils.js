@@ -78,7 +78,10 @@ function validateCards(deck, format) {
   const valid = deck.cards.map(value => {
     const card = value[0];
     const count = value[1];
-    if (card['cardClass'].toLowerCase()!==deck.class && card['cardClass'] !== 'NEUTRAL') {
+    if (card['classes'] && !card['classes'].map(a=>a.toLowerCase()).includes(deck.class)) {
+      return 'Invalid card class: ' + card['name'];
+    }
+    if (!card['classes'] && card['cardClass'].toLowerCase()!==deck.class && card['cardClass'] !== 'NEUTRAL') {
       return 'Invalid card class: ' + card['name'];
     }
     if (count > 2 || count <=0) {

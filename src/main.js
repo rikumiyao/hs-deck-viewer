@@ -33,6 +33,7 @@ class Main extends Component {
           <Route path='/runeterra/leaderboard' component={RuneterraLeaderboard}/>
           <Route path='/runeterra/deck/(.+)' component={RuneterraDeckViewer}/>
           <Route path='/runeterra/deck' component={Runeterra}/>
+          <Route path='/runeterra' component={Runeterra}/>
         </Switch>
       </main>
     );

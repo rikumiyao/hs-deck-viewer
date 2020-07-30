@@ -19,6 +19,8 @@ def getCardsJson():
     }
     if 'cost' in card:
       data[index]['cost'] = card['cost']
+    if 'classes' in card:
+      data[index]['classes'] = card['classes']
     cardInfo = api.getCard(card['dbfId'])
     if cardInfo:
       data[index]['image'] = cardInfo['image']
