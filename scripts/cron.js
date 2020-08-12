@@ -3,7 +3,8 @@ const update = require('./update-tournament-data');
 const updateLor = require('./update-lor');
 
 function startCronJob() {
-  const job = new CronJob('0 0 * * * *', function() {
+  const job = new CronJob('0 */10 * * * *', function() {
+
     update();
     updateLor();
   });
