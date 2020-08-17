@@ -46,8 +46,8 @@ export function lorDecodeDeck(code) {
   const cards = deckData.map(card => [lorCardData[card.code],card.count]).sort(compare);
   const regions = new Set();
   cards.forEach(card => {regions.add(card[0].region)});
-  if (regions.size >=3) {
-    return { success: false, error: 'Deck cannot have more than 2 regions'};
+  if (regions.size >= 4) {
+    return { success: false, error: 'Deck cannot have more than 3 regions'};
   }
   const err = validateLorCards(cards);
   if (err) {
