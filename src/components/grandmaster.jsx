@@ -64,7 +64,6 @@ class Grandmaster extends Component {
       this.setState({
         'startDate': date,
       });
-      console.log(date);
       this.fetchGrandmaster(date);
     }
     else {

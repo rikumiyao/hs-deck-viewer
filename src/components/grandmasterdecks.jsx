@@ -7,6 +7,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { validateDecks, compareDecks, findDeckCode, fetchDeck } from '../deckutils.js';
 import DeckDiff from './deckdiff';
 import Deck from './deck';
+import DeckOptions from './deckoptions';
 
 const queryString = require('query-string');
 
@@ -17,8 +18,9 @@ class GrandmasterDecks extends Component {
     decks : [],
     isLoaded : false,
     error : null,
-    isDiff : false,
-    decksExist: true
+    isDiff : true,
+    decksExist: true,
+    isSpecialist: false
   }
 
   constructor() {
@@ -65,8 +67,8 @@ class GrandmasterDecks extends Component {
           this.setState({
             player: player,
           });
-          if (decks && decks.every(deck=>deck)) {
-            this.processDecks(decks);
+          if (decks && decks.filter(deck=>deck).every(deck=>deck)) {
+            this.processDecks(decks.filter(deck=>deck));
           } else {
             this.setState({decksExist: false});
           }
@@ -94,9 +96,11 @@ class GrandmasterDecks extends Component {
             isValid: false
           });
         } else {
+          const isSpecialist = result['decks'].every(a=>a['class']===result['decks'][0]['class'])
           this.setState({
             decks: result['decks'],
-            isValid: true
+            isValid: true,
+            isSpecialist: isSpecialist
           });
         }
       });
@@ -105,7 +109,7 @@ class GrandmasterDecks extends Component {
   render() {
     if (this.state.isLoaded && !this.state.error && this.state.isValid) {
       let decks;
-      if (this.state.isDiff) {
+      if (this.state.isSpecialist && this.state.isDiff) {
         decks = [];
         decks.push((
           <div key={'Deck'+(1)} className='col-sm'>
@@ -124,7 +128,7 @@ class GrandmasterDecks extends Component {
         decks = this.state.decks.map((deck, i)=> {
           return (
             <div key={'Deck'+(i+1)} className='col-sm'>
-              <Deck index={0} deck={deck}></Deck>
+              <Deck index={this.state.isSpecialist ? i+1 : 0} deck={deck}></Deck>
             </div>
           );
         });
@@ -134,6 +138,8 @@ class GrandmasterDecks extends Component {
           <div className='container mt-2'>
             <Link className="btn btn-primary" role="button" to={`/grandmasters`}>&lt; Back</Link>
             <h1>{this.state.player}'s Decks</h1>
+            {this.state.isSpecialist ? <DeckOptions onToggleDiff={this.handleToggleDiff}
+              disabledText="Show Differences" enabledText="Hide Differences"></DeckOptions> : null}
             <div className='row'>
               {decks}
             </div>

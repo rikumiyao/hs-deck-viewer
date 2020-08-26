@@ -172,18 +172,23 @@ function handleGrandmaster(gmData) {
           const player1 = match.competitors[0] ? match.competitors[0].name : '';
           const player2 = match.competitors[1] ? match.competitors[1].name : '';
           let player1Decks;
-          if (!match.attributes.competitor_1) {
-            player1Decks = [];
-            player2Decks = [];
-            player1Classes = [];
-            player2Classes = [];
-          } else {
+          if (match.attributes.competitor_1) {
             player1Decks = match.attributes.competitor_1.decklist.map(a=>a['deckCode']);
             player2Decks = match.attributes.competitor_2.decklist.map(a=>a['deckCode']);
             player1Classes = match.attributes.competitor_1.decklist.map(
               a=>{return {class: a['class'],banned:a['attributes']==='Banned'}});
             player2Classes = match.attributes.competitor_2.decklist.map(
               a=>{return {class: a['class'],banned:a['attributes']==='Banned'}});
+          } else if (match.attributes.competitor_1_decklists) {
+            player1Decks = match.attributes.competitor_1_decklists;
+            player2Decks = match.attributes.competitor_2_decklists;
+            player1Classes = [{class: match.attributes.competitor_1_class, banned: false}];
+            player2Classes = [{class: match.attributes.competitor_2_class, banned: false}];
+          } else {
+            player1Decks = [];
+            player2Decks = [];
+            player1Classes = [];
+            player2Classes = [];
           }
           const score = match.scores.map(a=>a.value);
           const id = match.id;
