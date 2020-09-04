@@ -11,7 +11,7 @@ class Card extends Component {
     };
     return (
       <div>
-        <ReactHover options={options}>
+        <ReactHover options={options} zIndex={1}>
           <ReactHover.Trigger type='trigger'>
             <img src={this.getCardTile(card)} alt={card[0].name}></img>
           </ReactHover.Trigger>

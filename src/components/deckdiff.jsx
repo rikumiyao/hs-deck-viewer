@@ -7,12 +7,12 @@ class DeckDiff extends Component {
 
   state = {
     'copied': false
-  }
+  };
 
-	styles = {
+  styles = {
     paddingLeft: 0,
     listStyleType: "none"
-	};
+  };
 
   renderDeck() {
     const deck = this.props.deck;
