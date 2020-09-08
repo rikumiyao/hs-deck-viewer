@@ -15,7 +15,7 @@ class RuneterraCard extends Component {
     };
     return (
       <div style={this.styles}>
-        <ReactHover options={options}>
+        <ReactHover options={options} zIndex={1}>
           <ReactHover.Trigger type='trigger'>
             <div>
               <img src={this.getCardTile(card)} height='50px' alt={card[0].name}></img>
