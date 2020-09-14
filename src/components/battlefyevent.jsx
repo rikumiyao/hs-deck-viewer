@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import Loader from 'react-loader-spinner';
@@ -175,7 +175,7 @@ class BattlefyEvent extends Component {
 
   renderTable() {
     return (
-      <Fragment>
+      <>
         <input type="text" className="form-control m-1" onChange={(e) => this.handleChange(e)} placeholder={'Enter Player Name'}/>
         <table className="table table-striped">
           <thead>
@@ -203,7 +203,7 @@ class BattlefyEvent extends Component {
             )}
           </tbody>
         </table>
-      </Fragment>
+      </>
     );
   }
 

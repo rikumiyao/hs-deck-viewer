@@ -14,9 +14,9 @@ class Header extends Component {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <NavDropdown title="Hearthstone" id="hearthstone-nav-dropdown">
+              <NavDropdown.Item href="/deck" className={(component==="deck"?" active":"")}>Deck</NavDropdown.Item>
               <NavDropdown.Item href="/conquest" className={(component==="conquest"?" active":"")}>Conquest</NavDropdown.Item>
               <NavDropdown.Item href="/specialist" className={(component==="specialist"?" active":"")}>Specialist</NavDropdown.Item>
-              <NavDropdown.Item href="/deck" className={(component==="deck"?" active":"")}>Deck</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Runeterra" id="runeterra-nav-dropdown">
               <NavDropdown.Item href="/runeterra/deck" className={(component==="runeterra"&&component2==="deck"?" active":"")}>Deck</NavDropdown.Item>

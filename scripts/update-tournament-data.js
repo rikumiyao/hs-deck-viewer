@@ -166,6 +166,7 @@ function handleGrandmaster(gmData) {
   const tournaments = gmData.requestedSeasonTournaments;
   const data = [];
   tournaments.forEach(tournament => {
+    const region = tournament.region;
     tournament.stages.forEach(stage => {
       stage.brackets.forEach(bracket => {
         bracket.matches.forEach(match => {
@@ -202,6 +203,7 @@ function handleGrandmaster(gmData) {
             competitor_2_decks: player2Decks,
             competitor_2_classes: player2Classes,
             score: score,
+            region: region,
             startDate: startDate
           };
           if ((player1 || player2) && startDate) {

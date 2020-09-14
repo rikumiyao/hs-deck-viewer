@@ -18,7 +18,7 @@ class Main extends Component {
     return (
       <main>
         <Switch>
-          <Route exact path='/' component={DeckPanel}/>
+          <Route exact path='/' component={HearthstoneDeck}/>
           <Route path='/(specialist|conquest)/(.+)' component={DeckViewer}/>
           <Route path='/(specialist|conquest)' component={DeckPanel}/>
           <Route path='/deck/(.+)' component={DeckViewer}/>

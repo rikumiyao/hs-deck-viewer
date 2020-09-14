@@ -1,0 +1,104 @@
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+class GrandmasterPlayers extends Component {
+
+  state = {
+    "region": "NA"
+  };
+
+  constructor() {
+    super();
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    this.setState({region: e.target.value});
+  }
+
+  renderTable(props) {
+    const players = {};
+    props.matches.filter(match=>match.region===this.state.region)
+      .forEach(match => {
+        const matchId = match.id;
+        [1,2].forEach(n => {
+          const player = match[`competitor_${n}`];
+          const classes = match[`competitor_${n}_classes`];
+          const decks = match[`competitor_${n}_decks`];
+          if (!players[player]) {
+            players[player] = {
+              name: player,
+              classes,
+              matchId,
+              decks
+            }
+          } else {
+            if (decks) {
+              players[player] = {
+                name: player,
+                classes,
+                matchId,
+                decks
+              }
+            }
+          }
+        })
+      });
+    const data = Object.values(players).sort((a,b) => a&&b ? a.name.localeCompare(b.name) : 
+        a.name < b.name ? -1 : a.name===b.name ? 0 : 1);
+    return (
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Player</th>
+            <th scope="col">Classes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data
+            .map(player=> {
+            return (
+              <tr id={player['name']}>
+                <td>{player.decks && player.decks.length!==0 ? <Link to={`/grandmasters/${player['matchId']}?player=${player.name}`}>{player.name}</Link> : player.name}</td>
+                <td>{this.renderClasses(player.classes)}</td>
+              </tr>
+            )})}
+        </tbody>
+      </table>
+    );
+  }
+
+  render() {
+    return (
+      <>
+        <div className="row my-2">
+          <label className="col-sm-1 col-form-label">Region</label>
+          <select className="form-control col-sm-2" id="region"
+            defaultValue={this.state.region} onChange={this.handleChange}>
+            <option value="NA">Americas</option>
+            <option value="EU">Europe</option>
+            <option value="APAC">Asia</option>
+          </select>
+        </div>
+        {this.renderTable(this.props)}
+      </>
+    )
+  }
+
+  renderClasses(classes) {
+    const classArr = classes.filter(a => !a['banned'] && a['class'])
+      .sort((a,b)=>a['class'].localeCompare(b['class']))
+      .map(a => (
+        <img width="34px" height="34px"
+          src={require(`../resources/icons/icon_${a['class']}.png`)} alt={a['class']} className='mx-1'/>));
+    const bannedClasses = classes.filter(a => a['banned'] && a['class']);
+    if (bannedClasses.length === 1) {
+      const bannedClass = bannedClasses[0]['class'];
+      classArr.push(<img width="34px" height="34px" className='banned mx-1'
+        src={require(`../resources/icons/icon_${bannedClass}.png`)} alt={bannedClass}/>)
+    }
+    return classArr;
+  }
+}
+
+export default GrandmasterPlayers;

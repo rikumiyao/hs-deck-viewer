@@ -202,8 +202,7 @@ class Battlefy extends Component {
   }
 
   render() {
-    const defaultActiveKey = this.props.location.pathname.split('/')[2]==='stats'?'stats' : 
-      this.props.location.pathname.split('/')[2]==='top8' ? 'top8' : 'events';
+    const defaultActiveKey = this.props.location.pathname.split('/')[2]==='top8' ? 'top8' : 'events';
     let component;
     if (this.state.isLoaded && !this.state.error) {
       component = (
