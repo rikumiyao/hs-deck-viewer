@@ -46,11 +46,12 @@ def process(cardid):
     #    process_hero(card)
         return
     width = 243
-    xoff = 105
     height = 39
-    minx = 105
-    maxx = 221
     color_palette = [(41,48,58,255), (93, 68, 68, 0)]
+
+    xoff = 105
+    minx = 129
+    maxx = 245
 
     image = '{}{}.png'.format(tile_loc, card['id'])
     try:
@@ -68,7 +69,11 @@ def process(cardid):
         draw.line([(x,0), (x,39)], fill=color)
     master = Image.alpha_composite(master, gradient)
     draw = ImageDraw.Draw(master)
-    font = ImageFont.truetype(deck_font, 15)
+    if len(card['name'])>22:
+      font_size = 12
+    else:
+      font_size = 13
+    font = ImageFont.truetype(deck_font, font_size)
 
     def writeCost(font):
         msg = str(card['cost'])
@@ -77,8 +82,8 @@ def process(cardid):
         draw_shadow(draw,(44-w)/2,(39-h)/2-1,str(card['cost']), font)
         draw.text(((44-w)/2, (39-h)/2-1), str(card['cost']), font=font)
     
-    draw_shadow(draw, 45, 13, card['name'], font)
-    draw.text((45, 13), card['name'], font=font)
+    draw_shadow(draw, 45, 27-font_size, card['name'], font)
+    draw.text((45, 27-font_size), card['name'], font=font)
     if card['rarity']=='LEGENDARY':
         bg = Image.open(tile_container_number)
         master.paste(bg, (0, 0, 239, 39), bg)
