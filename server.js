@@ -86,7 +86,7 @@ createRoute(/\/specialist(\/.*)?/, setMeta(DEFAULT_TITLE, 'View Specialist Lineu
 createRoute(/\/conquest(\/.*)?/, setMeta(DEFAULT_TITLE, 'Create Conquest Lineups', DEFAULT_IMAGE));
 createRoute(/\/deck(\/.*)/, setMeta(DEFAULT_TITLE, 'Create Hearthstone Deck', DEFAULT_IMAGE));
 createRoute(/\/battlefy(\/.*)?/, setBattlefyMeta);
-createRoute(/\/grandmasters\/([0-9]+)/, setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
+createRoute(/\/grandmasters\/(\/.*)?/, setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute('/grandmasters', setMeta(DEFAULT_TITLE, 'Hearthstone Grandmasters Decks', DEFAULT_IMAGE));
 createRoute(/\/runeterra(\/.*)?/, setMeta(DEFAULT_TITLE, 'Runeterra', DEFAULT_IMAGE));
 createRoute('/', setMeta(DEFAULT_TITLE, DEFAULT_DESCRIPTION, DEFAULT_IMAGE));
