@@ -8,7 +8,7 @@ const dateFormat = require('dateformat');
 class GrandmasterMatches extends Component {
 
   state = {
-    "region": "NA"
+    "region": "ALL"
   };
 
   constructor() {
@@ -35,7 +35,7 @@ class GrandmasterMatches extends Component {
         </thead>
         <tbody>
           {this.props.matches
-            .filter(data => data.region===this.state.region)
+            .filter(data => data.region===this.state.region || this.state.region === "ALL")
             .map(data=> {
             const date = new Date(data.startDate);
             return (
@@ -60,9 +60,10 @@ class GrandmasterMatches extends Component {
           <label className="col-sm-1 col-form-label">Region</label>
           <select className="form-control col-sm-2" id="region"
             defaultValue={this.state.region} onChange={this.handleChange}>
+            <option value="ALL">All Regions</option>
             <option value="NA">Americas</option>
             <option value="EU">Europe</option>
-            <option value="APAC">Asia</option>
+            <option value="APAC">Asia-Pacific</option>
           </select>
         </div>
         {this.renderTable(this.props)}
