@@ -124,8 +124,13 @@ exports.routes = (app) => {
             client.close;
             return;
           }
-          res.json(document['data']);
-          client.close();
+          if (document) {
+            res.json(document['data']);
+            client.close();
+          } else {
+            res.json([]);
+            client.close();
+          }
         });
       });
     });
