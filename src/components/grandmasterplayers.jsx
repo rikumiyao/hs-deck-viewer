@@ -96,17 +96,11 @@ class GrandmasterPlayers extends Component {
   }
 
   renderClasses(classes) {
-    const classArr = classes.filter(a => !a['banned'] && a['class'])
+    const classArr = classes.filter(a => a['class'])
       .sort((a,b)=>a['class'].localeCompare(b['class']))
       .map(a => (
         <img width="34px" height="34px"
           src={require(`../resources/icons/icon_${a['class']}.png`)} alt={a['class']} className='mx-1'/>));
-    const bannedClasses = classes.filter(a => a['banned'] && a['class']);
-    if (bannedClasses.length === 1) {
-      const bannedClass = bannedClasses[0]['class'];
-      classArr.push(<img width="34px" height="34px" className='banned mx-1'
-        src={require(`../resources/icons/icon_${bannedClass}.png`)} alt={bannedClass}/>)
-    }
     return classArr;
   }
 }
