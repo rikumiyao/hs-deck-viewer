@@ -158,7 +158,7 @@ function writeWinner(id, name, startTime) {
 }
 
 function updateGrandmaster() {
-  const url = 'https://playhearthstone.com/en-us/api/esports/schedule/grandmasters/';
+  const url = 'https://playhearthstone.com/en-us/api/esports/schedule/grandmasters/?season=2&year=2020';
   httpGet(url, {}, handleGrandmaster);
 }
 

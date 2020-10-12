@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import DocumentTitle from 'react-document-title'
-import { withRouter } from 'react-router';
 
 const dateFormat = require('dateformat');
 

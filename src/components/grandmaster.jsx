@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import GrandMasterMatches from './grandmastermatches';
 import GrandMasterPlayers from './grandmasterplayers';
 import Loader from 'react-loader-spinner';
 import { Tabs, Tab } from 'react-bootstrap';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
-const dateFormat = require('dateformat');
 
 function dateToString(date) {
   return date.toJSON();
