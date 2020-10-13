@@ -16,6 +16,7 @@ class DeckDiff extends Component {
 
   renderDeck() {
     const deck = this.props.deck;
+    const diffcount = this.props.removed.reduce((acc, cur)=> acc+cur[1], 0);
     return (
       <div>
         <CopyToClipboard className='m-2 btn btn-primary' text={encodeDeck(this.props.deck)}
@@ -23,6 +24,7 @@ class DeckDiff extends Component {
           <button>Copy Deck Code</button>
         </CopyToClipboard>
         {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
+        <h2>Diff count: {diffcount}</h2>
         <span>
           { deck.class ? <img src={this.getClassImg(deck.class, this.props.index)} alt={deck.class}></img> : null }
         </span>

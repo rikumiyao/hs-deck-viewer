@@ -56,18 +56,18 @@ class DeckPanel extends Component {
           const decks = result['decks'];
           const errors = Array(this.state.numDecks).fill('');
           let success = true;
-          if (this.state.mode==='specialist') {
-            const diffs1 = cardDiff(decks[0], decks[1]);
-            const diffs2 = cardDiff(decks[0], decks[2]);
-            if (diffs1 > 5) {
-              errors[1] = `Invalid number of swaps: ${diffs1}`;
-              success = false;
-            }
-            if (diffs2 > 5) {
-              errors[2] = `Invalid number of swaps: ${diffs2}`;
-              success = false;
-            }
-          }
+//          if (this.state.mode==='specialist') {
+//            const diffs1 = cardDiff(decks[0], decks[1]);
+//            const diffs2 = cardDiff(decks[0], decks[2]);
+//            if (diffs1 > 5) {
+//              errors[1] = `Invalid number of swaps: ${diffs1}`;
+//              success = false;
+//            }
+//            if (diffs2 > 5) {
+//              errors[2] = `Invalid number of swaps: ${diffs2}`;
+//              success = false;
+//            }
+//          }
           if (success) {
             this.props.history.push(this.decksToURL(decks, this.state.mode), {created: true});
           } else {
