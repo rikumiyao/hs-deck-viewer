@@ -32,12 +32,22 @@ class RuneterraDeck extends Component {
     const champions = cards.filter(card => card[0].type==='Champion');
     const spells = cards.filter(card => card[0].type==='Spell');
     const units = cards.filter(card => card[0].type==='Unit');
+    const landmarks = cards.filter(card => card[0].type==='Landmark');
+    console.log(landmarks);
     return (
       <div className='container'>
         <div className='row'>
           <div key='Champions' className='col-sm'>
             <h2>Champions</h2>
             {this.renderSortCost(champions)}
+            {
+              landmarks.length!==0 ? (
+                <>
+                  <h2>Landmarks</h2>
+                  {this.renderSortCost(landmarks)}
+                </>
+              ):''
+            }
           </div>
           <div key='Followers' className='col-sm'>
             <h2>Followers</h2>
