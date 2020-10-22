@@ -1,6 +1,6 @@
 import { encode, decode } from "deckstrings";
 
-const ACTIVE_SETS = ['CORE','EXPERT1', 'DALARAN', 'ULDUM', 'DRAGONS', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE', 'DEMON_HUNTER_INITIATE', 'SCHOLOMANCE'];
+const ACTIVE_SETS = ['CORE','EXPERT1', 'DALARAN', 'ULDUM', 'DRAGONS', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE', 'DEMON_HUNTER_INITIATE', 'SCHOLOMANCE', 'DARKMOON_FAIRE'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const heroDict = {
   'demonhunter': 56550,
