@@ -1,14 +1,16 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { compareDecks, condenseDeckstring, 
+import { compareDecks, condenseDeckstring,
   fetchDeck, combine, validateDecks, isValidDeckstring } from '../deckutils.js';
 import { encode } from "deckstrings";
 import Deck from './deck';
 import DeckOptions from './deckoptions';
 import DeckDiff from './deckdiff';
+import DocumentTitle from 'react-document-title';
 
 class DeckViewer extends Component {
 
@@ -105,6 +107,11 @@ class DeckViewer extends Component {
     return deckComponents;
   }
 
+  createTitle(decks, mode) {
+    const classes = _.uniq(decks.map(deck => _.capitalize(deck.class)));
+    return `${classes.join('/')}: ${mode!=='deck' ? _.capitalize(mode): 'Hearthstone'} Decks`;
+  }
+
   render() {
     return (
       <div className='container mt-2'>
@@ -118,11 +125,13 @@ class DeckViewer extends Component {
         {this.state.isValid && this.state.mode==='specialist' ? 
           <DeckOptions onToggleDiff={this.handleToggleDiff} 
             disabledText="Show Differences" enabledText="Hide Differences"></DeckOptions> : null}
-        <div className='container'>
-          <div className='row'>
-            {this.renderDecks(this.state.decks, this.state.mode)}
+        <DocumentTitle title={this.createTitle(this.state.decks, this.state.mode)}>
+          <div className='container'>
+            <div className='row'>
+              {this.renderDecks(this.state.decks, this.state.mode)}
+            </div>
           </div>
-        </div>
+        </DocumentTitle>
       </div>
     );
   }

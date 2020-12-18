@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
 
-import { validateDecks, findDeckCode, cardDiff, condenseDeckstring, fetchDeck } from '../deckutils.js';
+import { validateDecks, findDeckCode, condenseDeckstring, fetchDeck } from '../deckutils.js';
 import DeckForm from './deckform';
 import DocumentTitle from 'react-document-title';
 
