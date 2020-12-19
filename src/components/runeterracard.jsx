@@ -31,11 +31,11 @@ class RuneterraCard extends Component {
   }
 
   getCardTile(card) {
-    return require('../resources/LorTiles/'+card[0].cardCode+'.png');
+    return require('../resources/LorTiles/'+card[0].cardCode+'.png').default;
   }
 
   getCardCount(card) {
-    return require('../resources/LorTiles/tile_'+card[1]+'.png');
+    return require('../resources/LorTiles/tile_'+card[1]+'.png').default;
   }
 
 }

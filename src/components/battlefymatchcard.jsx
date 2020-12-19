@@ -125,10 +125,10 @@ class BattlefyMatchCard extends Component {
       .sort()
       .map(className => (
         <img width="34px" height="34px"
-          src={require(`../resources/icons/icon_${className}.png`)} alt={className} className='mx-1'/>));
+          src={require(`../resources/icons/icon_${className}.png`).default} alt={className} className='mx-1'/>));
     if (player['bannedClass']) {
       classes.push(<img width="34px" height="34px" className='banned mx-1' 
-        src={require(`../resources/icons/icon_${player['bannedClass']}.png`)} alt={player['bannedClass']}/>)
+        src={require(`../resources/icons/icon_${player['bannedClass']}.png`).default} alt={player['bannedClass']}/>)
     }
     return classes;
   }

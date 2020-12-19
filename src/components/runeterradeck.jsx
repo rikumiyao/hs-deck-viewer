@@ -110,7 +110,7 @@ class RuneterraDeck extends Component {
 
   getRegionImg(region) {
     const extension = '.png';
-    return require('../resources/RuneterraIcons/icon-'+region+extension);
+    return require('../resources/RuneterraIcons/icon-'+region+extension).default;
   }
 
 }

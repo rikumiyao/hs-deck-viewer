@@ -24,7 +24,7 @@ class Card extends Component {
   }
 
   getCardTile(card) {
-    return require('../resources/Tiles/'+card[0].id+(card[1]===2 ? '_2' : '')+'.png');
+    return require('../resources/Tiles/'+card[0].id+(card[1]===2 ? '_2' : '')+'.png').default;
   }
 
 }

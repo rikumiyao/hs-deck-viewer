@@ -96,9 +96,9 @@ class Deck extends Component {
   getClassImg(deckClass, index) {
     const extension = '.png';
     if (index===0)
-      return require('../resources/classes/'+deckClass+extension);
+      return require('../resources/classes/'+deckClass+extension).default;
     else
-      return require('../resources/classes/'+deckClass+'_'+index+extension);
+      return require('../resources/classes/'+deckClass+'_'+index+extension).default;
   }
 }
 
