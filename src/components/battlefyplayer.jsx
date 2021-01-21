@@ -59,15 +59,27 @@ class BattlefyPlayer extends Component {
                 found: res.found,
                 matches: res.matches.sort((a,b) => b.ts - a.ts)
               });
+              return res.found;
             })
-            .then(()=> {
+            .then((found)=> {
               if (fetchBracket2Url) {
                 return fetch(fetchBracket2Url)
                   .then(res => res.json())
                   .then(this.processBracket)
-                  .then(res => this.setState({
-                    matches: this.state.matches.concat(res.matches).sort((a,b) => b.ts - a.ts)
-                  }))
+                  .then(res => {
+                    if (found) {
+                      this.setState({
+                        matches: this.state.matches.concat(res.matches).sort((a,b) => b.ts - a.ts)
+                      });
+                    } else {
+                      this.setState({
+                        matchPosition: res.matchPosition,
+                        matchId: res.matchId,
+                        found: res.found,
+                        matches: this.state.matches.concat(res.matches).sort((a,b) => b.ts - a.ts)
+                      });
+                    }
+                  });
               }
             })
             .then(() => {

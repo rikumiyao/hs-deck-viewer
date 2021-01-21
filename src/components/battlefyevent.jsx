@@ -127,7 +127,9 @@ class BattlefyEvent extends Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
+    const searchParams = new URLSearchParams(this.props.location.search);
     const id = pathname.split('/')[2];
+    const pathStageId = searchParams.get('stageId');
     this.setState({id: id});
     const fetchTourneyURL = `https://dtmwra1jsgyb0.cloudfront.net/tournaments/${id}`;
     fetch(fetchTourneyURL)
@@ -135,7 +137,7 @@ class BattlefyEvent extends Component {
       .then(
         (result) => {
           this.setState({name: result['name'], slug: result['slug']})
-          const stageId = result['stageIDs'][0];
+          const stageId = pathStageId || result['stageIDs'][0];
           const top8Id = result['stageIDs'][1];
           if (stageId) {
             this.setState({bracketStarted:true});

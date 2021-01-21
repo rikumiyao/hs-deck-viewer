@@ -58,20 +58,22 @@ class Battlefy extends Component {
   }
 
   handleSubmit(e) {
-    const regex = /^(?:https:\/\/)?\/?battlefy.com\/([^:/\s]+)\/([^:\/\s]+)\/([\w\d]+)\/.*$/;
+    const regex = /^(?:https:\/\/)?\/?battlefy.com\/([^:/\s]+)\/([^:\/\s]+)\/([\w\d]+)\/(?:stage\/([\w\d]+))?.*$/;
     const matches = this.state.value.match(regex);
     if (matches) {
       const code = matches[3];
+      const stageId = matches[4];
       this.setState({invalidUrl: false});
-      this.props.history.push(this.tournamentCodeToUrl(code), {created: true});
+      this.props.history.push(this.tournamentCodeToUrl(code, stageId), {created: true});
     } else {
       this.setState({invalidUrl: true});
     }
     e.preventDefault();
   }
 
-  tournamentCodeToUrl(code) {
-    return `/battlefy/${encodeURIComponent(code)}`
+  tournamentCodeToUrl(code, stageId) {
+    const stageIdComponent = stageId ? `?stageId=${encodeURIComponent(stageId)}` : '';
+    return `/battlefy/${encodeURIComponent(code)}${stageIdComponent}`
   }
 
   fetchTourney(startDate) {
