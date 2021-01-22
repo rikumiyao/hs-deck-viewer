@@ -116,8 +116,7 @@ function processTournaments(data) {
 }
 
 function processTop8(id, slug, standings, tournamentLoc, tournamentNum, startTime) {
-  const top2 = tournamentLoc === 'seoul' && tournamentNum >= 133 || tournamentLoc === 'bucharest';
-  const qualified = top2 ? standings.filter(e=>e['place']<=2).map(a=>a['team']['name']) : standings.filter(e=>e['place']<=1).map(a=>a['team']['name']);
+  const qualified = standings.filter(e=>e['place']<=1).map(a=>a['team']['name']);
   if (qualified.length != 0) {
     writeWinner(id, qualified, startTime);
   }

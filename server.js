@@ -83,7 +83,6 @@ function setBattlefyMeta(req, callback) {
     })
     .catch(err => {
       callback({title: DEFAULT_TITLE, description: 'Hearthstone Masters Cup Decks', image: DEFAULT_IMAGE});
-      console.log(err);
       return;
     });
 }
