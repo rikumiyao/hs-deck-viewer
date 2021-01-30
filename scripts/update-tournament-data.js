@@ -125,6 +125,9 @@ function processTop8(id, slug, standings, tournamentLoc, tournamentNum, startTim
 }
 
 function writeTop8(id, slug, players, tournamentLoc, tournamentNum) {
+  if (players.length===0) {
+    return;
+  }
   mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => {
     if (err) throw err;
 
