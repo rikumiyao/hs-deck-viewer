@@ -117,6 +117,9 @@ class BattlefyDecks extends Component {
         <div className='container mt-2'>
           <Link className="btn btn-primary" role="button" to={`/battlefy/${this.props.tourneyId}`}>&lt; Back</Link>
           <h1>{this.props.player}'s Decks</h1>
+          <a className='btn btn-primary' href={`https://d0nkey.top/battlefy/tournament/${this.props.tourneyId}/player/${encodeURIComponent(this.props.player)}`}  target='_blank' rel='noopener noreferrer'>
+            d0nkey
+          </a>
           {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
           <div className='row'>
             {decks}

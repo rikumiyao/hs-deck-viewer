@@ -155,7 +155,8 @@ class Battlefy extends Component {
             <th scope='col'>Start Time</th>
             <th scope='col'>Region</th>
             <th scope='col'>Qualified</th>
-            <th scope='col'>Deck Links</th>
+            <th scope='col'>Decks</th>
+            <th scope='col'>d0nkey</th>
           </tr>
         </thead>
         <tbody>
@@ -176,6 +177,13 @@ class Battlefy extends Component {
                 </td>
                 <td>
                   { new Date() > date ? <Link to={`/battlefy/${data['_id']}`}>Decks</Link> : ''}
+                </td>
+                <td>
+                  { new Date() > date ? 
+                    <a href={`https://d0nkey.top/battlefy/tournament/${data['_id']}`}  target='_blank' rel='noopener noreferrer'>
+                        d0nkey
+                    </a> :''
+                  }
                 </td>
               </tr>
             )})}

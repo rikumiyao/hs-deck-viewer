@@ -221,6 +221,9 @@ class BattlefyEvent extends Component {
                 {this.state.name}
               </a>
             </h2>
+            <a className='btn btn-primary' href={`https://d0nkey.top/battlefy/tournament/${this.state.id}`}  target='_blank' rel='noopener noreferrer'>
+              d0nkey
+            </a>
             {this.renderTable()}
           </div>
         </DocumentTitle>
