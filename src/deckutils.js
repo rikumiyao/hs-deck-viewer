@@ -1,6 +1,7 @@
 import { encode, decode } from "deckstrings";
 
-const ACTIVE_SETS = ['CORE','EXPERT1', 'DALARAN', 'ULDUM', 'DRAGONS', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE', 'DEMON_HUNTER_INITIATE', 'SCHOLOMANCE', 'DARKMOON_FAIRE', 'THE_BARRENS'];
+const STANDARD_SETS = ['CORE', 'YEAR_OF_THE_DRAGON','BLACK_TEMPLE', 'SCHOLOMANCE', 'DARKMOON_FAIRE', 'THE_BARRENS'];
+const CLASSIC_SETS = ['VANILLA'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const heroDict = {
   'demonhunter': 56550,
@@ -89,7 +90,15 @@ function validateCards(deck, format) {
     }
     cardCount += count;
     if (format==='standard') {
-      if (!ACTIVE_SETS.includes(card['set'])) {
+      if (!STANDARD_SETS.includes(card['set'])) {
+        return 'Invalid card: ' + card['name'];
+      }
+    } else if (format==='wild') {
+      if (CLASSIC_SETS.includes(card['set'])) {
+        return 'Invalid card: ' + card['name'];
+      }
+    } else if (format==='classic') {
+      if (!CLASSIC_SETS.includes(card['set'])) {
         return 'Invalid card: ' + card['name'];
       }
     }

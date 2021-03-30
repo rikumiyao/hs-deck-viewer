@@ -32,6 +32,7 @@ class DeckForm extends Component {
             defaultValue={this.state.format} onChange={this.handleFormat}>
             <option value="standard">Standard</option>
             <option value="wild">Wild</option>
+            <option value="classic">Classic</option>
           </select>
         </div>
         {

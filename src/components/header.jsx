@@ -19,7 +19,6 @@ class Header extends Component {
               <NavDropdown.Item href="/specialist" className={(component==="specialist"?" active":"")}>Specialist</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Runeterra" id="runeterra-nav-dropdown">
-              <NavDropdown.Item href="/runeterra/deck" className={(component==="runeterra"&&component2==="deck"?" active":"")}>Deck</NavDropdown.Item>
               <NavDropdown.Item href="/runeterra/leaderboard" className={(component==="runeterra"&&component2==="leaderboard"?" active":"")}>Leaderboard</NavDropdown.Item>
             </NavDropdown>
             <Link to="/battlefy" className={"nav-item nav-link"+(component==="battlefy"?" active":"")}><NavItem>Battlefy</NavItem></Link>
