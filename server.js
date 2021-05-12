@@ -103,7 +103,7 @@ function setDeckViewerMeta(req, callback) {
     return;
   }
   const title = createDeckTitle(decks.map(deck => deck.deck), mode);
-  callback({title: title, description: `View Hearthstone ${mode!=='deck' && _.capitalize(mode) + ' '}Decks`, image: DEFAULT_IMAGE});
+  callback({title: title, description: `View Hearthstone ${mode!=='deck' && _.capitalize(mode) + ' ' || ''}Decks`, image: DEFAULT_IMAGE});
 }
 
 createRoute(/\/specialist(\/.*)?/, setDeckViewerMeta);

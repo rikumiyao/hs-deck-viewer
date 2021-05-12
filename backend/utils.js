@@ -20,7 +20,16 @@ function convertDeck(deck) {
     return null;
   }
   cards.sort(compare);
-  const format = deck.format===2 ? 'standard' : 'wild'
+  let format;
+  if (deck.format===1) {
+    format = 'wild';
+  } else if (deck.format===2) {
+    format = 'standard';
+  } else if (deck.format===3) {
+    format = 'classic';
+  } else {
+    format = 'standard';
+  }
 
   return {'class': heroClass, 'cards': cards, 'format': format};
 }
@@ -31,6 +40,9 @@ export function hsDecodeDeck(deckstring) {
     return { success: false, error: 'Invalid deck code'};
   }
   const deck = convertDeck(valid);
+  if (!deck) {
+    return { success: false, error: 'Invalid class' };
+  }
   return { success: true, deck: deck };
 }
 
