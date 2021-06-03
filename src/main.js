@@ -9,8 +9,6 @@ import BattlefyPlayer from './components/battlefyplayer';
 import BattlefyDecks from './components/battlefydecks';
 import Grandmaster from './components/grandmaster';
 import GrandmasterDecks from './components/grandmasterdecks';
-import Runeterra from './components/runeterra';
-import RuneterraDeckViewer from './components/runeterradeckviewer';
 import RuneterraLeaderboard from './components/runeterraleaderboard';
 
 class Main extends Component {
@@ -31,9 +29,6 @@ class Main extends Component {
           <Route path='/grandmasters/([0-9]+)' component={GrandmasterDecks}/>
           <Route path='/grandmasters' component={Grandmaster}/>
           <Route path='/runeterra/leaderboard' component={RuneterraLeaderboard}/>
-          <Route path='/runeterra/deck/(.+)' component={RuneterraDeckViewer}/>
-          <Route path='/runeterra/deck' component={Runeterra}/>
-          <Route path='/runeterra' component={Runeterra}/>
         </Switch>
       </main>
     );

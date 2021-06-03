@@ -1,4 +1,4 @@
-import {hsDecodeDeck, lorDecodeDeck} from './utils';
+import {hsDecodeDeck} from './utils';
 const url = require('url');
 const mongodb = require('mongodb');
 const uri = process.env.DB_URI;
@@ -40,18 +40,6 @@ exports.routes = (app) => {
         res.status(400).json('Invalid Deckstring');
       } else {
         res.json(result['deck']);
-      }
-    });
-  app.route('/api/decodeLor')
-    .get((req, res) => {
-      const query = url.parse(req.url).query;
-      const i = query.indexOf('deckstring=');
-      const deckstring = query.substr(i+'deckstring='.length);
-      const deck = lorDecodeDeck(deckstring);
-      if (!deck['success']) {
-        res.status(400).json('Invalid Deckstring');
-      } else {
-        res.json(deck['deck']);
       }
     });
   app.route('/api/grandmasters')
