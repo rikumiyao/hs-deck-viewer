@@ -9,7 +9,8 @@ tile_dest = '../src/resources/Tiles/'
 cards_json = '../src/resources/cards.compact.json'
 hero_dest = 'Heros'
 resources_dir = 'resources/'
-deck_font = resources_dir + 'Belwe-Bold.ttf'
+english_font = resources_dir + 'Belwe-Bold.ttf'
+asia_font = resources_dir + 'NotoSansCJK-Bold.ttc'
 name_font = resources_dir + 'NotoSansCJK-Bold.ttc'
 star = resources_dir + 'star.png'
 
@@ -40,8 +41,9 @@ def draw_shadow(draw,x,y,text,font,shadowcolor="black"):
     draw.text((x+1, y-1), text, font=font, fill=shadowcolor)
     draw.text((x-1, y+1), text, font=font, fill=shadowcolor)
 
-def process(cardid):
+def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
     card = card_dict[cardid]
+    name = card['name'][language]
     if 'cost' not in card:
     #    process_hero(card)
         return
@@ -69,48 +71,50 @@ def process(cardid):
         draw.line([(x,0), (x,39)], fill=color)
     master = Image.alpha_composite(master, gradient)
     draw = ImageDraw.Draw(master)
-    if len(card['name'])>22:
+    if len(name)>22:
       font_size = 12
     else:
       font_size = 13
-    font = ImageFont.truetype(deck_font, font_size)
 
-    def writeCost(font):
+    def writeCost():
+        font = ImageFont.truetype(english_font, 18)
         msg = str(card['cost'])
         w, h = draw.textsize(msg, font=font)
-        font = ImageFont.truetype(deck_font, 18)
+        ##changethis
         draw_shadow(draw,(44-w)/2,(39-h)/2-1,str(card['cost']), font)
         draw.text(((44-w)/2, (39-h)/2-1), str(card['cost']), font=font)
     
-    draw_shadow(draw, 45, 27-font_size, card['name'], font)
-    draw.text((45, 27-font_size), card['name'], font=font)
+    font = ImageFont.truetype(font_name, font_size)
+    w, h = draw.textsize(name, font=font)
+    draw_shadow(draw, 45, (39-h)/2, name, font)
+    draw.text((45, (39-h)/2), name, font=font)
     if card['rarity']=='LEGENDARY':
         bg = Image.open(tile_container_number)
         master.paste(bg, (0, 0, 239, 39), bg)
         imstar = Image.open(star)
         master.paste(imstar, (214, 10, 233, 29), imstar)
 
-        writeCost(font)
+        writeCost()
 
-        master.save(u'{}{}.png'.format(tile_dest,cardid), 'PNG')
+        master.save(u'{}{}.png'.format(dest,cardid), 'PNG')
     else:
         bg = Image.open(tile_container_open)
         master.paste(bg, (0, 0, 239, 39), bg)
 
-        writeCost(font)
+        writeCost()
 
-        master.save(u'{}{}.png'.format(tile_dest,cardid), 'PNG')
+        master.save(u'{}{}.png'.format(dest,cardid), 'PNG')
 
         bg = Image.open(tile_container_number)
 
         master.paste(bg, (0, 0, 239, 39), bg)
-        font = ImageFont.truetype(deck_font, 16)
+        font = ImageFont.truetype(english_font, 16)
         w, h = draw.textsize('2', font=font)
         draw.text(((30-w)/2+209,(39-h)/2), '2', font=font, fill=(229, 181, 68))
 
-        writeCost(font)
+        writeCost()
 
-        master.save(u'{}{}_2.png'.format(tile_dest,cardid), 'PNG')
+        master.save(u'{}{}_2.png'.format(dest,cardid), 'PNG')
 
 def process_hero(card):
     if card['set'] != 'CORE':
@@ -134,13 +138,18 @@ def process_hero(card):
         draw.text((22, 75-h), title, font=font)
         imclass.save('{}/{}_{}.jpg'.format(hero_dest, card['cardClass'].lower(), i+1))
 
-print("Generating tiles in {}".format(tile_dest))
 
-if not os.path.exists(tile_dest):
-    os.mkdir(tile_dest)
+languageSettings = {'en':{'font_name': english_font, 'language':'enUS', 'dest':tile_dest+'en/'}, 
+'jp': {'font_name': asia_font, 'language':'jaJP', 'dest':tile_dest+'jp/'}}
+for language in languageSettings:
+    settings = languageSettings[language]
+    print("Generating tiles in {}".format(settings['dest']))
+    if not os.path.exists(settings['dest']):
+        os.makedirs(settings['dest'])
+    for card in card_dict:
+        process(card, settings['font_name'], settings['language'], settings['dest'])
+
 #if not os.path.exists(hero_dest):
 #    os.mkdir(hero_dest)
-for card in card_dict:
-    process(card)
 
 print("Finished generating tiles")

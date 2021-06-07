@@ -7,7 +7,7 @@ import Card from './card';
 class Deck extends Component {
 
   state = {
-    copied: false
+    copied: false,
   }
 
   styles = {
@@ -18,6 +18,8 @@ class Deck extends Component {
   deckstyles = {
     maxWidth: 340
   }
+
+  supportedLanguages = ['en', 'jp'];
 
   renderDeck() {
     if (!this.props.deck) {
@@ -31,15 +33,14 @@ class Deck extends Component {
           <button>Copy Deck Code</button>
         </CopyToClipboard>
         {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
- 
         <span>
-          { deck.class ? <img src={this.getClassImg(deck.class, this.props.index)} alt={deck.class}></img> : null }
+          { deck.class ? <img src={this.getClassImg(deck.class, this.props.index, this.props.language)} alt={deck.class}></img> : null }
         </span>
         <ul style={this.styles}>
           {
             deck.cards.map(card => 
               <li key={card[0].name}>
-               <Card card={card}/>
+               <Card card={card} language={this.props.language}/>
               </li>
             ) 
           }
@@ -67,23 +68,23 @@ class Deck extends Component {
       const card1 = cards[i];
       const card2 = diff[j];
       if (card1[0]===card2[0]) {
-        result.push(<li key={card1[0].name}><Card card={card1} change={card2[1]}/></li>);
+        result.push(<li key={card1[0].name}><Card card={card1} change={card2[1]} language={this.props.language}/></li>);
         i++;
         j++;
       } else if (compare(card1, card2) < 0) {
-        result.push(<li key={card1[0].name}><Card card={card1} change={0}/></li>);
+        result.push(<li key={card1[0].name}><Card card={card1} change={0} language={this.props.language}/></li>);
         i++;
       } else {
-        result.push(<li key={card2[0].name}><Card card={card2} change={card2[1]}/></li>);
+        result.push(<li key={card2[0].name}><Card card={card2} change={card2[1]} language={this.props.language}/></li>);
         j++;
       }
     }
     while (i < cards.length) {
-          result.push(<li key={cards[i][0].name}><Card card={cards[i]} change={0}/></li>);
+          result.push(<li key={cards[i][0].name}><Card card={cards[i]} change={0} language={this.props.language}/></li>);
       i++;
     }
     while (j < diff.length) {
-      result.push(<li key={diff[j][0].name}><Card card={diff[j]} change={0}/></li>);
+      result.push(<li key={diff[j][0].name}><Card card={diff[j]} change={0} language={this.props.language}/></li>);
       j++;
     }
     return result;
@@ -93,12 +94,15 @@ class Deck extends Component {
     return this.renderDeck();
   }
 
-  getClassImg(deckClass, index) {
+  getClassImg(deckClass, index, language) {
+    if (!this.supportedLanguages.includes(language)) {
+      language = 'en';
+    }
     const extension = '.png';
     if (index===0)
-      return require('../resources/classes/'+deckClass+extension).default;
+      return require('../resources/classes/'+language+'/'+deckClass+extension).default;
     else
-      return require('../resources/classes/'+deckClass+'_'+index+extension).default;
+      return require('../resources/classes/'+language+'/'+deckClass+'_'+index+extension).default;
   }
 }
 

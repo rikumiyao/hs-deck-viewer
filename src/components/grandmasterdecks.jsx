@@ -16,12 +16,16 @@ class GrandmasterDecks extends Component {
   state = {
     player : '',
     decks : [],
+    language: 'en',
     isLoaded : false,
     error : null,
     isDiff : true,
     decksExist: true,
     isSpecialist: false
   }
+
+  // TODO: turn this into a component
+  languages = [{key:'en', value: 'English'}, {key: 'jp', value: '日本語'}];
 
   constructor() {
     super();
@@ -113,14 +117,14 @@ class GrandmasterDecks extends Component {
         decks = [];
         decks.push((
           <div key={'Deck'+(1)} className='col-sm'>
-            <Deck index={1} deck={this.state.decks[0]}></Deck>
+            <Deck index={1} deck={this.state.decks[0]} language={this.state.language}></Deck>
           </div>
         ))
         decks = decks.concat(this.state.decks.slice(1).map((deck, i)=> {
           const diffs = compareDecks(this.state.decks[0],deck);
           return (
             <div key={'Diff'+(i+1)} className='col-sm'>
-              <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]}></DeckDiff>
+              <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]} language={this.state.language}></DeckDiff>
             </div>
           );
         }));
@@ -128,7 +132,7 @@ class GrandmasterDecks extends Component {
         decks = this.state.decks.map((deck, i)=> {
           return (
             <div key={'Deck'+(i+1)} className='col-sm'>
-              <Deck index={this.state.isSpecialist ? i+1 : 0} deck={deck}></Deck>
+              <Deck index={this.state.isSpecialist ? i+1 : 0} deck={deck} language={this.state.language}></Deck>
             </div>
           );
         });
@@ -138,6 +142,14 @@ class GrandmasterDecks extends Component {
           <div className='container mt-2'>
             <Link className="btn btn-primary" role="button" to={`/grandmasters`}>&lt; Back</Link>
             <h1>{this.state.player}'s Decks</h1>
+            <select className="form-control m-1" id="format"
+            defaultValue={this.state.language} onChange={event => {this.setState({language:event.target.value})}}>
+              {
+                this.languages.map(language => {
+                  return (<option value={language.key}>{language.value}</option>)
+                })
+              }
+            </select>
             {this.state.isSpecialist ? <DeckOptions onToggleDiff={this.handleToggleDiff}
               disabledText="Show Differences" enabledText="Hide Differences"></DeckOptions> : null}
             <div className='row'>

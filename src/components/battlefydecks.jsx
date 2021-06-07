@@ -12,11 +12,14 @@ class BattlefyDecks extends Component {
 
   state = {
     decks : [],
+    language : 'en',
     isValid : false,
     isLoaded : false,
     error : null,
     isDiff : true
   }
+  // TODO: turn this into a component
+  languages = [{key:'en', value: 'English'}, {key: 'jp', value: '日本語'}];
 
   constructor() {
     super();
@@ -100,7 +103,7 @@ class BattlefyDecks extends Component {
           const diffs = compareDecks(this.state.decks[0],deck);
           return (
             <div key={'Diff'+(i+1)} className='col-sm'>
-              <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]}></DeckDiff>
+              <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]} language={this.state.language}></DeckDiff>
             </div>
           );
         }));
@@ -108,7 +111,7 @@ class BattlefyDecks extends Component {
         decks = this.state.decks.map((deck, i)=> {
           return (
             <div key={'Deck'+(i+1)} className='col-sm'>
-              <Deck index={isSpecialist ? i+1 : 0} deck={deck}></Deck>
+              <Deck index={isSpecialist ? i+1 : 0} deck={deck} language={this.state.language}></Deck>
             </div>
           );
         });
@@ -120,6 +123,14 @@ class BattlefyDecks extends Component {
           <a className='btn btn-primary' href={`https://d0nkey.top/battlefy/tournament/${this.props.tourneyId}/player/${encodeURIComponent(this.props.player)}`}  target='_blank' rel='noopener noreferrer'>
             d0nkey
           </a>
+          <select className="form-control m-1" id="format"
+          defaultValue={this.state.language} onChange={event => {this.setState({language:event.target.value})}}>
+            {
+              this.languages.map(language => {
+                return (<option value={language.key}>{language.value}</option>)
+              })
+            }
+          </select>
           {isSpecialist && this.state.isValid ? <DeckOptions onToggleDiff={this.handleToggleDiff}></DeckOptions> : null}
           <div className='row'>
             {decks}

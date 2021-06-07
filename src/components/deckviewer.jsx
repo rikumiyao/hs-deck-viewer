@@ -19,9 +19,13 @@ class DeckViewer extends Component {
     this.handleToggleDiff = this.handleToggleDiff.bind(this);
   }
 
+  // TODO: turn this into a component
+  languages = [{key:'en', value: 'English'}, {key: 'jp', value: '日本語'}];
+
   state = {
     decks : [],
     validDeck : [],
+    language: 'en',
     isValid : false,
     isDiff: true,
     copied: false,
@@ -70,13 +74,13 @@ class DeckViewer extends Component {
     );
   }
 
-  renderDecks(decks, mode) {
+  renderDecks(decks, mode, language) {
     let deckComponents;
     if (mode==='conquest' || mode==='deck') {
       deckComponents = decks.map((deck, i)=> {
         return (
           <div key={'Deck'+(i+1)} className='col-sm'>
-            <Deck index={0} deck={deck}></Deck>
+            <Deck index={0} deck={deck} language={language}></Deck>
           </div>
         );
       });
@@ -84,22 +88,22 @@ class DeckViewer extends Component {
       deckComponents = [];
       deckComponents.push((
         <div key={'Deck'+(1)} className='col-sm'>
-          <Deck index={1} deck={decks[0]}></Deck>
+          <Deck index={1} deck={decks[0]} language={language}></Deck>
         </div>
       ))
       deckComponents = deckComponents.concat(decks.slice(1).map((deck, i)=> {
         const diffs = compareDecks(decks[0],deck);
         return (
           <div key={'Diff'+(i+1)} className='col-sm'>
-            <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={this.state.decks[i+1]}></DeckDiff>
+            <DeckDiff index={i+2} removed={diffs[0]} added={diffs[1]} deck={decks[i+1]} language={language}></DeckDiff>
           </div>
         );
       }));
     } else {
-      deckComponents = this.state.decks.map((deck, i)=> {
+      deckComponents = decks.map((deck, i)=> {
         return (
           <div key={'Deck'+(i+1)} className='col-sm'>
-            <Deck index={i+1} deck={deck}></Deck>
+            <Deck index={i+1} deck={deck}  language={language}></Deck>
           </div>
         );
       });
@@ -128,7 +132,15 @@ class DeckViewer extends Component {
         <DocumentTitle title={this.createTitle(this.state.decks, this.state.mode)}>
           <div className='container'>
             <div className='row'>
-              {this.renderDecks(this.state.decks, this.state.mode)}
+              <select className="form-control m-1" id="format"
+              defaultValue={this.state.language} onChange={event => {this.setState({language:event.target.value})}}>
+                {
+                  this.languages.map(language => {
+                    return (<option value={language.key}>{language.value}</option>)
+                  })
+                }
+              </select>
+              {this.renderDecks(this.state.decks, this.state.mode, this.state.language)}
             </div>
           </div>
         </DocumentTitle>

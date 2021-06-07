@@ -1,7 +1,7 @@
 import requests
 import json
 import api
-CARDS_URL = 'https://api.hearthstonejson.com/v1/latest/enUS/cards.collectible.json'
+CARDS_URL = 'https://api.hearthstonejson.com/v1/latest/all/cards.collectible.json'
 
 def getCardsJson():
   r = requests.get(CARDS_URL)
@@ -25,7 +25,7 @@ def getCardsJson():
     if cardInfo:
       data[index]['image'] = cardInfo['image']
     else:
-      print('No card data found for {} ({})'.format(card['name'], card['dbfId']))
+      print('No card data found for {} ({})'.format(card['name']['enUS'], card['dbfId']))
   return data
 
 print("Fetching cards from {}".format(CARDS_URL))
