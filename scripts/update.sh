@@ -5,4 +5,6 @@ unzip -uq master
 rm master.zip
 python3 updateCards.py
 python3 generate_tiles.py
+aws s3 cp ../src/resources/Tiles/ s3://yaytears/resources/Tiles --recursive --acl public-read
 rm -r hs-card-tiles-master
+rm -r ../src/resources/Tiles

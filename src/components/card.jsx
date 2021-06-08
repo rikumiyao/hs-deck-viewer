@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactHover from 'react-hover'; 
 
+const s3URI = 'https://yaytears.s3.us-east-2.amazonaws.com'
+
 class Card extends Component {
 
   supportedLanguages = ['en', 'jp'];
@@ -29,7 +31,7 @@ class Card extends Component {
     if (!this.supportedLanguages.includes(language)) {
       language = 'en';
     }
-    return require('../resources/Tiles/'+language+'/'+card[0].id+(card[1]===2 ? '_2' : '')+'.png').default;
+    return s3URI + '/resources/Tiles/'+language+'/'+card[0].id+(card[1]===2 ? '_2' : '')+'.png';
   }
 
 }
