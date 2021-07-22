@@ -96,6 +96,35 @@ exports.routes = (app) => {
         });
       });
     });
+  app.route('/api/masterstourstats')
+    .get((req, res) => {
+      const region = decodeURIComponent(req.query['region']);
+      mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
+        if (err) {
+          res.status(500).json({'error': err});
+          return;
+        }
+        const db = client.db();
+        const statsDb = db.collection('aggregateStats');
+        statsDb.findOne({'_id': {$eq: region}}, function (err, result) {
+          if (err) {
+            res.status(500).json({'error': err});
+            client.close();
+            return;
+          }
+          if (!result) {
+            res.json([]);
+            client.close();
+            return;
+          }
+          const stats = result['playerStats'];
+          const statsArr = Object.values(stats);
+          statsArr.sort((a,b) => b.winrate - a.winrate);
+          res.json(statsArr);
+          client.close();
+        });
+      });
+  });
   app.route('/api/leaderboardlor')
     .get((req, res) => {
       const region = decodeURIComponent(req.query['region']);

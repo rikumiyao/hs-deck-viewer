@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import DocumentTitle from 'react-document-title';
 
-import BattlefyTop8 from './battlefytop8';
+import BattlefyAggregateStats from './battlefyaggregatestats';
 
 const dateFormat = require('dateformat');
 
@@ -223,8 +223,8 @@ class Battlefy extends Component {
               {this.renderBattlefyForm()}
               {this.renderTable()}
             </Tab>
-            <Tab eventKey="top8" title="Top 8 Count">
-              <BattlefyTop8/>
+            <Tab eventKey="stats" title="Stats">
+              <BattlefyAggregateStats/>
             </Tab>
           </Tabs>
         </div>

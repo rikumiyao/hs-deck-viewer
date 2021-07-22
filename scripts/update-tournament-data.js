@@ -62,6 +62,87 @@ function handleSingleElim(id, slug, tournamentLoc, tournamentNum, stageId, start
   httpGet(fetchStandingsUrl, {}, standings => {
     handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum, startTime);
   });
+  const fetchMatchesUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/matches`;
+  httpGet(fetchMatchesUrl, {}, matches => {
+    handleQualifiers(id, slug, matches, tournamentLoc, tournamentNum, startTime);
+  });
+}
+
+function handleQualifiers(id, slug, matches, tournamentLoc, tournamentNum) {
+  players = {};
+  matches.forEach(match => {
+    if (match.isBye) {
+      return;
+    }
+    ['top', 'bottom'].forEach(position => {
+      const playerData = match[position];
+      const playerName = playerData.team.name;
+      const player = players[playerName] || {name: playerName, wins: 0, losses: 0}
+      if (playerData.winner) {
+        player.wins++;
+      } else {
+        player.losses++;
+      }
+      players[playerName] = player;
+    })
+  });
+  writeStats(id, slug, players, tournamentLoc, tournamentNum);
+  aggregateStats(tournamentLoc);
+}
+
+function writeStats(id, slug, players, tournamentLoc, tournamentNum) {
+  if (players.length===0) {
+    return;
+  }
+  mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => {
+    if (err) throw err;
+    const db = client.db();
+    const stats = db.collection('stats');
+    let count = 0;
+    stats.updateOne({_id: id},{$set: {id: id, slug: slug, tournamentId: tournamentLoc, tournamentNum: tournamentNum, players: players}}, {upsert:true}, (err, res) => {
+      if (err) throw err;-
+      client.close();
+    });
+  });
+}
+
+function aggregateStats(tournamentLoc) {
+  mongodb.MongoClient.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client)=> {
+    if (err) {
+      res.status(500).json({'error': err});
+      return;
+    }
+
+    const db = client.db();
+    const statsCollection = db.collection('stats');
+    const tournamentStats = {};
+    const aggregatedStats = db.collection('aggregateStats');
+    statsCollection.find({
+      'tournamentId': {$eq: tournamentLoc}
+    }).toArray(function (err, result) {
+      if (err) {
+        res.status(500).json({'error': err});
+        client.close();
+        return;
+      }
+      result.forEach(stats => {
+        Object.values(stats.players).forEach(player => {
+          const playerName = player['name'];
+          const playerStats = tournamentStats[playerName] || {name: playerName, count: 0, wins: 0, losses: 0};
+          playerStats.count++;
+          playerStats.wins += player['wins'];
+          playerStats.losses += player['losses'];
+          const numGames = playerStats.losses + playerStats.wins;
+          playerStats.winrate = numGames > 0 ? playerStats.wins / numGames : 0;
+          tournamentStats[playerName] = playerStats;
+        })
+      })
+      aggregatedStats.updateOne({_id: tournamentLoc},{$set: {tournamentId: tournamentLoc, playerStats: tournamentStats}}, {upsert:true}, (err, res) => {
+        if (err) throw err;
+        client.close();
+      });
+    });
+  });
 }
 
 function handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum, startTime) {
@@ -81,7 +162,7 @@ function manualTop8(id, slug, tournamentLoc, tournamentNum) {
     if (stageId) {
       const fetchStandingsUrl = `https://dtmwra1jsgyb0.cloudfront.net/stages/${stageId}/standings`;
       httpGet(fetchStandingsUrl, {}, standings => {
-        handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum)
+        handleSingleElimStandings(id, slug, standings, tournamentLoc, tournamentNum);
       });
     }
   });
