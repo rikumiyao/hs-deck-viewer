@@ -59,8 +59,9 @@ class BattlefyTop8 extends Component {
     const stats = this.state.stats.filter(player => 
       (this.state.includeQualified || !this.state.qualified.has(player.name)) && 
       (!this.state.minCups || player.count >= this.state.minCups)
-    ).map(player => {
+    ).map((player, index) => {
       return {
+        index: index + 1,
         name: player.name,
         numCups: player.count,
         numTop8s: this.state.top8Counts[player.name] ? this.state.top8Counts[player.name].numTop8s : 0,
@@ -115,6 +116,7 @@ class BattlefyTop8 extends Component {
       return (
         <BootstrapTable
           data={ this.state.displayedData } pagination options={options} className="table-striped">
+          <TableHeaderColumn dataField='index'>#</TableHeaderColumn>
           <TableHeaderColumn dataField='name' isKey>Player</TableHeaderColumn>
           <TableHeaderColumn dataField='numCups'>Cups</TableHeaderColumn>
           <TableHeaderColumn dataField='numTop8s'>Top 8</TableHeaderColumn>
