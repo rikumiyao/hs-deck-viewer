@@ -49,7 +49,7 @@ function compare(a,b) {
   if (a[0]['cost'] - b[0]['cost'] !== 0) {
     return a[0]['cost'] - b[0]['cost'];
   } else {
-    if (a[0]['name'] < b[0]['name']) {
+    if (a[0]['name']['enUS'] < b[0]['name']['enUS']) {
       return -1;
     } else {
       return 1;

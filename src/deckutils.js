@@ -80,30 +80,30 @@ function validateCards(deck, format) {
     const card = value[0];
     const count = value[1];
     if (card['classes'] && !card['classes'].map(a=>a.toLowerCase()).includes(deck.class)) {
-      return 'Invalid card class: ' + card['name'];
+      return 'Invalid card class: ' + card['name']['enUS'];
     }
     if (!card['classes'] && card['cardClass'].toLowerCase()!==deck.class && card['cardClass'] !== 'NEUTRAL') {
-      return 'Invalid card class: ' + card['name'];
+      return 'Invalid card class: ' + card['name']['enUS'];
     }
     if (count > 2 || count <=0) {
-      return 'Invalid card count: ' + card['name'];
+      return 'Invalid card count: ' + card['name']['enUS'];
     }
     cardCount += count;
     if (format==='standard') {
       if (!STANDARD_SETS.includes(card['set'])) {
-        return 'Invalid card: ' + card['name'];
+        return 'Invalid card: ' + card['name']['enUS'];
       }
     } else if (format==='wild') {
       if (CLASSIC_SETS.includes(card['set'])) {
-        return 'Invalid card: ' + card['name'];
+        return 'Invalid card: ' + card['name']['enUS'];
       }
     } else if (format==='classic') {
       if (!CLASSIC_SETS.includes(card['set'])) {
-        return 'Invalid card: ' + card['name'];
+        return 'Invalid card: ' + card['name']['enUS'];
       }
     }
     if (BANNED_CARDS.includes(card.id)) {
-      return 'Invalid card: ' + card['name'];
+      return 'Invalid card: ' + card['name']['enUS'];
     }
     return null;
   })
@@ -121,7 +121,7 @@ function compare(a,b) {
   if (a[0]['cost'] - b[0]['cost'] !== 0) {
     return a[0]['cost'] - b[0]['cost'];
   } else {
-    if (a[0]['name'] < b[0]['name']) {
+    if (a[0]['name'] < b[0]['name']['enUS']) {
       return -1;
     } else {
       return 1;
@@ -149,7 +149,6 @@ export function cardDiff(deck1, deck2) {
   while (i < cards1.length && j < cards2.length) {
     if (cards1[i][0].dbfId === cards2[j][0].dbfId) {
       if (cards1[i][1]>cards2[j][1]) {
-        console.log('test' + i + "test1 " + j)
         count += Math.abs(cards1[i][1]-cards2[j][1]);
       }
       i++;
