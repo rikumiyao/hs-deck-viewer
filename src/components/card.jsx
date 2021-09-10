@@ -15,14 +15,7 @@ class Card extends Component {
     };
     return (
       <div>
-        <ReactHover options={options} zIndex={1}>
-          <ReactHover.Trigger type='trigger'>
-            <img src={this.getCardTile(card, this.props.language)} alt={card[0].name}></img>
-          </ReactHover.Trigger>
-          <ReactHover.Hover type='hover'>
-            <img src={card[0].image} alt={card[0].name} width="256px"></img>
-          </ReactHover.Hover>
-        </ReactHover>
+        <img src={this.getCardTile(card, this.props.language)} alt={card[0].name}></img>
       </div>
     );
   }

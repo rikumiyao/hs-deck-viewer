@@ -21,11 +21,11 @@ def getCardsJson():
       data[index]['cost'] = card['cost']
     if 'classes' in card:
       data[index]['classes'] = card['classes']
-    cardInfo = api.getCard(card['dbfId'])
-    if cardInfo:
-      data[index]['image'] = cardInfo['image']
-    else:
-      print('No card data found for {} ({})'.format(card['name']['enUS'], card['dbfId']))
+    #cardInfo = api.getCard(card['dbfId'])
+    #if cardInfo:
+    #  data[index]['image'] = cardInfo['image']
+    #else:
+    #  print('No card data found for {} ({})'.format(card['name']['enUS'], card['dbfId']))
   return data
 
 print("Fetching cards from {}".format(CARDS_URL))
