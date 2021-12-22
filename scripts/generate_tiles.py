@@ -42,7 +42,7 @@ def draw_shadow(draw,x,y,text,font,shadowcolor="black"):
     draw.text((x+1, y-1), text, font=font, fill=shadowcolor)
     draw.text((x-1, y+1), text, font=font, fill=shadowcolor)
 
-def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
+def process(cardid, font_name=english_font, language='enUS', dest=tile_dest, count=1):
     card = card_dict[cardid]
     name = card['name'][language]
     if 'cost' not in card:
@@ -52,9 +52,14 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
     height = 39
     color_palette = [(41,48,58,255), (93, 68, 68, 0)]
 
-    xoff = 105
-    minx = 129
-    maxx = 245
+    if count == 2 or card['rarity'] == "LEGENDARY":
+        xoff = 81
+        minx = 105
+        maxx = 221
+    else:
+        xoff = 105
+        minx = 129
+        maxx = 245
 
     image = '{}{}.png'.format(tile_loc, card['id'])
     try:
@@ -89,6 +94,7 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
     w, h = draw.textsize(name, font=font)
     draw_shadow(draw, 45, (39-h)/2, name, font)
     draw.text((45, (39-h)/2), name, font=font)
+
     if card['rarity']=='LEGENDARY':
         bg = Image.open(tile_container_number)
         master.paste(bg, (0, 0, 239, 39), bg)
@@ -98,16 +104,15 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
         writeCost()
 
         master.save(u'{}{}.png'.format(dest,cardid), 'PNG')
-    else:
+    elif count == 1:
         bg = Image.open(tile_container_open)
         master.paste(bg, (0, 0, 239, 39), bg)
 
         writeCost()
 
         master.save(u'{}{}.png'.format(dest,cardid), 'PNG')
-
+    elif count == 2:
         bg = Image.open(tile_container_number)
-
         master.paste(bg, (0, 0, 239, 39), bg)
         font = ImageFont.truetype(english_font, 16)
         w, h = draw.textsize('2', font=font)
@@ -150,6 +155,8 @@ for language in languageSettings:
         os.makedirs(settings['dest'])
     for card in card_dict:
         process(card, settings['font_name'], settings['language'], settings['dest'])
+        if card_dict[card]['rarity'] != 'LEGENDARY':
+            process(card, settings['font_name'], settings['language'], settings['dest'], 2)
 
 #if not os.path.exists(hero_dest):
 #    os.mkdir(hero_dest)
