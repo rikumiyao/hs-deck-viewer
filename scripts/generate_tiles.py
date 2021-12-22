@@ -24,6 +24,10 @@ with open(cards_json, encoding="utf-8") as json_file:
     for card in data:
         card_dict[card['id']] = card
 
+font_settings = {'enUS':{"font_sizes": [12, 13, 14], "bounds": [22, 20, 0]},
+'zhCN': {"font_sizes": [16, 18, 19, 21], "bounds": [9, 8, 7, 0]},
+'default': {"font_sizes": [12, 13], "bounds": [22, 0]}}
+
 def interpolate_color(minval, maxval, val, color_palette):
     """ Computes intermediate RGB color of a value in the range of minval-maxval
         based on color_palette representing the range. """
@@ -77,18 +81,22 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest, cou
         draw.line([(x,0), (x,39)], fill=color)
     master = Image.alpha_composite(master, gradient)
     draw = ImageDraw.Draw(master)
-    if len(name)>22:
-      font_size = 12
-    else:
-      font_size = 13
-
+    
+    settings = font_settings.get(language, font_settings['default'])
+    font_sizes = settings['font_sizes']
+    bounds = settings['bounds']
+    for i in range(len(font_sizes)):
+        if len(name) > bounds[i]:
+            font_size = font_sizes[i]
+            break
+    
     def writeCost():
-        font = ImageFont.truetype(english_font, 18)
+        font = ImageFont.truetype(english_font, 25)
         msg = str(card['cost'])
         w, h = draw.textsize(msg, font=font)
         ##changethis
-        draw_shadow(draw,(44-w)/2,(39-h)/2-1,str(card['cost']), font)
-        draw.text(((44-w)/2, (39-h)/2-1), str(card['cost']), font=font)
+        draw_shadow(draw,(44-w)/2,(39-h)/2,str(card['cost']), font)
+        draw.text(((44-w)/2, (39-h)/2), str(card['cost']), font=font)
     
     font = ImageFont.truetype(font_name, font_size)
     w, h = draw.textsize(name, font=font)
