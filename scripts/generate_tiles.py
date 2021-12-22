@@ -11,6 +11,7 @@ hero_dest = 'Heros'
 resources_dir = 'resources/'
 english_font = resources_dir + 'Belwe-Bold.ttf'
 asia_font = resources_dir + 'NotoSansCJK-Bold.ttc'
+chinese_font = resources_dir + 'fangzhenglibian.ttf'
 name_font = resources_dir + 'NotoSansCJK-Bold.ttc'
 star = resources_dir + 'star.png'
 
@@ -140,7 +141,8 @@ def process_hero(card):
 
 
 languageSettings = {'en':{'font_name': english_font, 'language':'enUS', 'dest':tile_dest+'en/'}, 
-'jp': {'font_name': asia_font, 'language':'jaJP', 'dest':tile_dest+'jp/'}}
+'jp': {'font_name': asia_font, 'language':'jaJP', 'dest':tile_dest+'jp/'}, 
+'cn': {'font_name': chinese_font, 'language':'zhCN', 'dest':tile_dest+'cn/'}}
 for language in languageSettings:
     settings = languageSettings[language]
     print("Generating tiles in {}".format(settings['dest']))

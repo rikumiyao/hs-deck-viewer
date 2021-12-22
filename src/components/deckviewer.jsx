@@ -20,7 +20,7 @@ class DeckViewer extends Component {
   }
 
   // TODO: turn this into a component
-  languages = [{key:'en', value: 'English'}, {key: 'jp', value: '日本語'}];
+  languages = [{key:'en', value: 'English'}, {key: 'jp', value: '日本語'}, {key: 'cn', value: '简体中文'}];
 
   state = {
     decks : [],
