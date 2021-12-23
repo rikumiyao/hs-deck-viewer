@@ -5,7 +5,7 @@ const s3URI = 'https://yaytears.s3.us-east-2.amazonaws.com'
 
 class Card extends Component {
 
-  supportedLanguages = ['en', 'jp'];
+  supportedLanguages = ['en', 'jp', 'cn'];
 
   render() {
     const card = this.props.card;

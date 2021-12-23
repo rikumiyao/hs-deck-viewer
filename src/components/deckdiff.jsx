@@ -14,7 +14,7 @@ class DeckDiff extends Component {
     listStyleType: "none"
   };
 
-  supportedLanguages = ['en', 'jp'];
+  supportedLanguages = ['en', 'jp', 'cn'];
 
   renderDeck() {
     const deck = this.props.deck;

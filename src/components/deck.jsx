@@ -19,7 +19,7 @@ class Deck extends Component {
     maxWidth: 340
   }
 
-  supportedLanguages = ['en', 'jp'];
+  supportedLanguages = ['en', 'jp', 'cn'];
 
   renderDeck() {
     if (!this.props.deck) {

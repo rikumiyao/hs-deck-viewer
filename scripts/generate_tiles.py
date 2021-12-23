@@ -11,6 +11,7 @@ hero_dest = 'Heros'
 resources_dir = 'resources/'
 english_font = resources_dir + 'Belwe-Bold.ttf'
 asia_font = resources_dir + 'NotoSansCJK-Bold.ttc'
+chinese_font = resources_dir + 'fangzhenglibian.ttf'
 name_font = resources_dir + 'NotoSansCJK-Bold.ttc'
 star = resources_dir + 'star.png'
 
@@ -22,6 +23,10 @@ with open(cards_json, encoding="utf-8") as json_file:
     data = json.load(json_file)
     for card in data:
         card_dict[card['id']] = card
+
+font_settings = {'enUS':{"font_sizes": [12, 13, 14], "bounds": [22, 20, 0]},
+'zhCN': {"font_sizes": [16, 18, 19, 21], "bounds": [9, 8, 7, 0]},
+'default': {"font_sizes": [12, 13], "bounds": [22, 0]}}
 
 def interpolate_color(minval, maxval, val, color_palette):
     """ Computes intermediate RGB color of a value in the range of minval-maxval
@@ -41,7 +46,7 @@ def draw_shadow(draw,x,y,text,font,shadowcolor="black"):
     draw.text((x+1, y-1), text, font=font, fill=shadowcolor)
     draw.text((x-1, y+1), text, font=font, fill=shadowcolor)
 
-def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
+def process(cardid, font_name=english_font, language='enUS', dest=tile_dest, count=1):
     card = card_dict[cardid]
     name = card['name'][language]
     if 'cost' not in card:
@@ -51,9 +56,14 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
     height = 39
     color_palette = [(41,48,58,255), (93, 68, 68, 0)]
 
-    xoff = 105
-    minx = 129
-    maxx = 245
+    if count == 2 or card['rarity'] == "LEGENDARY":
+        xoff = 81
+        minx = 105
+        maxx = 221
+    else:
+        xoff = 105
+        minx = 129
+        maxx = 245
 
     image = '{}{}.png'.format(tile_loc, card['id'])
     try:
@@ -71,23 +81,28 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
         draw.line([(x,0), (x,39)], fill=color)
     master = Image.alpha_composite(master, gradient)
     draw = ImageDraw.Draw(master)
-    if len(name)>22:
-      font_size = 12
-    else:
-      font_size = 13
-
+    
+    settings = font_settings.get(language, font_settings['default'])
+    font_sizes = settings['font_sizes']
+    bounds = settings['bounds']
+    for i in range(len(font_sizes)):
+        if len(name) > bounds[i]:
+            font_size = font_sizes[i]
+            break
+    
     def writeCost():
-        font = ImageFont.truetype(english_font, 18)
+        font = ImageFont.truetype(english_font, 25)
         msg = str(card['cost'])
         w, h = draw.textsize(msg, font=font)
         ##changethis
-        draw_shadow(draw,(44-w)/2,(39-h)/2-1,str(card['cost']), font)
-        draw.text(((44-w)/2, (39-h)/2-1), str(card['cost']), font=font)
+        draw_shadow(draw,(44-w)/2,(39-h)/2,str(card['cost']), font)
+        draw.text(((44-w)/2, (39-h)/2), str(card['cost']), font=font)
     
     font = ImageFont.truetype(font_name, font_size)
     w, h = draw.textsize(name, font=font)
     draw_shadow(draw, 45, (39-h)/2, name, font)
     draw.text((45, (39-h)/2), name, font=font)
+
     if card['rarity']=='LEGENDARY':
         bg = Image.open(tile_container_number)
         master.paste(bg, (0, 0, 239, 39), bg)
@@ -97,16 +112,15 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest):
         writeCost()
 
         master.save(u'{}{}.png'.format(dest,cardid), 'PNG')
-    else:
+    elif count == 1:
         bg = Image.open(tile_container_open)
         master.paste(bg, (0, 0, 239, 39), bg)
 
         writeCost()
 
         master.save(u'{}{}.png'.format(dest,cardid), 'PNG')
-
+    elif count == 2:
         bg = Image.open(tile_container_number)
-
         master.paste(bg, (0, 0, 239, 39), bg)
         font = ImageFont.truetype(english_font, 16)
         w, h = draw.textsize('2', font=font)
@@ -140,7 +154,8 @@ def process_hero(card):
 
 
 languageSettings = {'en':{'font_name': english_font, 'language':'enUS', 'dest':tile_dest+'en/'}, 
-'jp': {'font_name': asia_font, 'language':'jaJP', 'dest':tile_dest+'jp/'}}
+'jp': {'font_name': asia_font, 'language':'jaJP', 'dest':tile_dest+'jp/'}, 
+'cn': {'font_name': chinese_font, 'language':'zhCN', 'dest':tile_dest+'cn/'}}
 for language in languageSettings:
     settings = languageSettings[language]
     print("Generating tiles in {}".format(settings['dest']))
@@ -148,6 +163,8 @@ for language in languageSettings:
         os.makedirs(settings['dest'])
     for card in card_dict:
         process(card, settings['font_name'], settings['language'], settings['dest'])
+        if card_dict[card]['rarity'] != 'LEGENDARY':
+            process(card, settings['font_name'], settings['language'], settings['dest'], 2)
 
 #if not os.path.exists(hero_dest):
 #    os.mkdir(hero_dest)
