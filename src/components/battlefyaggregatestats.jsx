@@ -7,7 +7,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 class BattlefyTop8 extends Component {
 
-  tournaments = ['one', 'undercity','stormwind', 'silvermoon'];
+  tournaments = ['two', 'one', 'undercity','stormwind', 'silvermoon'];
 
   state = {
     eventLocation: this.tournaments[0],

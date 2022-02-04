@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactHover from 'react-hover'; 
 
 const s3URI = 'https://yaytears.s3.us-east-2.amazonaws.com'
 
