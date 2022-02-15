@@ -8,10 +8,6 @@ class Card extends Component {
 
   render() {
     const card = this.props.card;
-    const options = {
-      followCursor: true,
-      shiftY: -380
-    };
     return (
       <div>
         <img src={this.getCardTile(card, this.props.language)} alt={card[0].name}></img>
