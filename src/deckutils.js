@@ -1,6 +1,6 @@
 import { encode, decode } from "deckstrings";
 
-const STANDARD_SETS = ['CORE','BLACK_TEMPLE', 'SCHOLOMANCE', 'DARKMOON_FAIRE', 'THE_BARRENS', 'STORMWIND', 'ALTERAC_VALLEY'];
+const STANDARD_SETS = ['CORE', 'THE_BARRENS', 'STORMWIND', 'ALTERAC_VALLEY', 'THE_SUNKEN_CITY'];
 const CLASSIC_SETS = ['VANILLA'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const heroDict = {
