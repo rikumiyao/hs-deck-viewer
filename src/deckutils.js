@@ -1,6 +1,6 @@
 import { encode, decode } from "deckstrings";
 
-const STANDARD_SETS = ['CORE', 'THE_BARRENS', 'STORMWIND', 'ALTERAC_VALLEY', 'THE_SUNKEN_CITY'];
+const STANDARD_SETS = ['CORE', 'THE_BARRENS', 'STORMWIND', 'ALTERAC_VALLEY', 'THE_SUNKEN_CITY', 'REVENDRETH'];
 const CLASSIC_SETS = ['VANILLA'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const heroDict = {
@@ -111,8 +111,11 @@ function validateCards(deck, format) {
   if (error) {
     return error;
   }
-  if (cardCount!==30) {
-    return 'Invalid number of cards' + cardCount;
+  const hasPrinceRenathal = deck.cards.some(value => {
+    return value[0]['dbfId'] === 79767// Prince Renathal
+  });
+  if (hasPrinceRenathal && cardCount !==40 || !hasPrinceRenathal && cardCount!==30) {
+    return 'Invalid number of cards: ' + cardCount;
   }
   return '';
 }
