@@ -15,7 +15,7 @@
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.21",
-    "mdbreact": "^4.27.0",
+    "mdbreact": "^5.2.0",
     "mongodb": "^3.6.1",
     "query-string": "^6.13.1",
     "react": "^16.8.3",
@@ -29,11 +29,11 @@
     "react-router": "^4.3.1",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^4.0.1",
+    "react-scripts": "^5.0.1",
     "reactstrap": "^7.1.0",
     "request": "^2.88.0",
     "runeterra": "^2.0.0",
-    "serve": "^11.3.2",
+    "serve": "^14.0.1",
     "url-loader": "^1.1.2"
   },
   "scripts": {
@@ -44,6 +44,9 @@
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build-assets && npm run build",
     "build-assets": "cd scripts && ./update.sh"
+  },
+  "engines": {
+    "node": ">=16.0.0 <17.0.0"
   },
   "eslintConfig": {
     "extends": "react-app"

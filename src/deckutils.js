@@ -114,7 +114,7 @@ function validateCards(deck, format) {
   const hasPrinceRenathal = deck.cards.some(value => {
     return value[0]['dbfId'] === 79767// Prince Renathal
   });
-  if (hasPrinceRenathal && cardCount !==40 || !hasPrinceRenathal && cardCount!==30) {
+  if ((hasPrinceRenathal && cardCount !==40) || (!hasPrinceRenathal && cardCount!==30)) {
     return 'Invalid number of cards: ' + cardCount;
   }
   return '';

@@ -6,7 +6,7 @@ function startCronJob() {
   const job = new CronJob('0 */10 * * * *', function() {
 
     update();
-    updateLor();
+//    updateLor();
   });
 
   job.start();

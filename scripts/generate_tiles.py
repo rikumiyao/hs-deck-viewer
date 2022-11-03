@@ -46,6 +46,11 @@ def draw_shadow(draw,x,y,text,font,shadowcolor="black"):
     draw.text((x+1, y-1), text, font=font, fill=shadowcolor)
     draw.text((x-1, y+1), text, font=font, fill=shadowcolor)
 
+def get_text_size(draw, text, font=None):
+    left, top, right, bottom = draw.multiline_textbbox((0, 0), text, font=font)
+    width, height = right-left, bottom - top
+    return width, height
+
 def process(cardid, font_name=english_font, language='enUS', dest=tile_dest, count=1):
     card = card_dict[cardid]
     name = card['name'][language]
@@ -93,13 +98,13 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest, cou
     def writeCost():
         font = ImageFont.truetype(english_font, 25)
         msg = str(card['cost'])
-        w, h = draw.textsize(msg, font=font)
+        w, h = get_text_size(draw, msg, font=font)
         ##changethis
         draw_shadow(draw,(44-w)/2,(39-h)/2,str(card['cost']), font)
         draw.text(((44-w)/2, (39-h)/2), str(card['cost']), font=font)
     
     font = ImageFont.truetype(font_name, font_size)
-    w, h = draw.textsize(name, font=font)
+    w, h = get_text_size(draw, name, font=font)
     draw_shadow(draw, 45, (39-h)/2, name, font)
     draw.text((45, (39-h)/2), name, font=font)
 
@@ -123,7 +128,7 @@ def process(cardid, font_name=english_font, language='enUS', dest=tile_dest, cou
         bg = Image.open(tile_container_number)
         master.paste(bg, (0, 0, 239, 39), bg)
         font = ImageFont.truetype(english_font, 16)
-        w, h = draw.textsize('2', font=font)
+        w, h = get_text_size(draw, '2', font=font)
         draw.text(((30-w)/2+209,(39-h)/2), '2', font=font, fill=(229, 181, 68))
 
         writeCost()
@@ -137,7 +142,7 @@ def process_hero(card):
     imclass = Image.open('resources/{}.jpg'.format(card['cardClass'].lower()))
     draw = ImageDraw.Draw(imclass)
     font = ImageFont.truetype(name_font, 19)
-    w,h = draw.textsize(title, font=font)
+    w,h = get_text_size(draw, title, font=font)
     draw_shadow(draw, 22, 75-h, title, font)
     draw.text((22, 75-h), title, font=font)
     imclass.save('{}/{}.jpg'.format(hero_dest, card['cardClass'].lower()))
@@ -147,7 +152,7 @@ def process_hero(card):
         imclass = Image.open('resources/{}.jpg'.format(card['cardClass'].lower()))
         draw = ImageDraw.Draw(imclass)
         font = ImageFont.truetype(name_font, 19)
-        w,h = draw.textsize(title, font=font)
+        w,h = get_text_size(draw, title, font=font)
         draw_shadow(draw, 22, 75-h, title, font)
         draw.text((22, 75-h), title, font=font)
         imclass.save('{}/{}_{}.jpg'.format(hero_dest, card['cardClass'].lower(), i+1))
