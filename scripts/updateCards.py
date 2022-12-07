@@ -7,7 +7,7 @@ def getCardsJson():
   r = requests.get(CARDS_URL)
   data = r.json()
   for index, card in enumerate(data):
-    if 'rarity' not in card:
+    if 'rarity' not in card or 'set' not in card:
         continue
     data[index] = {
       'cardClass': card['cardClass'],

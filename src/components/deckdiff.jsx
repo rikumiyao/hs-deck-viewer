@@ -60,9 +60,9 @@ class DeckDiff extends Component {
     }
     const extension = '.png';
     if (index===0)
-      return require('../resources/classes/'+language+'/'+deckClass+extension).default;
+      return require('../resources/classes/'+language+'/'+deckClass+extension);
     else
-      return require('../resources/classes/'+language+'/'+deckClass+'_'+index+extension).default;
+      return require('../resources/classes/'+language+'/'+deckClass+'_'+index+extension);
   }
 
   render() {

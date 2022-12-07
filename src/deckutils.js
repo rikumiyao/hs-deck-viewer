@@ -1,9 +1,10 @@
 import { encode, decode } from "deckstrings";
 
-const STANDARD_SETS = ['CORE', 'THE_BARRENS', 'STORMWIND', 'ALTERAC_VALLEY', 'THE_SUNKEN_CITY', 'REVENDRETH'];
+const STANDARD_SETS = ['CORE', 'THE_BARRENS', 'STORMWIND', 'ALTERAC_VALLEY', 'THE_SUNKEN_CITY', 'REVENDRETH', 'RETURN_OF_THE_LICH_KING', 'PATH_OF_ARTHAS'];
 const CLASSIC_SETS = ['VANILLA'];
 const BANNED_CARDS = ['BOT_914','DAL_800']; //Whizbang and Zayle
 const heroDict = {
+  'deathknight': 78065,
   'demonhunter': 56550,
   'mage': 637,
   'shaman': 1066,
